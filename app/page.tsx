@@ -1,6 +1,7 @@
 'use client';
+import axios from 'axios';
 import Column from 'components/Column';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 export default function Home() {
@@ -30,8 +31,23 @@ export default function Home() {
     },
     columnOrder: ['column-1', 'column-2', 'column-3'],
   };
+  console.log('in', initialData);
+  const [data, setData] = useState<any>({});
 
-  const [data, setData] = useState(initialData);
+  const getData = async () => {
+    try {
+      const response = await axios(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/board/1`
+      );
+      setData(response.data);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const onDragEnd = (result: any) => {
     console.log(result);
@@ -44,7 +60,7 @@ export default function Home() {
       return;
 
     if (type === 'column') {
-      const newColumnOrder = Array.from(data.columnOrder);
+      const newColumnOrder = Array.from(data?.columnOrder);
       newColumnOrder.splice(source.index, 1);
       newColumnOrder.splice(destination.index, 0, draggableId);
       setData((prev: any) => ({ ...prev, columnOrder: newColumnOrder }));
@@ -64,6 +80,16 @@ export default function Home() {
         ...prev,
         columns: { ...prev.columns, [newStart.id]: newStart },
       }));
+
+      console.log('tasks', newTaskIds);
+      const prevTaskIndex =
+        data.tasks[newTaskIds[result.destination.index - 1] as any]
+          ?.taskPosition;
+      const nextTaskIndex =
+        data.tasks[newTaskIds[result.destination.index + 1] as any]
+          ?.taskPosition;
+
+      console.log(prevTaskIndex, nextTaskIndex);
       return;
     }
 
@@ -90,22 +116,92 @@ export default function Home() {
     }));
   };
 
-  const addMoreColumns = () => {
-    setData((prev: any) => ({
-      ...prev,
-      columnOrder: [
-        ...prev.columnOrder,
-        `column-${prev.columnOrder.length + 1}`,
-      ],
-      columns: {
-        ...prev.columns,
-        [`column-${prev.columnOrder.length + 1}`]: {
-          id: `column-${prev.columnOrder.length + 1}`,
-          title: 'New',
-          taskIds: [],
+  const addMoreColumns = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/createColumn/1`,
+        { title: 'new new' },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log(response.data);
+      const newColumnInfo = response.data;
+      setData((prev: any) => ({
+        ...prev,
+        columnOrder: [...prev.columnOrder, newColumnInfo.id],
+        columns: {
+          ...prev.columns,
+          [newColumnInfo.id]: { ...newColumnInfo, taskIds: [] },
         },
-      },
-    }));
+      }));
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  console.log(data);
+
+  // const addTaskHandler = async (columnId: number) => {
+  //   try {
+  //     const lastTaskId =
+  //       data.columns[`column-${columnId}`].taskIds[data.columns.length - 1];
+
+  //     const lastIndexInColumn = data.tasks[lastTaskId].taskPosition;
+
+  //     const taskId = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_BACKEND_URL}/task/${columnId}`,
+  //       { content: 'new new', prevIndex: lastIndexInColumn },
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     );
+  //     return taskId;
+  //   } catch (err: any) {
+  //     console.error(err);
+  //   }
+  // };
+
+  const addMoreTasks = async (columnId: string) => {
+    console.log(columnId);
+    try {
+      const lastTaskId = data.columns[columnId].taskIds.at(-1);
+      const lastIndexInColumn = lastTaskId
+        ? data.tasks[lastTaskId].taskPosition
+        : null;
+      console.log(lastIndexInColumn);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/task/${columnId.slice(7)}`,
+        { content: 'new new', prevIndex: lastIndexInColumn },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const newTaskInfo = response.data;
+      setData((prev: any) => ({
+        ...prev,
+        tasks: {
+          ...prev.tasks,
+          [newTaskInfo.id]: newTaskInfo,
+        },
+        columns: {
+          ...prev.columns,
+          [columnId]: {
+            ...prev.columns[columnId],
+            taskIds: [...prev.columns[columnId].taskIds, newTaskInfo.id],
+          },
+        },
+      }));
+    } catch (err: any) {
+      console.error(err);
+    }
   };
 
   console.log(data);
@@ -134,6 +230,7 @@ export default function Home() {
                     column={column}
                     tasks={tasks}
                     index={index}
+                    addMoreTasks={addMoreTasks}
                   />
                 );
               })}

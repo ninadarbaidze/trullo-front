@@ -36,6 +36,7 @@ const Column: React.FC<any> = (props) => {
                 </li>
               )}
             </Droppable>
+            <p onClick={() => props.addMoreTasks(props.column.id)}>+add more</p>
           </ul>
         </li>
       )}
