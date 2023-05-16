@@ -49,6 +49,40 @@ export default function Home() {
     getData();
   }, []);
 
+  const reorderTask = async (
+    taskId: number,
+    prevTaskId: number,
+    nextTaskId: number,
+    isChangingColumn: boolean,
+    columnId: number
+  ) => {
+    await axios.patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/reorder/${taskId}`,
+      { columnId, isChangingColumn, prevTaskId, nextTaskId },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  };
+
+  const reorderColumn = async (
+    columnId: number,
+    prevColumnId: number,
+    nextColumnId: number
+  ) => {
+    await axios.patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/reorder-column/${columnId}`,
+      { boardId: 1, prevColumnId, nextColumnId },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  };
+
   const onDragEnd = (result: any) => {
     console.log(result);
     const { destination, source, draggableId, type } = result;
@@ -63,7 +97,14 @@ export default function Home() {
       const newColumnOrder = Array.from(data?.columnOrder);
       newColumnOrder.splice(source.index, 1);
       newColumnOrder.splice(destination.index, 0, draggableId);
+      const prevColumnIndex =
+        data.columns[newColumnOrder[result.destination.index - 1] as any]
+          ?.columnPosition;
+      const nextColumnIndex =
+        data.columns[newColumnOrder[result.destination.index + 1] as any]
+          ?.columnPosition;
       setData((prev: any) => ({ ...prev, columnOrder: newColumnOrder }));
+      reorderColumn(draggableId.slice(7), prevColumnIndex, nextColumnIndex);
       return;
     }
 
@@ -81,13 +122,20 @@ export default function Home() {
         columns: { ...prev.columns, [newStart.id]: newStart },
       }));
 
-      console.log('tasks', newTaskIds);
       const prevTaskIndex =
         data.tasks[newTaskIds[result.destination.index - 1] as any]
           ?.taskPosition;
       const nextTaskIndex =
         data.tasks[newTaskIds[result.destination.index + 1] as any]
           ?.taskPosition;
+
+      reorderTask(
+        draggableId.slice(5),
+        prevTaskIndex,
+        nextTaskIndex,
+        false,
+        destination.droppableId.slice(7)
+      );
 
       console.log(prevTaskIndex, nextTaskIndex);
       return;
@@ -105,6 +153,12 @@ export default function Home() {
       ...finish,
       taskIds: finishTaskIds,
     };
+    const prevTaskIndex =
+      data.tasks[finishTaskIds[result.destination.index - 1] as any]
+        ?.taskPosition;
+    const nextTaskIndex =
+      data.tasks[finishTaskIds[result.destination.index + 1] as any]
+        ?.taskPosition;
 
     setData((prev: any) => ({
       ...prev,
@@ -114,20 +168,30 @@ export default function Home() {
         [newFinish.id]: newFinish,
       },
     }));
+    reorderTask(
+      draggableId.slice(5),
+      prevTaskIndex,
+      nextTaskIndex,
+      true,
+      destination.droppableId.slice(7)
+    );
   };
 
   const addMoreColumns = async () => {
+    const lastColumnId = data.columnOrder.at(-1);
+    const lastIndexOfColumn = lastColumnId
+      ? data.columns[lastColumnId].columnPosition
+      : null;
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/createColumn/1`,
-        { title: 'new new' },
+        { title: 'done', prevIndex: lastIndexOfColumn },
         {
           headers: {
             'Content-Type': 'application/json',
           },
         }
       );
-      console.log(response.data);
       const newColumnInfo = response.data;
       setData((prev: any) => ({
         ...prev,
@@ -137,6 +201,9 @@ export default function Home() {
           [newColumnInfo.id]: { ...newColumnInfo, taskIds: [] },
         },
       }));
+      const lastColumnId = data.columnOrder.at(-1);
+      const lastColumnPosition = data.columns[lastColumnId].columnPosition;
+      console.log(lastColumnPosition);
     } catch (err: any) {
       console.error(err);
     }
@@ -173,10 +240,9 @@ export default function Home() {
       const lastIndexInColumn = lastTaskId
         ? data.tasks[lastTaskId].taskPosition
         : null;
-      console.log(lastIndexInColumn);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/task/${columnId.slice(7)}`,
-        { content: 'new new', prevIndex: lastIndexInColumn },
+        { content: 'task6', prevIndex: lastIndexInColumn },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -204,7 +270,6 @@ export default function Home() {
     }
   };
 
-  console.log(data);
   return (
     <main className='flex h-screen p-24 bg-white text-black'>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -235,7 +300,7 @@ export default function Home() {
                 );
               })}
               {provided.placeholder}
-              <p onClick={() => addMoreColumns()}>+add more</p>
+              <p onClick={() => addMoreColumns()}>+add more</p>;
             </ul>
           )}
         </Droppable>

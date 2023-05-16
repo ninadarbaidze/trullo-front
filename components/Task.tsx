@@ -15,7 +15,7 @@ const Task: React.FC<any> = (props) => {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
             className={`${
-              snapshot.isDragging ? 'bg-red-600 rotate-3' : 'bg-white'
+              snapshot.isDragging ? 'bg-red-600' : 'bg-white'
             }  border`}
           >
             {props.task.content}
