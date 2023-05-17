@@ -1,18 +1,22 @@
 'use client';
-import axios from 'axios';
 import Column from 'components/Column';
 import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import {
+  addColumn,
+  addTask,
+  getBoard,
+  reorderColumn,
+  reorderTask,
+} from 'services';
 
 export default function Home() {
   const [data, setData] = useState<any>({});
 
   const getData = async () => {
     try {
-      const response = await axios(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/board/1`
-      );
-      setData(response.data);
+      const board = await getBoard();
+      setData(board);
     } catch (err: any) {
       console.error(err);
     }
@@ -22,38 +26,28 @@ export default function Home() {
     getData();
   }, []);
 
-  const reorderTask = async (
+  const reorderTaskHandler = async (
     taskId: number,
     prevTaskId: number,
     nextTaskId: number,
     isChangingColumn: boolean,
     columnId: number
   ) => {
-    await axios.patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/reorder/${taskId}`,
-      { columnId, isChangingColumn, prevTaskId, nextTaskId },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+    await reorderTask(
+      taskId,
+      prevTaskId,
+      nextTaskId,
+      isChangingColumn,
+      columnId
     );
   };
 
-  const reorderColumn = async (
+  const reorderColumnHandler = async (
     columnId: number,
     prevColumnId: number,
     nextColumnId: number
   ) => {
-    await axios.patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/reorder-column/${columnId}`,
-      { boardId: 1, prevColumnId, nextColumnId },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    await reorderColumn(columnId, prevColumnId, nextColumnId);
   };
 
   const onDragEnd = (result: any) => {
@@ -76,7 +70,11 @@ export default function Home() {
         data.columns[newColumnOrder[result.destination.index + 1] as any]
           ?.columnPosition;
       setData((prev: any) => ({ ...prev, columnOrder: newColumnOrder }));
-      reorderColumn(draggableId.slice(7), prevColumnIndex, nextColumnIndex);
+      reorderColumnHandler(
+        draggableId.slice(7),
+        prevColumnIndex,
+        nextColumnIndex
+      );
       return;
     }
 
@@ -101,7 +99,7 @@ export default function Home() {
         data.tasks[newTaskIds[result.destination.index + 1] as any]
           ?.taskPosition;
 
-      reorderTask(
+      reorderTaskHandler(
         draggableId.slice(5),
         prevTaskIndex,
         nextTaskIndex,
@@ -139,7 +137,7 @@ export default function Home() {
         [newFinish.id]: newFinish,
       },
     }));
-    reorderTask(
+    reorderTaskHandler(
       draggableId.slice(5),
       prevTaskIndex,
       nextTaskIndex,
@@ -154,16 +152,8 @@ export default function Home() {
       ? data?.columns[lastColumnId]?.columnPosition
       : null;
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/createColumn/1`,
-        { title: 'todo', prevIndex: lastIndexOfColumn },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      const newColumnInfo = response.data;
+      const response = await addColumn(lastIndexOfColumn);
+      const newColumnInfo = response;
       setData((prev: any) => ({
         ...prev,
         columnOrder: [...prev.columnOrder, newColumnInfo.id],
@@ -183,17 +173,9 @@ export default function Home() {
       const lastIndexInColumn = lastTaskId
         ? data.tasks[lastTaskId].taskPosition
         : null;
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/task/${columnId.slice(7)}`,
-        { content: 'task6', prevIndex: lastIndexInColumn },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await addTask(columnId, lastIndexInColumn);
 
-      const newTaskInfo = response.data;
+      const newTaskInfo = response;
       setData((prev: any) => ({
         ...prev,
         tasks: {
