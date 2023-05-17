@@ -5,33 +5,6 @@ import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 export default function Home() {
-  const initialData: any = {
-    tasks: {
-      'task-1': { id: 'task-1', content: 'Take out the garbage' },
-      'task-2': { id: 'task-2', content: 'Watch my favorite show' },
-      'task-3': { id: 'task-3', content: 'Charge my phone' },
-      'task-4': { id: 'task-4', content: 'Cook dinner' },
-    },
-    columns: {
-      'column-1': {
-        id: 'column-1',
-        title: 'To do',
-        taskIds: ['task-1', 'task-2', 'task-3', 'task-4'],
-      },
-      'column-2': {
-        id: 'column-2',
-        title: 'In progress',
-        taskIds: [],
-      },
-      'column-3': {
-        id: 'column-3',
-        title: 'Done',
-        taskIds: [],
-      },
-    },
-    columnOrder: ['column-1', 'column-2', 'column-3'],
-  };
-  console.log('in', initialData);
   const [data, setData] = useState<any>({});
 
   const getData = async () => {
@@ -84,7 +57,6 @@ export default function Home() {
   };
 
   const onDragEnd = (result: any) => {
-    console.log(result);
     const { destination, source, draggableId, type } = result;
     if (!destination) return;
     if (
@@ -137,7 +109,6 @@ export default function Home() {
         destination.droppableId.slice(7)
       );
 
-      console.log(prevTaskIndex, nextTaskIndex);
       return;
     }
 
@@ -178,14 +149,14 @@ export default function Home() {
   };
 
   const addMoreColumns = async () => {
-    const lastColumnId = data.columnOrder.at(-1);
+    const lastColumnId = data.columnOrder?.at(-1);
     const lastIndexOfColumn = lastColumnId
-      ? data.columns[lastColumnId].columnPosition
+      ? data?.columns[lastColumnId]?.columnPosition
       : null;
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/createColumn/1`,
-        { title: 'done', prevIndex: lastIndexOfColumn },
+        { title: 'todo', prevIndex: lastIndexOfColumn },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -201,40 +172,12 @@ export default function Home() {
           [newColumnInfo.id]: { ...newColumnInfo, taskIds: [] },
         },
       }));
-      const lastColumnId = data.columnOrder.at(-1);
-      const lastColumnPosition = data.columns[lastColumnId].columnPosition;
-      console.log(lastColumnPosition);
     } catch (err: any) {
       console.error(err);
     }
   };
 
-  console.log(data);
-
-  // const addTaskHandler = async (columnId: number) => {
-  //   try {
-  //     const lastTaskId =
-  //       data.columns[`column-${columnId}`].taskIds[data.columns.length - 1];
-
-  //     const lastIndexInColumn = data.tasks[lastTaskId].taskPosition;
-
-  //     const taskId = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_BACKEND_URL}/task/${columnId}`,
-  //       { content: 'new new', prevIndex: lastIndexInColumn },
-  //       {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //       }
-  //     );
-  //     return taskId;
-  //   } catch (err: any) {
-  //     console.error(err);
-  //   }
-  // };
-
   const addMoreTasks = async (columnId: string) => {
-    console.log(columnId);
     try {
       const lastTaskId = data.columns[columnId].taskIds.at(-1);
       const lastIndexInColumn = lastTaskId
