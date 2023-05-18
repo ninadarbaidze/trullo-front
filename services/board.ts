@@ -35,7 +35,7 @@ export const reorderColumn = async (
 };
 
 export const addColumn = async (
-  lastIndexOfColumn: number,
+  lastIndexOfColumn: number | null,
   boardId: number = 1,
   title: string = 'todo'
 ) => {
@@ -48,7 +48,7 @@ export const addColumn = async (
 
 export const addTask = async (
   columnId: string,
-  lastIndexOfColumn: number,
+  lastIndexOfColumn: number | null,
   content: string = 'task 1'
 ) => {
   const res = await axios.post(`/create-task/${columnId.slice(7)}`, {

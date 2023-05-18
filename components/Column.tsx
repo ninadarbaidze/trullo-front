@@ -1,8 +1,14 @@
 import React from 'react';
 import Task from './Task';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { ColumnType, TaskType } from 'types/global';
 
-const Column: React.FC<any> = (props) => {
+const Column: React.FC<{
+  tasks: TaskType[];
+  column: ColumnType;
+  index: number;
+  addMoreTasks: (arg1: string) => void;
+}> = (props) => {
   return (
     <Draggable draggableId={props.column.id} index={props.index}>
       {(provided) => (
@@ -16,11 +22,7 @@ const Column: React.FC<any> = (props) => {
           </h2>
 
           <ul className='flex flex-col gap-3 w-44'>
-            <Droppable
-              droppableId={props.column.id}
-              type='task'
-              //  isDropDisabled={'column-1'}
-            >
+            <Droppable droppableId={props.column.id} type='task'>
               {(provided, snapshot) => (
                 <li
                   {...provided.droppableProps}
@@ -29,8 +31,8 @@ const Column: React.FC<any> = (props) => {
                     snapshot.isDraggingOver ? 'bg-black' : 'bg-white'
                   } flex-grow min-h-[100px]`}
                 >
-                  {props.tasks.map((task: any, index: any) => (
-                    <Task key={task.id} task={task} index={index} />
+                  {props.tasks.map((task, index: number) => (
+                    <Task key={task.id as string} task={task} index={index} />
                   ))}
                   {provided.placeholder}
                 </li>
