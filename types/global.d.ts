@@ -5,9 +5,9 @@ export type Board = {
 };
 
 export type TaskType = {
-  id: String;
+  id: string;
   taskPosition: number;
-  content: String;
+  content: string;
   columnId: number;
   boardId: number;
 };
@@ -17,4 +17,11 @@ export type ColumnType = {
   title: string;
   columnPosition: number;
   taskIds: string[];
+};
+
+export type Placeholder = {
+  clientHeight: number | null;
+  clientWidth: number | null;
+  clientX: number | null;
+  clientY: number | null;
 };

@@ -9,21 +9,13 @@ export default function Home() {
     onDragEnd,
     addMoreColumns,
     addMoreTasks,
-    onDragStart,
     onDragUpdate,
-    // before,
-    dragId,
     placeholderProps,
   } = useMain();
 
   return (
     <div className='flex flex-row pl-24 py-24  text-black'>
-      <DragDropContext
-        onDragEnd={onDragEnd}
-        onDragStart={onDragStart}
-        onDragUpdate={onDragUpdate}
-        // onBeforeCapture={before}
-      >
+      <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
         <Droppable
           droppableId='all-columns'
           direction='horizontal'
@@ -48,7 +40,6 @@ export default function Home() {
                       tasks={tasks}
                       index={index}
                       addMoreTasks={addMoreTasks}
-                      dragId={dragId}
                       placeholderProps={placeholderProps}
                     />
                   );

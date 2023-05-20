@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { DropResult } from 'react-beautiful-dnd';
+import { DragUpdate, DropResult } from 'react-beautiful-dnd';
 import {
   addColumn,
   addTask,
@@ -7,9 +7,7 @@ import {
   reorderColumn,
   reorderTask,
 } from 'services';
-import { Board } from 'types/global';
-
-const queryAttr = 'data-rbd-drag-handle-draggable-id';
+import { Board, Placeholder } from 'types/global';
 
 export const useMain = () => {
   const [data, setData] = useState<Board>({
@@ -18,8 +16,12 @@ export const useMain = () => {
     columnOrder: [],
   });
 
-  const [dragId, setDragId] = useState('');
-  const [placeholderProps, setPlaceholderProps] = useState({});
+  const [placeholderProps, setPlaceholderProps] = useState<Placeholder>({
+    clientHeight: null,
+    clientWidth: null,
+    clientX: null,
+    clientY: null,
+  });
 
   const getData = async () => {
     try {
@@ -59,7 +61,12 @@ export const useMain = () => {
   };
 
   const onDragEnd = (result: DropResult) => {
-    setPlaceholderProps({});
+    setPlaceholderProps({
+      clientHeight: null,
+      clientWidth: null,
+      clientX: null,
+      clientY: null,
+    });
 
     const { destination, source, draggableId, type } = result;
     if (!destination) return;
@@ -156,6 +163,47 @@ export const useMain = () => {
     );
   };
 
+  const onDragUpdate = (update: DragUpdate) => {
+    if (!update.destination) {
+      return;
+    }
+    const draggableId = update.draggableId;
+    const destinationIndex = update.destination.index;
+
+    const dragHandleId = `[data-rbd-drag-handle-draggable-id='${draggableId}']`;
+    const draggedDOM = document.querySelector(dragHandleId);
+
+    const dropHandleId = `[data-rbd-droppable-id='${update.destination.droppableId}']`;
+    const dropDOM = document?.querySelector(dropHandleId)?.children[0]
+      .children as HTMLCollectionOf<HTMLElement>;
+
+    if (!draggedDOM || !dropHandleId) {
+      return;
+    }
+    const { clientHeight, clientWidth } = draggedDOM;
+
+    const clientY = Array.from(dropDOM)
+      .slice(0, destinationIndex)
+      .reduce((total, curr) => {
+        const style =
+          (curr as any).currentStyle || window.getComputedStyle(curr);
+        const marginBottom = parseFloat(style.marginBottom);
+        return total + curr.clientHeight + marginBottom;
+      }, 0);
+
+    const parentNode = draggedDOM.parentNode;
+
+    if (parentNode instanceof Element) {
+      const paddingLeft = window.getComputedStyle(parentNode).paddingLeft;
+      setPlaceholderProps({
+        clientHeight,
+        clientWidth,
+        clientY,
+        clientX: parseFloat(paddingLeft),
+      });
+    }
+  };
+
   const addMoreColumns = async () => {
     const lastColumnId = data?.columnOrder?.at(-1);
     const lastIndexOfColumn = lastColumnId
@@ -205,72 +253,13 @@ export const useMain = () => {
     }
   };
 
-  const getDraggedDom = (draggableId) => {
-    const domQuery = `[${queryAttr}='${draggableId}']`;
-    const draggedDOM = document.querySelector(domQuery);
-
-    return draggedDOM;
-  };
-
-  const onDragStart = (start) => {};
-
-  const onDragUpdate = (update) => {
-    console.log(update);
-    if (!update.destination) {
-      return;
-    }
-    const draggableId = update.draggableId;
-    const destinationIndex = update.destination.index;
-
-    const domQuery = `[${queryAttr}='${draggableId}']`;
-    const draggedDOM = document.querySelector(domQuery);
-
-    const droppabbleQuery = `[data-rbd-droppable-id='${update.destination.droppableId}']`;
-    const droppabbleQueryDOM =
-      document?.querySelector(droppabbleQuery)?.children[0].children;
-
-    if (!draggedDOM) {
-      return;
-    }
-    const { clientHeight, clientWidth } = draggedDOM;
-
-    // console.log(ba2);
-
-    // console.log('ch', draggedDOM.parentNode?.children);
-    // console.log(draggedDOM.parentNode?.children);
-
-    const clientY =
-      // parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
-      [...droppabbleQueryDOM]
-        .slice(0, destinationIndex)
-        .reduce((total, curr) => {
-          const style = curr.currentStyle || window.getComputedStyle(curr);
-          const marginBottom = parseFloat(style.marginBottom);
-          return total + curr.clientHeight + marginBottom;
-        }, 0);
-
-    console.log(clientY);
-
-    setPlaceholderProps({
-      clientHeight,
-      clientWidth,
-      clientY,
-      clientX: parseFloat(
-        window.getComputedStyle(draggedDOM.parentNode).paddingLeft
-      ),
-    });
-  };
-
   return {
     data,
     setData,
     onDragEnd,
     addMoreColumns,
     addMoreTasks,
-    onDragStart,
     onDragUpdate,
-    // before,
-    dragId,
     placeholderProps,
   };
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import { ColumnType, TaskType } from 'types/global';
-import { Task, TaskList } from 'components';
+import { ColumnType, Placeholder, TaskType } from 'types/global';
+import { TaskList } from 'components';
 
 const Column: React.FC<{
   tasks: TaskType[];
@@ -9,8 +9,8 @@ const Column: React.FC<{
   index: number;
   addMoreTasks: (arg1: string) => void;
   key: string;
+  placeholderProps: Placeholder;
 }> = (props) => {
-  // console.log(Object.keys(props.placeholderProps).length === 0);
   return (
     <Draggable
       draggableId={props.column.id}
@@ -40,35 +40,8 @@ const Column: React.FC<{
                     snapshot.isDraggingOver ? ' relative' : 'bg-babyBlue'
                   } flex flex-col  flex-grow min-h-[100px]`}
                 >
-                  {/* <TaskList tasks={props.tasks} /> */}
                   <ul className={` flex flex-col `}>
-                    {props.tasks.map((task, index: number) => (
-                      // <Task
-                      //   key={task.id as string}
-                      //   task={task}
-                      //   index={index}
-                      //   isDragging={props.isDragging}
-                      // />
-                      <Draggable
-                        draggableId={task.id as string}
-                        index={index}
-                        key={task.id}
-                      >
-                        {(provided, snapshot) => (
-                          <li
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
-                            className={`${
-                              snapshot.isDragging ? 'bg-white' : 'bg-white'
-                            } pb-16 rounded-xl shadow-sm mb-4`}
-                          >
-                            <div>{task.content}</div>
-                          </li>
-                        )}
-                        {}
-                      </Draggable>
-                    ))}
+                    <TaskList tasks={props.tasks} />
                   </ul>
                   {provided.placeholder}
                   {Object.keys(props.placeholderProps).length > 0 &&
@@ -76,11 +49,10 @@ const Column: React.FC<{
                       <div
                         style={{
                           position: 'absolute',
-                          top: props.placeholderProps.clientY,
-                          left: props.placeholderProps.clientX,
-                          height: props.placeholderProps.clientHeight,
-                          // background: 'tomato',
-                          width: props.placeholderProps.clientWidth,
+                          top: props.placeholderProps.clientY as number,
+                          left: props.placeholderProps.clientX as number,
+                          height: props.placeholderProps.clientHeight as number,
+                          width: props.placeholderProps.clientWidth as number,
                         }}
                         className={`bg-blue-100 border border-dashed border-blue-400 rounded-xl`}
                       />
