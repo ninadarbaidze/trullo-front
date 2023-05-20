@@ -49,7 +49,7 @@ export const addColumn = async (
 export const addTask = async (
   columnId: string,
   lastIndexOfColumn: number | null,
-  content: string = 'task 1'
+  content: string = 'task 5 task 5task 5task 5task 5task 5task  ask 5task 5task 5task 5task 5task 5task 5task 5task 5'
 ) => {
   const res = await axios.post(`/create-task/${columnId.slice(7)}`, {
     content,

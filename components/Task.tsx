@@ -4,19 +4,23 @@ import { TaskType } from 'types/global';
 
 const Task: React.FC<{ task: TaskType; index: number }> = (props) => {
   return (
-    <div className=''>
-      <Draggable draggableId={props.task.id as string} index={props.index}>
+    <div className={`bg-white`}>
+      <Draggable
+        draggableId={props.task.id as string}
+        index={props.index}
+        key={props.key}
+      >
         {(provided, snapshot) => (
-          <h2
+          <div
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
             className={`${
-              snapshot.isDragging ? 'bg-red-600' : 'bg-white'
-            }  border`}
+              snapshot.isDragging ? 'bg-white' : 'bg-white'
+            } rounded-xl shadow-sm bg-white`}
           >
-            {props.task.content}
-          </h2>
+            <div>{props.task.content}</div>
+          </div>
         )}
         {}
       </Draggable>

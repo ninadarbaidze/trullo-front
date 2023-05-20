@@ -9,12 +9,17 @@ import {
 } from 'services';
 import { Board } from 'types/global';
 
+const queryAttr = 'data-rbd-drag-handle-draggable-id';
+
 export const useMain = () => {
   const [data, setData] = useState<Board>({
     tasks: {},
     columns: {},
     columnOrder: [],
   });
+
+  const [dragId, setDragId] = useState('');
+  const [placeholderProps, setPlaceholderProps] = useState({});
 
   const getData = async () => {
     try {
@@ -54,6 +59,8 @@ export const useMain = () => {
   };
 
   const onDragEnd = (result: DropResult) => {
+    setPlaceholderProps({});
+
     const { destination, source, draggableId, type } = result;
     if (!destination) return;
     if (
@@ -63,7 +70,7 @@ export const useMain = () => {
       return;
 
     if (type === 'column') {
-      const newColumnOrder = Array.from(data?.columnOrder as string[]);
+      const newColumnOrder = Array.from(data?.columnOrder);
       newColumnOrder.splice(source.index, 1);
       newColumnOrder.splice(destination.index, 0, draggableId);
       const prevColumnIndex =
@@ -77,7 +84,7 @@ export const useMain = () => {
         columnOrder: newColumnOrder,
       }));
       reorderColumnHandler(
-        (draggableId as string).slice(7),
+        draggableId.slice(7),
         prevColumnIndex,
         nextColumnIndex
       );
@@ -86,6 +93,7 @@ export const useMain = () => {
 
     const start = data?.columns[source.droppableId];
     const finish = data?.columns[destination.droppableId];
+
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds);
       newTaskIds.splice(source.index, 1);
@@ -196,5 +204,73 @@ export const useMain = () => {
       console.error(err);
     }
   };
-  return { data, setData, onDragEnd, addMoreColumns, addMoreTasks };
+
+  const getDraggedDom = (draggableId) => {
+    const domQuery = `[${queryAttr}='${draggableId}']`;
+    const draggedDOM = document.querySelector(domQuery);
+
+    return draggedDOM;
+  };
+
+  const onDragStart = (start) => {};
+
+  const onDragUpdate = (update) => {
+    console.log(update);
+    if (!update.destination) {
+      return;
+    }
+    const draggableId = update.draggableId;
+    const destinationIndex = update.destination.index;
+
+    const domQuery = `[${queryAttr}='${draggableId}']`;
+    const draggedDOM = document.querySelector(domQuery);
+
+    const droppabbleQuery = `[data-rbd-droppable-id='${update.destination.droppableId}']`;
+    const droppabbleQueryDOM =
+      document?.querySelector(droppabbleQuery)?.children[0].children;
+
+    if (!draggedDOM) {
+      return;
+    }
+    const { clientHeight, clientWidth } = draggedDOM;
+
+    // console.log(ba2);
+
+    // console.log('ch', draggedDOM.parentNode?.children);
+    // console.log(draggedDOM.parentNode?.children);
+
+    const clientY =
+      // parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
+      [...droppabbleQueryDOM]
+        .slice(0, destinationIndex)
+        .reduce((total, curr) => {
+          const style = curr.currentStyle || window.getComputedStyle(curr);
+          const marginBottom = parseFloat(style.marginBottom);
+          return total + curr.clientHeight + marginBottom;
+        }, 0);
+
+    console.log(clientY);
+
+    setPlaceholderProps({
+      clientHeight,
+      clientWidth,
+      clientY,
+      clientX: parseFloat(
+        window.getComputedStyle(draggedDOM.parentNode).paddingLeft
+      ),
+    });
+  };
+
+  return {
+    data,
+    setData,
+    onDragEnd,
+    addMoreColumns,
+    addMoreTasks,
+    onDragStart,
+    onDragUpdate,
+    // before,
+    dragId,
+    placeholderProps,
+  };
 };
