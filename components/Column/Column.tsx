@@ -1,6 +1,6 @@
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ColumnType, Placeholder, TaskType } from 'types/global';
-import { TaskList } from 'components';
+import { TaskList, X } from 'components';
 import { useColumn } from './useColumn';
 
 const Column: React.FC<{
@@ -11,7 +11,13 @@ const Column: React.FC<{
   key: string;
   placeholderProps: Placeholder;
 }> = (props) => {
-  const { inputValue, taskInputIsOpen, setTaskInputIsOpen } = useColumn();
+  const {
+    inputValue,
+    taskInputIsOpen,
+    setTaskInputIsOpen,
+    submitTaskHandler,
+    submitOnEnterHandler,
+  } = useColumn(props.addMoreTasks, props.column.id);
 
   return (
     <Draggable
@@ -56,7 +62,7 @@ const Column: React.FC<{
                           height: props.placeholderProps.clientHeight as number,
                           width: props.placeholderProps.clientWidth as number,
                         }}
-                        className={`bg-blue-100 border border-dashed border-blue-400 rounded-xl`}
+                        className={`bg-blue100 border border-dashed border-blue-400 rounded-xl`}
                       />
                     )}
                 </div>
@@ -64,16 +70,45 @@ const Column: React.FC<{
             </Droppable>
 
             <form
-              action=''
               onSubmit={(e) => {
                 e.preventDefault();
-                props.addMoreTasks(props.column.id, inputValue.current!.value);
-                inputValue.current!.value = '';
+                submitTaskHandler();
               }}
             >
-              <p onClick={() => setTaskInputIsOpen(true)}>+add more</p>
-              {taskInputIsOpen && (
-                <input type='text' ref={inputValue} name='new-task' />
+              {taskInputIsOpen ? (
+                <div className='flex flex-col gap-2'>
+                  <textarea
+                    ref={inputValue}
+                    name='new-task'
+                    className='bg-white w-full p-2 h-20 break-all text-xs shadow-md align-top rounded-xl -sm resize-none'
+                    placeholder='Enter a title for this task..'
+                    onKeyDown={submitOnEnterHandler}
+                  />
+                  <nav className='flex gap-1'>
+                    <button
+                      className='bg-blue500 text-white px-2 py-1 text-xs rounded-md'
+                      type='submit'
+                    >
+                      Add task
+                    </button>
+                    <button
+                      className='hover:opacity-40'
+                      onClick={() => setTaskInputIsOpen(false)}
+                    >
+                      <X pathClassName='fill-gray-500' />
+                    </button>
+                  </nav>
+                </div>
+              ) : (
+                <div
+                  className='flex items-center justify-between bg-blue200 rounded-lg text-xs text-blue500  px-2 cursor-pointer'
+                  onClick={() => setTaskInputIsOpen(true)}
+                >
+                  <p className='cursor-pointer'>Add another card</p>
+                  <button type='button' className='text-lg'>
+                    +
+                  </button>
+                </div>
               )}
             </form>
           </div>

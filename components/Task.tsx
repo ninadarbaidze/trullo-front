@@ -19,7 +19,7 @@ const Task: React.FC<{ task: TaskType; index: number; key: string }> = (
             ref={provided.innerRef}
             className={`${
               snapshot.isDragging ? 'bg-white' : 'bg-white'
-            } pb-16 rounded-xl shadow-sm mb-4`}
+            } pb-16 rounded-xl shadow-md mb-4`}
           >
             <div>{props.task.content}</div>
           </li>
