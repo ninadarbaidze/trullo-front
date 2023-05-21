@@ -225,13 +225,14 @@ export const useMain = () => {
     }
   };
 
-  const addMoreTasks = async (columnId: string) => {
+  const addMoreTasks = async (columnId: string, content: string) => {
     try {
+      if (!content) return;
       const lastTaskId = data?.columns[columnId].taskIds.at(-1);
       const lastIndexInColumn = lastTaskId
         ? data?.tasks[lastTaskId].taskPosition
         : null;
-      const response = await addTask(columnId, lastIndexInColumn);
+      const response = await addTask(columnId, lastIndexInColumn, content);
 
       const newTaskInfo = response;
       setData((prev) => ({
@@ -239,6 +240,7 @@ export const useMain = () => {
         tasks: {
           ...prev.tasks,
           [newTaskInfo.id]: newTaskInfo,
+          [newTaskInfo.content]: content,
         },
         columns: {
           ...prev.columns,

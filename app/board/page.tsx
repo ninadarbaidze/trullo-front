@@ -1,5 +1,5 @@
 'use client';
-import Column from 'components/Column';
+import Column from 'components/Column/Column';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useMain } from '../hooks';
 

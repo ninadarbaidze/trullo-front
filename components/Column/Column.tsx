@@ -1,16 +1,18 @@
-import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ColumnType, Placeholder, TaskType } from 'types/global';
 import { TaskList } from 'components';
+import { useColumn } from './useColumn';
 
 const Column: React.FC<{
   tasks: TaskType[];
   column: ColumnType;
   index: number;
-  addMoreTasks: (arg1: string) => void;
+  addMoreTasks: (arg1: string, arg2: string) => void;
   key: string;
   placeholderProps: Placeholder;
 }> = (props) => {
+  const { inputValue, taskInputIsOpen, setTaskInputIsOpen } = useColumn();
+
   return (
     <Draggable
       draggableId={props.column.id}
@@ -60,7 +62,20 @@ const Column: React.FC<{
                 </div>
               )}
             </Droppable>
-            <p onClick={() => props.addMoreTasks(props.column.id)}>+add more</p>
+
+            <form
+              action=''
+              onSubmit={(e) => {
+                e.preventDefault();
+                props.addMoreTasks(props.column.id, inputValue.current!.value);
+                inputValue.current!.value = '';
+              }}
+            >
+              <p onClick={() => setTaskInputIsOpen(true)}>+add more</p>
+              {taskInputIsOpen && (
+                <input type='text' ref={inputValue} name='new-task' />
+              )}
+            </form>
           </div>
         </li>
       )}
