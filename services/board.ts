@@ -36,8 +36,8 @@ export const reorderColumn = async (
 
 export const addColumn = async (
   lastIndexOfColumn: number | null,
-  boardId: number = 1,
-  title: string = 'todo'
+  title: string = 'todo',
+  boardId: number = 1
 ) => {
   const res = await axios.post(`/create-column/${boardId}`, {
     title,
@@ -55,5 +55,15 @@ export const addTask = async (
     content,
     prevIndex: lastIndexOfColumn,
   });
+  return res.data;
+};
+
+export const deleteTask = async (taskId: string) => {
+  const res = await axios.delete(`/delete-task/${taskId.slice(5)}`);
+  return res.data;
+};
+
+export const deleteColumn = async (columnId: string) => {
+  const res = await axios.delete(`/delete-column/${columnId.slice(7)}`);
   return res.data;
 };

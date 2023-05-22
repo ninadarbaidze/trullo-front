@@ -1,23 +1,21 @@
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import { ColumnType, Placeholder, TaskType } from 'types/global';
-import { TaskList, X } from 'components';
+import { ActionDialog, TaskList, ThreeDots, X } from 'components';
 import { useColumn } from './useColumn';
+import { submitOnEnterHandler } from 'helpers';
+import { PropsTypes } from './types';
 
-const Column: React.FC<{
-  tasks: TaskType[];
-  column: ColumnType;
-  index: number;
-  addMoreTasks: (arg1: string, arg2: string) => void;
-  key: string;
-  placeholderProps: Placeholder;
-}> = (props) => {
+const Column: React.FC<PropsTypes> = (props) => {
   const {
     inputValue,
     taskInputIsOpen,
     setTaskInputIsOpen,
     submitTaskHandler,
-    submitOnEnterHandler,
-  } = useColumn(props.addMoreTasks, props.column.id);
+    dropdownRef,
+    triggerRef,
+    columnDialogIsOpen,
+    dropdownToggler,
+    deleteColumn,
+  } = useColumn(props.addMoreTasks, props.column.id, props.deleteColumnHandler);
 
   return (
     <Draggable
@@ -27,7 +25,7 @@ const Column: React.FC<{
     >
       {(provided) => (
         <li
-          className='flex flex-col gap-2 p-5 '
+          className='flex flex-col gap-2 p-5 relative'
           {...provided.draggableProps}
           ref={provided.innerRef}
         >
@@ -35,10 +33,24 @@ const Column: React.FC<{
             className='bg-babyBlue text-sm font-semibold'
             {...provided.dragHandleProps}
           >
-            {props.column.title}
+            {columnDialogIsOpen && (
+              <div className='absolute top-10 right-4 z-50' ref={dropdownRef}>
+                <ActionDialog deleteHandler={deleteColumn} />
+              </div>
+            )}
+            <section className='flex items-start justify-between py-2'>
+              <div className='pr-1'> {props.column.title}</div>
+              <button
+                ref={triggerRef}
+                className='pt-1'
+                onClick={() => dropdownToggler()}
+              >
+                <ThreeDots color='#828282' />
+              </button>
+            </section>
           </h2>
 
-          <div className='flex flex-col w-44'>
+          <div className='flex flex-col w-60'>
             <Droppable droppableId={props.column.id} type='task'>
               {(provided, snapshot) => (
                 <div
@@ -49,7 +61,10 @@ const Column: React.FC<{
                   } flex flex-col  flex-grow min-h-[100px]`}
                 >
                   <ul className={` flex flex-col `}>
-                    <TaskList tasks={props.tasks} />
+                    <TaskList
+                      tasks={props.tasks}
+                      deleteTaskHandler={props.deleteTaskHandler}
+                    />
                   </ul>
                   {provided.placeholder}
                   {Object.keys(props.placeholderProps).length > 0 &&
@@ -74,6 +89,7 @@ const Column: React.FC<{
                 e.preventDefault();
                 submitTaskHandler();
               }}
+              className=''
             >
               {taskInputIsOpen ? (
                 <div className='flex flex-col gap-2'>
@@ -82,7 +98,9 @@ const Column: React.FC<{
                     name='new-task'
                     className='bg-white w-full p-2 h-20 break-all text-xs shadow-md align-top rounded-xl -sm resize-none'
                     placeholder='Enter a title for this task..'
-                    onKeyDown={submitOnEnterHandler}
+                    onKeyDown={(e) =>
+                      submitOnEnterHandler(e, submitTaskHandler)
+                    }
                   />
                   <nav className='flex gap-1'>
                     <button
@@ -101,7 +119,7 @@ const Column: React.FC<{
                 </div>
               ) : (
                 <div
-                  className='flex items-center justify-between bg-blue200 rounded-lg text-xs text-blue500  px-2 cursor-pointer'
+                  className='flex items-center justify-between bg-blue200 rounded-lg text-xs text-blue500 px-2 cursor-pointer'
                   onClick={() => setTaskInputIsOpen(true)}
                 >
                   <p className='cursor-pointer'>Add another card</p>

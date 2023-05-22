@@ -1,10 +1,13 @@
+import { addClickAwayHandler } from 'helpers';
 import { useRef, useState } from 'react';
 
 export const useColumn = (
   addMoreTasks: (arg1: string, arg2: string) => void,
-  columnId: string
+  columnId: string,
+  deleteColumnHandler: (columnId: string) => void
 ) => {
   const [taskInputIsOpen, setTaskInputIsOpen] = useState(false);
+  const [columnDialogIsOpen, setColumnDialogIsOpen] = useState(false);
   const inputValue = useRef<HTMLTextAreaElement>(null);
 
   const submitTaskHandler = () => {
@@ -12,14 +15,16 @@ export const useColumn = (
     addMoreTasks(columnId, inputValue.current!.value);
     inputValue.current!.value = '';
   };
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const submitOnEnterHandler = (
-    e: React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
-    if (e.keyCode == 13 && e.shiftKey == false) {
-      e.preventDefault();
-      submitTaskHandler();
-    }
+  const dropdownToggler = () => {
+    addClickAwayHandler(triggerRef, dropdownRef, setColumnDialogIsOpen);
+    setColumnDialogIsOpen((prev) => !prev);
+  };
+
+  const deleteColumn = () => {
+    deleteColumnHandler(columnId);
   };
 
   return {
@@ -27,6 +32,10 @@ export const useColumn = (
     taskInputIsOpen,
     setTaskInputIsOpen,
     submitTaskHandler,
-    submitOnEnterHandler,
+    triggerRef,
+    dropdownRef,
+    columnDialogIsOpen,
+    dropdownToggler,
+    deleteColumn,
   };
 };

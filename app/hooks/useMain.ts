@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DragUpdate, DropResult } from 'react-beautiful-dnd';
 import {
   addColumn,
   addTask,
+  deleteColumn,
+  deleteTask,
   getBoard,
   reorderColumn,
   reorderTask,
@@ -16,12 +18,16 @@ export const useMain = () => {
     columnOrder: [],
   });
 
+  const [columnInputIsOpen, setColumnInputIsOpen] = useState(false);
+
   const [placeholderProps, setPlaceholderProps] = useState<Placeholder>({
     clientHeight: null,
     clientWidth: null,
     clientX: null,
     clientY: null,
   });
+
+  const inputValue = useRef<HTMLInputElement>(null);
 
   const getData = async () => {
     try {
@@ -204,13 +210,14 @@ export const useMain = () => {
     }
   };
 
-  const addMoreColumns = async () => {
+  const addMoreColumns = async (title: string) => {
+    if (!title) return;
     const lastColumnId = data?.columnOrder?.at(-1);
     const lastIndexOfColumn = lastColumnId
       ? data?.columns[lastColumnId]?.columnPosition
       : null;
     try {
-      const response = await addColumn(lastIndexOfColumn);
+      const response = await addColumn(lastIndexOfColumn, title);
       const newColumnInfo = response;
       setData((prev) => ({
         ...prev,
@@ -255,6 +262,52 @@ export const useMain = () => {
     }
   };
 
+  const submitColumnHandler = () => {
+    setColumnInputIsOpen(false);
+    addMoreColumns(inputValue.current!.value);
+    inputValue.current!.value = '';
+  };
+
+  const deleteTaskHandler = async (taskId: string, columnId: string) => {
+    try {
+      setData((prev) => {
+        const { tasks, columns, ...rest } = prev;
+        const newTasks = { ...tasks };
+        const newColumns = { ...columns };
+
+        delete newTasks[taskId];
+        newColumns[columnId].taskIds = newColumns[columnId].taskIds.filter(
+          (task) => task !== taskId
+        );
+
+        return { tasks: newTasks, columns: newColumns, ...rest };
+      });
+      await deleteTask(taskId);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const deleteColumnHandler = async (columnId: string) => {
+    try {
+      setData((prev) => {
+        const { columnOrder, columns, ...rest } = prev;
+        const newColumns = { ...columns };
+
+        delete newColumns[columnId];
+
+        return {
+          columns: newColumns,
+          columnOrder: columnOrder.filter((column) => column !== columnId),
+          ...rest,
+        };
+      });
+      await deleteColumn(columnId);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   return {
     data,
     setData,
@@ -263,5 +316,11 @@ export const useMain = () => {
     addMoreTasks,
     onDragUpdate,
     placeholderProps,
+    columnInputIsOpen,
+    setColumnInputIsOpen,
+    inputValue,
+    submitColumnHandler,
+    deleteTaskHandler,
+    deleteColumnHandler,
   };
 };
