@@ -4,6 +4,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useMain } from '../hooks';
 import { submitOnEnterHandler } from 'helpers';
 import { X } from 'components';
+import { getCookie } from 'cookies-next';
 
 export default function Home() {
   const {

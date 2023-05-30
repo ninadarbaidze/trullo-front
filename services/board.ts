@@ -1,7 +1,12 @@
 import axios from 'services/axios';
 
-export const getBoard = async (boardId: number = 1) => {
-  const res = await axios.get(`/board/${boardId}`, {});
+export const getBoard = async (boardId: number = 1, token: string) => {
+  const res = await axios.get(`/board/${boardId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+    },
+  });
   return res.data;
 };
 

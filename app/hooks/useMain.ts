@@ -1,3 +1,4 @@
+import { getCookie } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
 import { DragUpdate, DropResult } from 'react-beautiful-dnd';
 import {
@@ -31,7 +32,7 @@ export const useMain = () => {
 
   const getData = async () => {
     try {
-      const board = await getBoard();
+      const board = await getBoard(1, getCookie('token') as string);
       setData(board);
     } catch (err: any) {
       console.error(err);

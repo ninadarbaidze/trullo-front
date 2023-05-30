@@ -25,3 +25,14 @@ export type Placeholder = {
   clientX: number | null;
   clientY: number | null;
 };
+
+export type RegisterData = {
+  username: string;
+  email: string;
+  password: string;
+  repeat_password?: string;
+};
+export type LoginData = {
+  username: string;
+  password: string;
+};

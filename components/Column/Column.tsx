@@ -1,3 +1,4 @@
+'use client';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ActionDialog, TaskList, ThreeDots, X } from 'components';
 import { useColumn } from './useColumn';

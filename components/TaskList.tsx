@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { TaskType } from 'types/global';
 import { Task } from 'components';
