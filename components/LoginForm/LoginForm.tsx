@@ -43,8 +43,7 @@ const LoginForm = () => {
         <div className='flex items-center justify-between'>
           <div className='flex items-center'>
             <input
-              id='remember-me'
-              name='remember-me'
+              {...form.register('remember')}
               type='checkbox'
               className='h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600'
             />

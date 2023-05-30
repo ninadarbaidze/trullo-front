@@ -8,12 +8,13 @@ export const useLoginForm = () => {
   const form = useForm<LoginData>({
     defaultValues: {
       username: '',
-
+      remember: false,
       password: '',
     },
   });
 
   const onSubmit = async (data: LoginData) => {
+    console.log(data);
     try {
       const response = await loginUser(data);
       console.log(response);
