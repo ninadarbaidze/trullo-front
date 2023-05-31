@@ -12,7 +12,7 @@ const Auth = () => {
         !errorExists ? 'YOUR ACCOUNT IS VERIFIED' : 'UPS.. SOMETHINGS WRONG'
       }
       buttonText={!errorExists ? 'Go to boards' : 'Back to sign up'}
-      buttonUrl={!errorExists ? '/board' : '/user/register'}
+      buttonUrl={!errorExists ? '/boards' : '/user/register'}
     >
       <div
         className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${

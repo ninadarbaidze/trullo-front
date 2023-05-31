@@ -4,7 +4,7 @@ import { useRegisterForm } from './useRegisterForm';
 import { FormProvider } from 'react-hook-form';
 
 const RegisterForm = () => {
-  const { onSubmit, form } = useRegisterForm();
+  const { onSubmit, form, router } = useRegisterForm();
   return (
     <FormProvider {...form}>
       <form className='space-y-6' onSubmit={form.handleSubmit(onSubmit)}>
@@ -19,7 +19,7 @@ const RegisterForm = () => {
             <input
               {...form.register('username')}
               type='text'
-              className='block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+              className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
           </div>
         </div>
@@ -34,7 +34,7 @@ const RegisterForm = () => {
             <input
               {...form.register('email')}
               type='email'
-              className='block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+              className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
           </div>
         </div>
@@ -42,7 +42,7 @@ const RegisterForm = () => {
         <div>
           <label
             htmlFor='password'
-            className='block text-sm font-medium leading-6 text-gray-900'
+            className='block text-sm pl-2 font-medium leading-6 text-gray-900'
           >
             Password
           </label>
@@ -50,7 +50,7 @@ const RegisterForm = () => {
             <input
               {...form.register('password')}
               type='password'
-              className='block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+              className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
           </div>
         </div>
@@ -71,39 +71,23 @@ const RegisterForm = () => {
           </div>
         </div>
 
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center'>
-            <input
-              id='remember-me'
-              name='remember-me'
-              type='checkbox'
-              className='h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600'
-            />
-            <label
-              htmlFor='remember-me'
-              className='ml-3 block text-sm leading-6 text-gray-700'
-            >
-              Remember me
-            </label>
-          </div>
-
-          <div className='text-sm leading-6'>
-            <a
-              href='#'
-              className='font-semibold text-indigo-600 hover:text-indigo-500'
-            >
-              Forgot password?
-            </a>
-          </div>
-        </div>
-
         <div>
           <button
             type='submit'
-            className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+            className='flex w-full justify-center rounded-md bg-blue500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
           >
-            Sign in
+            Sign up
           </button>
+          <div className='text-xs flex pt-1  justify-center'>
+            Already have an account?{' '}
+            <span
+              className='pl-1 text-blue-500 cursor-pointer'
+              onClick={() => router.push('/user/login')}
+            >
+              {' '}
+              Log in
+            </span>
+          </div>
         </div>
       </form>
     </FormProvider>

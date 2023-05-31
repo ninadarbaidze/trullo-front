@@ -7,3 +7,5 @@ export * from './RegisterForm';
 export * from './LoginForm';
 export * from './AuthWrapper';
 export * from './InformationModal';
+export * from './Logo';
+export * from './AllBoardButton';

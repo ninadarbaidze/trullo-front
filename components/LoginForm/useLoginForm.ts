@@ -1,10 +1,11 @@
-import { cookies } from 'next/dist/client/components/headers';
 import { useForm } from 'react-hook-form';
 import { loginUser } from 'services';
 import { LoginData } from 'types/global';
 import { setCookie } from 'cookies-next';
+import { useRouter } from 'next/navigation';
 
 export const useLoginForm = () => {
+  const router = useRouter();
   const form = useForm<LoginData>({
     defaultValues: {
       username: '',
@@ -19,11 +20,12 @@ export const useLoginForm = () => {
       const response = await loginUser(data);
       console.log(response);
       setCookie('token', response.accessToken, { maxAge: 15 * 60 * 1000 });
-      setCookie('user', response.userId, { maxAge: 15 * 60 * 1000 });
+      setCookie('user', response.user, { maxAge: 15 * 60 * 1000 });
+      router.push('/boards');
     } catch (err: any) {
       console.error(err);
     }
     console.log(data);
   };
-  return { form, onSubmit };
+  return { form, onSubmit, router };
 };

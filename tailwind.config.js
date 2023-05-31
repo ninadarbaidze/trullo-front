@@ -13,6 +13,7 @@ module.exports = {
         blue200: '#DAE4FD',
         blue500: '#2F80ED',
         gray200: '#E0E0E0',
+        gray250: '#F2F2F2',
         gray300: '#828282',
       },
     },

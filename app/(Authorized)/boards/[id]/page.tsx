@@ -1,10 +1,9 @@
 'use client';
 import Column from 'components/Column/Column';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { useMain } from '../hooks';
+import { useMain } from '../../../hooks';
 import { submitOnEnterHandler } from 'helpers';
 import { X } from 'components';
-import { getCookie } from 'cookies-next';
 
 export default function Home() {
   const {
@@ -22,7 +21,7 @@ export default function Home() {
   } = useMain();
 
   return (
-    <div className='flex flex-row px-16 py-24  text-black'>
+    <div className='flex flex-row py-24  text-black  px-8'>
       <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
         <Droppable
           droppableId='all-columns'

@@ -1,8 +1,10 @@
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { registerUser } from 'services';
 import { RegisterData } from 'types/global';
 
 export const useRegisterForm = () => {
+  const router = useRouter();
   const form = useForm<RegisterData>({
     defaultValues: {
       username: '',
@@ -20,5 +22,5 @@ export const useRegisterForm = () => {
     }
     console.log(data);
   };
-  return { form, onSubmit };
+  return { form, onSubmit, router };
 };

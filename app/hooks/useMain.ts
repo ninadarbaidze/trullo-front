@@ -1,4 +1,5 @@
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
+import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { DragUpdate, DropResult } from 'react-beautiful-dnd';
 import {
@@ -19,6 +20,8 @@ export const useMain = () => {
     columnOrder: [],
   });
 
+  const params = useParams();
+
   const [columnInputIsOpen, setColumnInputIsOpen] = useState(false);
 
   const [placeholderProps, setPlaceholderProps] = useState<Placeholder>({
@@ -32,7 +35,8 @@ export const useMain = () => {
 
   const getData = async () => {
     try {
-      const board = await getBoard(1, getCookie('token') as string);
+      const board = await getBoard(+params.id, getCookie('token') as string);
+      setCookie('board', board.name);
       setData(board);
     } catch (err: any) {
       console.error(err);
