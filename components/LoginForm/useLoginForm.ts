@@ -19,8 +19,8 @@ export const useLoginForm = () => {
     try {
       const response = await loginUser(data);
       console.log(response);
-      setCookie('token', response.accessToken, { maxAge: 15 * 60 * 1000 });
-      setCookie('user', response.user, { maxAge: 15 * 60 * 1000 });
+      setCookie('token', response.accessToken);
+      setCookie('user', response.user);
       router.push('/boards');
     } catch (err: any) {
       console.error(err);

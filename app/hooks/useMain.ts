@@ -313,6 +313,16 @@ export const useMain = () => {
     }
   };
 
+  const changeColumnNameHandler = (columnId: string, title: string) => {
+    setData((prev) => ({
+      ...prev,
+      columns: {
+        ...prev.columns,
+        [columnId]: { ...prev.columns[columnId], title },
+      },
+    }));
+  };
+
   return {
     data,
     setData,
@@ -327,5 +337,6 @@ export const useMain = () => {
     submitColumnHandler,
     deleteTaskHandler,
     deleteColumnHandler,
+    changeColumnNameHandler,
   };
 };

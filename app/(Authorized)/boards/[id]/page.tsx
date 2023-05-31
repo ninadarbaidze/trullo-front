@@ -18,6 +18,7 @@ export default function Home() {
     deleteTaskHandler,
     inputValue,
     deleteColumnHandler,
+    changeColumnNameHandler,
   } = useMain();
 
   return (
@@ -50,6 +51,7 @@ export default function Home() {
                       placeholderProps={placeholderProps}
                       deleteTaskHandler={deleteTaskHandler}
                       deleteColumnHandler={deleteColumnHandler}
+                      changeColumnNameHandler={changeColumnNameHandler}
                     />
                   );
                 })}

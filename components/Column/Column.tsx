@@ -4,6 +4,7 @@ import { ActionDialog, TaskList, ThreeDots, X } from 'components';
 import { useColumn } from './useColumn';
 import { submitOnEnterHandler } from 'helpers';
 import { PropsTypes } from './types';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Column: React.FC<PropsTypes> = (props) => {
   const {
@@ -16,7 +17,17 @@ const Column: React.FC<PropsTypes> = (props) => {
     columnDialogIsOpen,
     dropdownToggler,
     deleteColumn,
-  } = useColumn(props.addMoreTasks, props.column.id, props.deleteColumnHandler);
+    columnName,
+    editColumnHandler,
+    isInEditMode,
+    setIsInEditMode,
+    openColumnEditMode,
+  } = useColumn(
+    props.addMoreTasks,
+    props.column.id,
+    props.deleteColumnHandler,
+    props.changeColumnNameHandler
+  );
 
   return (
     <Draggable
@@ -36,11 +47,39 @@ const Column: React.FC<PropsTypes> = (props) => {
           >
             {columnDialogIsOpen && (
               <div className='absolute top-10 right-4 z-50' ref={dropdownRef}>
-                <ActionDialog deleteHandler={deleteColumn} />
+                <ActionDialog
+                  deleteHandler={deleteColumn}
+                  canRename={true}
+                  editHandler={openColumnEditMode}
+                />
               </div>
             )}
             <section className='flex items-start justify-between py-2'>
-              <div className='pr-1'> {props.column.title}</div>
+              {isInEditMode ? (
+                <div className='relative'>
+                  <input
+                    ref={columnName}
+                    name='new-column'
+                    className='bg-white w-[85%] p-2  break-all text-xs shadow-md align-top rounded-xl'
+                    placeholder='Enter list title..'
+                    onKeyDown={(e) =>
+                      submitOnEnterHandler(e, editColumnHandler)
+                    }
+                    defaultValue={props.column.title}
+                  />
+                  <nav className='flex gap-1 absolute top-6 right-10'>
+                    <button onClick={() => editColumnHandler()}>
+                      <CheckIcon className='text-white bg-blue500 w-5 rounded-full z-20' />
+                    </button>
+                    <button onClick={() => setIsInEditMode(false)}>
+                      <XMarkIcon className='text-white bg-red-500 w-5 rounded-full z-20' />
+                    </button>
+                  </nav>
+                </div>
+              ) : (
+                <div className='pr-1'> {props.column.title}</div>
+              )}
+
               <button
                 ref={triggerRef}
                 className='pt-1'

@@ -7,4 +7,5 @@ export type PropsTypes = {
   placeholderProps: Placeholder;
   deleteTaskHandler: (taskId: string, columnId: string) => void;
   deleteColumnHandler: (columnId: string) => void;
+  changeColumnNameHandler: (columnId: string, title: string) => void;
 };

@@ -72,3 +72,10 @@ export const deleteColumn = async (columnId: string) => {
   const res = await axios.delete(`/delete-column/${columnId.slice(7)}`);
   return res.data;
 };
+
+export const updateColumn = async (columnId: string, title: string) => {
+  const res = await axios.patch(`/update-column/${columnId.slice(7)}`, {
+    title,
+  });
+  return res.data;
+};
