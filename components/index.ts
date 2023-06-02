@@ -9,3 +9,7 @@ export * from './AuthWrapper';
 export * from './InformationModal';
 export * from './Logo';
 export * from './AllBoardButton';
+export * from './AddBoardModal';
+export * from './ModalWrapper';
+export * from './AddButton';
+export * from './FileUploader';

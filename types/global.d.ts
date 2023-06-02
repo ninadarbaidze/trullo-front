@@ -37,3 +37,10 @@ export type LoginData = {
   password: string;
   remember?: boolean;
 };
+
+export type Boards = {
+  id: number;
+  name: string;
+  image: string | null;
+  userId: number;
+};

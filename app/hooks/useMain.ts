@@ -222,7 +222,7 @@ export const useMain = () => {
       ? data?.columns[lastColumnId]?.columnPosition
       : null;
     try {
-      const response = await addColumn(lastIndexOfColumn, title);
+      const response = await addColumn(lastIndexOfColumn, title, +params.id);
       const newColumnInfo = response;
       setData((prev) => ({
         ...prev,
@@ -244,7 +244,12 @@ export const useMain = () => {
       const lastIndexInColumn = lastTaskId
         ? data?.tasks[lastTaskId].taskPosition
         : null;
-      const response = await addTask(columnId, lastIndexInColumn, content);
+      const response = await addTask(
+        columnId,
+        lastIndexInColumn,
+        content,
+        +params.id
+      );
 
       const newTaskInfo = response;
       setData((prev) => ({

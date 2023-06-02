@@ -98,7 +98,7 @@ const Column: React.FC<PropsTypes> = (props) => {
                   ref={provided.innerRef}
                   className={`${
                     snapshot.isDraggingOver ? ' relative' : 'bg-babyBlue'
-                  } flex flex-col  flex-grow min-h-[100px]`}
+                  } flex flex-col  flex-grow `}
                 >
                   <ul className={` flex flex-col `}>
                     <TaskList

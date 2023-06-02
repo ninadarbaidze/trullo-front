@@ -9,7 +9,7 @@ const TaskList: React.FC<{
 }> = (props) => {
   return (
     <>
-      {props.tasks.map((task, index: number) => (
+      {props.tasks?.map((task, index: number) => (
         <Task
           task={task}
           index={index}

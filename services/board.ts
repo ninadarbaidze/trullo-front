@@ -1,12 +1,40 @@
 import axios from 'services/axios';
 
-export const getBoard = async (boardId: number = 1, token: string) => {
+export const getBoard = async (boardId: number, token: string) => {
   const res = await axios.get(`/board/${boardId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
     },
   });
+  return res.data;
+};
+
+export const getAllBoard = async (userId: number, token: string) => {
+  const res = await axios.get(`/boards/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+    },
+  });
+  return res.data;
+};
+
+export const createBoard = async (
+  name: string,
+  token: string,
+  userId: number
+) => {
+  const res = await axios.post(
+    `/create-board`,
+    { name, userId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    }
+  );
   return res.data;
 };
 
@@ -42,7 +70,7 @@ export const reorderColumn = async (
 export const addColumn = async (
   lastIndexOfColumn: number | null,
   title: string = 'todo',
-  boardId: number = 1
+  boardId: number
 ) => {
   const res = await axios.post(`/create-column/${boardId}`, {
     title,
@@ -54,11 +82,13 @@ export const addColumn = async (
 export const addTask = async (
   columnId: string,
   lastIndexOfColumn: number | null,
-  content: string = 'task 5'
+  content: string,
+  boardId: number
 ) => {
   const res = await axios.post(`/create-task/${columnId.slice(7)}`, {
     content,
     prevIndex: lastIndexOfColumn,
+    boardId,
   });
   return res.data;
 };

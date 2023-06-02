@@ -17,7 +17,7 @@ export default function BoardLayout({
 
   return (
     <section className='flex'>
-      <header className='flex items-center justify-between  w-screen h-16  shadow-sm fixed px-8'>
+      <header className='flex items-center justify-between  w-screen h-16 bg-white shadow-sm fixed px-8'>
         <section className='flex justify-between w-1/2 pr-[10%]'>
           <div className='flex items-center gap-2'>
             <Logo />
