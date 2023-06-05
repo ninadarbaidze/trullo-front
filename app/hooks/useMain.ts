@@ -20,6 +20,7 @@ export const useMain = () => {
     columnOrder: [],
     name: '',
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const params = useParams();
 
@@ -37,9 +38,9 @@ export const useMain = () => {
   const getData = async () => {
     try {
       const board = await getBoard(+params.id, getCookie('token') as string);
-      console.log(board);
       setCookie('board', board.name);
       setData(board);
+      setIsLoading(false);
     } catch (err: any) {
       console.error(err);
     }
@@ -345,5 +346,6 @@ export const useMain = () => {
     deleteTaskHandler,
     deleteColumnHandler,
     changeColumnNameHandler,
+    isLoading,
   };
 };

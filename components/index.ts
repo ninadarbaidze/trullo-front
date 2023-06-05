@@ -14,3 +14,5 @@ export * from './ModalWrapper';
 export * from './AddButton';
 export * from './FileUploader';
 export * from './MenuNavigation';
+export * from './SquareLoader';
+export * from './BoardSkeleton';

@@ -8,6 +8,7 @@ import { Boards } from 'types/global';
 export const useBoards = () => {
   const [boards, setBoards] = useState<Boards[]>([]);
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   const { user } = useContext(AuthContext);
@@ -16,6 +17,7 @@ export const useBoards = () => {
     try {
       const boards = await getAllBoard(user.id!, getCookie('token') as string);
       setBoards(boards);
+      setIsLoading(false);
     } catch (err: any) {
       console.error(err);
     }
@@ -57,5 +59,6 @@ export const useBoards = () => {
     setAddModalIsOpen,
     addNewBoardHandler,
     closeModalHandler,
+    isLoading,
   };
 };

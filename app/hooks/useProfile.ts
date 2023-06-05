@@ -19,6 +19,7 @@ export const useProfile = () => {
   const [imageReseted, setImageReseted] = useState(false);
   const [passwordChangeIsOpen, setPasswordChangeIsOpen] = useState(false);
   const [isInEditMode, setIsInEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
   const setCustomImage = (image: string) => {
     setPreviewImage(image);
   };
@@ -39,6 +40,7 @@ export const useProfile = () => {
     try {
       const profile = await getProfile(getCookie('token') as string, user.id!);
       form.reset({ ...profile, image: profile.avatar });
+      setLoading(false);
     } catch (err: any) {
       console.error(err);
     }
@@ -77,5 +79,6 @@ export const useProfile = () => {
     imageUrl,
     isInEditMode,
     setIsInEditMode,
+    loading,
   };
 };
