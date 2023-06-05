@@ -36,7 +36,7 @@ const Boards = () => {
               className=' col-span-1 bg-white  py-3 rounded-xl shadow-md cursor-pointer px-5'
               onClick={() => router.push(`/boards/${board.id}`)}
             >
-              <div className='flex  overflow-clip max-w-96 h-48 relative rounded-lg object-cover'>
+              <div className='flex  overflow-clip max-w-96 h-48 relative rounded-lg object-cover z-10'>
                 <Image
                   src={board.image ?? NoImage.src}
                   alt='default_profile'

@@ -1,3 +1,4 @@
+import { AuthContextProvider } from 'store';
 import './globals.css';
 import { Poppins } from 'next/font/google';
 

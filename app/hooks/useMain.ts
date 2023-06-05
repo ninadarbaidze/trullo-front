@@ -18,6 +18,7 @@ export const useMain = () => {
     tasks: {},
     columns: {},
     columnOrder: [],
+    name: '',
   });
 
   const params = useParams();
@@ -36,6 +37,7 @@ export const useMain = () => {
   const getData = async () => {
     try {
       const board = await getBoard(+params.id, getCookie('token') as string);
+      console.log(board);
       setCookie('board', board.name);
       setData(board);
     } catch (err: any) {

@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 export const useFileUploader = (
   name: string,
-  setCustomImage?: (file: File) => void
+  setCustomImage?: (file: string) => void
 ) => {
   const [imageIsDraggedOver, setImageIsDraggedOver] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
@@ -12,9 +12,16 @@ export const useFileUploader = (
 
   const { register, setValue, getValues } = useFormContext();
 
+  const imageUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${getValues(
+    'avatar'
+  )}`;
+
+  console.log(imageUrl);
+
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const file = URL.createObjectURL(event.target.files![0]);
-    setCustomImage?.(event.target.files![0]);
+    setValue(name, event.target.files![0]);
+    setCustomImage?.(file);
     setPreviewImage(file);
     setPreviewFileName(event.target.files![0].name);
   };
@@ -23,10 +30,10 @@ export const useFileUploader = (
     e.preventDefault();
     e.stopPropagation();
     let file = e.dataTransfer.files[0];
-    setCustomImage?.(file);
     setValue(name, file);
     setPreviewFileName(file.name);
     setPreviewImage(URL.createObjectURL(file));
+    setCustomImage?.(URL.createObjectURL(file));
   };
 
   const resetImage = (e: MouseEvent) => {
@@ -35,7 +42,7 @@ export const useFileUploader = (
     setPreviewImage('');
     setValue(name, '');
   };
-  console.log(getValues());
+  //   console.log(getValues());
 
   return {
     imageIsDraggedOver,
@@ -47,5 +54,6 @@ export const useFileUploader = (
     setImageIsDraggedOver,
     register,
     resetImage,
+    imageUrl,
   };
 };

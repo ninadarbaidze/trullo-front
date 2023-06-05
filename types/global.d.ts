@@ -2,6 +2,7 @@ export type Board = {
   tasks: { [key: string]: TaskType };
   columns: { [key: string]: ColumnType };
   columnOrder: string[];
+  name: string;
 };
 
 export type TaskType = {
@@ -43,4 +44,21 @@ export type Boards = {
   name: string;
   image: string | null;
   userId: number;
+};
+
+export type Profile = {
+  username: string;
+  email: string;
+  new_password: string;
+  image: blob | string;
+  repeat_password?: string;
+};
+
+export type ProfileBackInfo = {
+  avatar: string;
+  email: string;
+  id: number;
+  isVerified: boolean;
+  password: string;
+  username: string;
 };

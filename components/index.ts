@@ -13,3 +13,4 @@ export * from './AddBoardModal';
 export * from './ModalWrapper';
 export * from './AddButton';
 export * from './FileUploader';
+export * from './MenuNavigation';

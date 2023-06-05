@@ -1,7 +1,8 @@
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { createBoard, getAllBoard } from 'services';
+import { AuthContext } from 'store';
 import { Boards } from 'types/global';
 
 export const useBoards = () => {
@@ -9,10 +10,11 @@ export const useBoards = () => {
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const router = useRouter();
 
+  const { user } = useContext(AuthContext);
+
   const getBoards = async () => {
     try {
-      const userId = JSON.parse(getCookie('user') as string).id;
-      const boards = await getAllBoard(userId, getCookie('token') as string);
+      const boards = await getAllBoard(user.id!, getCookie('token') as string);
       setBoards(boards);
     } catch (err: any) {
       console.error(err);
@@ -24,18 +26,17 @@ export const useBoards = () => {
 
   const addNewBoardHandler = async (boardName: string) => {
     try {
-      const userId = JSON.parse(getCookie('user') as string).id;
       const response = await createBoard(
         boardName,
         getCookie('token') as string,
-        userId
+        user.id!
       );
       setBoards((prev) => {
         const newArr = [...prev];
         newArr.push({
           id: response.boardId,
           name: boardName,
-          userId,
+          userId: user.id!,
           image: null,
         });
         return newArr;

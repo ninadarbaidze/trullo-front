@@ -1,6 +1,10 @@
 import axios from 'services/axios';
+import { Board, Boards } from 'types/global';
 
-export const getBoard = async (boardId: number, token: string) => {
+export const getBoard = async (
+  boardId: number,
+  token: string
+): Promise<Board> => {
   const res = await axios.get(`/board/${boardId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -10,7 +14,10 @@ export const getBoard = async (boardId: number, token: string) => {
   return res.data;
 };
 
-export const getAllBoard = async (userId: number, token: string) => {
+export const getAllBoard = async (
+  userId: number,
+  token: string
+): Promise<Boards[]> => {
   const res = await axios.get(`/boards/${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -31,13 +38,12 @@ export const createBoard = async (
     {
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
       },
     }
   );
   return res.data;
 };
-
+//TODO add token bearers here
 export const reorderTask = async (
   taskId: number,
   prevTaskId: number,

@@ -13,6 +13,7 @@ const FileUploader: React.FC<Props> = (props) => {
     setImageIsDraggedOver,
     register,
     resetImage,
+    imageUrl,
   } = useFileUploader(props.name, props.setCustomImage);
 
   return (
@@ -26,24 +27,30 @@ const FileUploader: React.FC<Props> = (props) => {
         setImageIsDraggedOver(false);
       }}
       onDrop={(e) => dropHandler(e)}
-      className={`h-28 w-44 ${imageIsDraggedOver ? 'border-blue500' : ''} ${
+      className={`flex flex-col items-center h-28 w-44 ${
+        imageIsDraggedOver ? 'border-blue500' : ''
+      } ${
         !props.hiddenDropBox
           ? ' border-2 border-dashed rounded-lg border-gray-300 transition-all delay-75'
           : ''
       }`}
-      onClick={() => !previewImage && fileRef.current!.click()}
+      onClick={() =>
+        (!previewImage || props.imageReseted) &&
+        !props.disabled &&
+        fileRef.current!.click()
+      }
     >
       {!props.hiddenDropBox && (
         <div className='flex flex-col items-center justify-center h-full '>
           {previewImage ? (
             <div className='relative'>
               <div className='w-12 rounded-md overflow-clip '>
-                <img src={previewImage} alt={'uploaded_image'} />
+                <img src={previewImage || imageUrl} alt={'uploaded_image'} />
               </div>
               <button
                 className='absolute -top-2 -right-2 z-50'
                 type='button'
-                onClick={(e) => resetImage(e)}
+                onClick={(e: any) => resetImage(e)}
               >
                 <XMarkIcon className='bg-red-300 w-4 rounded-full text-red-600' />
               </button>
@@ -84,6 +91,11 @@ const FileUploader: React.FC<Props> = (props) => {
         onChange={(e) => changeHandler(e)}
         hidden
       />
+      {props.uploadBtnText && !props.disabled && (
+        <p className={`${props.uploadBtnStyle} cursor-pointer`}>
+          {props.uploadBtnText}
+        </p>
+      )}
     </div>
   );
 };

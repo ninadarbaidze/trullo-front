@@ -1,3 +1,6 @@
+import { deleteCookie } from 'cookies-next';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+
 export const getCookie = (name: string) => {
   const cookies = document.cookie.split(';');
   for (let i = 0; i < cookies.length; i++) {
@@ -7,4 +10,11 @@ export const getCookie = (name: string) => {
     }
   }
   return null;
+};
+
+export const logOutHandler = (router: AppRouterInstance) => {
+  router.push('/user/login');
+  deleteCookie('token');
+  deleteCookie('user');
+  deleteCookie('board');
 };
