@@ -41,7 +41,7 @@ const Page = () => {
               <button
                 className='absolute top-0 right-24 z-50'
                 type='button'
-                onClick={(e) => resetImage(e)}
+                onClick={(e) => resetImage(e as any)}
               >
                 <XMarkIcon className='bg-red-300 w-4 rounded-full text-red-600' />
               </button>

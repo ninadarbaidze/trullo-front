@@ -2,17 +2,11 @@
 import { AllBoardButton, Logo, MenuNavigation } from 'components';
 import { Profile } from 'public/images';
 import Image from 'next/image';
-import {
-  ChevronDownIcon,
-  UserCircleIcon,
-  PowerIcon,
-  SquaresPlusIcon,
-} from '@heroicons/react/24/outline';
-import { useParams, usePathname } from 'next/navigation';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { useParams } from 'next/navigation';
 import { getCookie } from 'cookies-next';
 import { useRef, useState } from 'react';
-import { addClickAwayHandler, logOutHandler } from 'helpers';
-import Link from 'next/link';
+import { addClickAwayHandler } from 'helpers';
 import { useRouter } from 'next/navigation';
 import { AuthContextProvider } from 'store';
 

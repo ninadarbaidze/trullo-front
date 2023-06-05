@@ -1,5 +1,5 @@
 import { getCookie } from 'cookies-next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { getProfile, updateProfile } from 'services';
 import { AuthContext } from 'store';
@@ -29,7 +29,7 @@ export const useProfile = () => {
     'image'
   )}`;
 
-  const resetImage = (e: React.MouseEvent<HTMLButtonElement, HTMLElement>) => {
+  const resetImage = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setPreviewImage('');
     form.setValue('image', '');
