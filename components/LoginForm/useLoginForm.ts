@@ -15,17 +15,14 @@ export const useLoginForm = () => {
   });
 
   const onSubmit = async (data: LoginData) => {
-    console.log(data);
     try {
       const response = await loginUser(data);
-      console.log(response);
       setCookie('token', response.accessToken);
       setCookie('user', response.user);
       router.push('/boards');
     } catch (err: any) {
       console.error(err);
     }
-    console.log(data);
   };
   return { form, onSubmit, router };
 };

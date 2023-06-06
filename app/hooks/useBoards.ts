@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import { createBoard, getAllBoard } from 'services';
 import { AuthContext } from 'store';
 import { Boards } from 'types/global';
+import { NoImage } from 'public/images';
 
 export const useBoards = () => {
   const [boards, setBoards] = useState<Boards[]>([]);
@@ -13,9 +14,11 @@ export const useBoards = () => {
 
   const { user } = useContext(AuthContext);
 
+  const token = getCookie('token') as unknown as string;
+
   const getBoards = async () => {
     try {
-      const boards = await getAllBoard(user.id!, getCookie('token') as string);
+      const boards = await getAllBoard(user.id!, token);
       setBoards(boards);
       setIsLoading(false);
     } catch (err: any) {
@@ -26,24 +29,24 @@ export const useBoards = () => {
     getBoards();
   }, []);
 
-  const addNewBoardHandler = async (boardName: string) => {
+  const addNewBoardHandler = async (data: { name: string; image: File }) => {
+    setIsLoading(true);
+    setAddModalIsOpen(false);
+
     try {
-      const response = await createBoard(
-        boardName,
-        getCookie('token') as string,
-        user.id!
-      );
-      setBoards((prev) => {
-        const newArr = [...prev];
-        newArr.push({
-          id: response.boardId,
-          name: boardName,
-          userId: user.id!,
-          image: null,
-        });
-        return newArr;
+      const formData = new FormData();
+      const keys = Object.keys(data);
+
+      keys.forEach((key: string) => {
+        formData.append(
+          `${key}`,
+          data[key as keyof { name: string; image: File }]
+        );
       });
-      setAddModalIsOpen(false);
+
+      formData.append('userId', user.id!);
+      await createBoard(formData, token);
+      await getBoards();
     } catch (err: any) {
       console.error(err);
     }
@@ -52,6 +55,11 @@ export const useBoards = () => {
     setAddModalIsOpen(false);
   };
 
+  const getImage = (board: Boards) => {
+    if (board?.image) {
+      return `${process.env.NEXT_PUBLIC_BACKEND_URL}/${board.image}`;
+    } else return NoImage.src;
+  };
   return {
     boards,
     router,
@@ -60,5 +68,6 @@ export const useBoards = () => {
     addNewBoardHandler,
     closeModalHandler,
     isLoading,
+    getImage,
   };
 };

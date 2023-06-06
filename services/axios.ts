@@ -20,7 +20,6 @@ instance.interceptors.response.use(
       error.response.status === 401 &&
       error.response.data.message.includes('expired')
     ) {
-      console.log('here');
       try {
         return instance.get('/refresh_token').then((response) => {
           const newAccessToken = response.data.token;

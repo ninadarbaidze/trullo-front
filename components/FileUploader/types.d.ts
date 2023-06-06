@@ -6,4 +6,5 @@ export type Props = {
   uploadBtnText?: string;
   imageReseted?: boolean;
   disabled?: boolean;
+  boxClassName?: string;
 };

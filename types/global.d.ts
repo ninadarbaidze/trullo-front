@@ -62,3 +62,7 @@ export type ProfileBackInfo = {
   password: string;
   username: string;
 };
+
+export interface UserProfile extends ProfileBackInfo {
+  name?: string;
+}

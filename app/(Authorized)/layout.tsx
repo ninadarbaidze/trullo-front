@@ -5,10 +5,11 @@ import Image from 'next/image';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { useParams } from 'next/navigation';
 import { getCookie } from 'cookies-next';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { addClickAwayHandler } from 'helpers';
 import { useRouter } from 'next/navigation';
 import { AuthContextProvider } from 'store';
+import { ProfileBackInfo, UserProfile } from 'types/global';
 
 export default function BoardLayout({
   children,
@@ -18,9 +19,16 @@ export default function BoardLayout({
   const params = useParams();
   const router = useRouter();
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false);
+  const [user, setUser] = useState<Partial<UserProfile>>({});
+  const [boardName, setBoardName] = useState('');
 
-  const user = JSON.parse(getCookie('user') as string);
-  const boardName = getCookie('board');
+  useEffect(() => {
+    const user = !!getCookie('user') && JSON.parse(getCookie('user') as string);
+    const boardName = getCookie('board') as string;
+
+    setUser(user);
+    setBoardName(boardName);
+  }, []);
 
   const dropDownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -28,6 +36,12 @@ export default function BoardLayout({
   const toggleDropDown = () => {
     setUserMenuIsOpen((prev) => !prev);
     addClickAwayHandler(triggerRef, dropDownRef, setUserMenuIsOpen);
+  };
+
+  const getAvatarHandler = () => {
+    return user?.avatar
+      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
+      : Profile.src;
   };
 
   return (
@@ -70,11 +84,8 @@ export default function BoardLayout({
               <div className='flex items-center gap-3 '>
                 <div className='w-10'>
                   <Image
-                    src={
-                      user?.avatar
-                        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user.avatar}`
-                        : Profile.src
-                    }
+                    src={getAvatarHandler()}
+                    loader={getAvatarHandler}
                     width={100}
                     height={100}
                     alt='default_profile'

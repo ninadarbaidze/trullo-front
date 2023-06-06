@@ -33,7 +33,7 @@ export const updateProfile = async (
   data: FormData,
   token: string,
   userId: number
-) => {
+): Promise<{ message: string; userInfo: ProfileBackInfo }> => {
   const res = await axios.put(`/update-profile/${userId}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,

@@ -1,7 +1,18 @@
-import { useRef } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 export const useAddBoardModal = () => {
-  const inputValue = useRef<HTMLInputElement>(null);
+  const [previewImage, setPreviewImage] = useState('');
+  const form = useForm({
+    defaultValues: {
+      image: '',
+      name: '',
+    },
+  });
 
-  return { inputValue };
+  const setCustomImage = (image: string) => {
+    setPreviewImage(image);
+  };
+
+  return { form, previewImage, setCustomImage, setPreviewImage };
 };

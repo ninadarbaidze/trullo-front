@@ -20,7 +20,6 @@ export const useRegisterForm = () => {
     } catch (err: any) {
       console.error(err);
     }
-    console.log(data);
   };
   return { form, onSubmit, router };
 };

@@ -33,6 +33,8 @@ export const useMain = () => {
     clientY: null,
   });
 
+  const token = getCookie('token') as string;
+
   const inputValue = useRef<HTMLInputElement>(null);
 
   const getData = async () => {
@@ -62,7 +64,8 @@ export const useMain = () => {
       prevTaskId,
       nextTaskId,
       isChangingColumn,
-      columnId
+      columnId,
+      token
     );
   };
 
@@ -71,7 +74,7 @@ export const useMain = () => {
     prevColumnId: number,
     nextColumnId: number
   ) => {
-    await reorderColumn(+columnId, prevColumnId, nextColumnId);
+    await reorderColumn(+columnId, prevColumnId, nextColumnId, token);
   };
 
   const onDragEnd = (result: DropResult) => {
@@ -225,7 +228,12 @@ export const useMain = () => {
       ? data?.columns[lastColumnId]?.columnPosition
       : null;
     try {
-      const response = await addColumn(lastIndexOfColumn, title, +params.id);
+      const response = await addColumn(
+        lastIndexOfColumn,
+        title,
+        +params.id,
+        token
+      );
       const newColumnInfo = response;
       setData((prev) => ({
         ...prev,
@@ -251,7 +259,8 @@ export const useMain = () => {
         columnId,
         lastIndexInColumn,
         content,
-        +params.id
+        +params.id,
+        token
       );
 
       const newTaskInfo = response;
@@ -295,7 +304,7 @@ export const useMain = () => {
 
         return { tasks: newTasks, columns: newColumns, ...rest };
       });
-      await deleteTask(taskId);
+      await deleteTask(taskId, token);
     } catch (err: any) {
       console.error(err);
     }
@@ -315,7 +324,7 @@ export const useMain = () => {
           ...rest,
         };
       });
-      await deleteColumn(columnId);
+      await deleteColumn(columnId, token);
     } catch (err: any) {
       console.error(err);
     }

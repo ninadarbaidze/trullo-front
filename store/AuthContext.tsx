@@ -13,8 +13,9 @@ export const AuthContext = createContext({
 export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = (
   props
 ) => {
-  const user = getCookie('user') && JSON.parse(getCookie('user') as string);
+  const user = !!getCookie('user') && JSON.parse(getCookie('user') as string);
   const boardName = getCookie('board') as string;
+
   const initialContext = {
     user: {
       id: user?.id,

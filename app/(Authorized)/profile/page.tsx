@@ -31,7 +31,7 @@ const Page = () => {
           >
             <div className='flex flex-col items-center relative'>
               <div className='bg-default bg-cover w-36 h-36 rounded-full overflow-clip shadow'>
-                <img src={imageUrl || previewImage} alt='' />
+                <img src={previewImage || imageUrl} alt='' />
               </div>
               <FileUploader
                 name='image'
@@ -41,9 +41,9 @@ const Page = () => {
                 imageReseted={true}
                 disabled={!isInEditMode}
               />
-              {previewImage && (
+              {previewImage && isInEditMode && (
                 <button
-                  className='absolute top-0 right-24 z-50'
+                  className='absolute top-0 right-12 z-50'
                   type='button'
                   onClick={(e) => resetImage(e as any)}
                 >

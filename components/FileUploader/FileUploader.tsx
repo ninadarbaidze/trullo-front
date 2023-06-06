@@ -27,8 +27,8 @@ const FileUploader: React.FC<Props> = (props) => {
         setImageIsDraggedOver(false);
       }}
       onDrop={(e) => dropHandler(e)}
-      className={`flex flex-col items-center h-28 w-44 ${
-        imageIsDraggedOver ? 'border-blue500' : ''
+      className={`${props.boxClassName} flex flex-col items-center h-28 w-44 ${
+        imageIsDraggedOver ? '!border-blue500' : ''
       } ${
         !props.hiddenDropBox
           ? ' border-2 border-dashed rounded-lg border-gray-300 transition-all delay-75'

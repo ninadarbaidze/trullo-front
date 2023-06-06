@@ -1,4 +1,4 @@
 export type Props = {
-  addNewBoardHandler: (boardName: string) => void;
+  addNewBoardHandler: ({ name: string, image: File }) => void;
   closeModalHandler: () => void;
 };

@@ -1,3 +1,4 @@
+import { getCookie } from 'cookies-next';
 import { addClickAwayHandler } from 'helpers';
 import { useRef, useState } from 'react';
 import { updateColumn } from 'services';
@@ -14,6 +15,8 @@ export const useColumn = (
   const inputValue = useRef<HTMLTextAreaElement>(null);
   const columnName = useRef<HTMLInputElement>(null);
 
+  const token = getCookie('token') as string;
+
   const submitTaskHandler = () => {
     setTaskInputIsOpen(false);
     addMoreTasks(columnId, inputValue.current!.value);
@@ -25,7 +28,7 @@ export const useColumn = (
       setColumnDialogIsOpen(false);
       const newColumnTitle = columnName.current!.value;
       changeColumnNameHandler(columnId, newColumnTitle);
-      await updateColumn(columnId, newColumnTitle);
+      await updateColumn(columnId, newColumnTitle, token);
       setIsInEditMode(false);
     } catch (err: any) {
       console.error(err);

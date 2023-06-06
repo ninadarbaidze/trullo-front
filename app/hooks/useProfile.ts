@@ -1,4 +1,4 @@
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { useContext, useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { getProfile, updateProfile } from 'services';
@@ -20,6 +20,7 @@ export const useProfile = () => {
   const [passwordChangeIsOpen, setPasswordChangeIsOpen] = useState(false);
   const [isInEditMode, setIsInEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const setCustomImage = (image: string) => {
     setPreviewImage(image);
   };
@@ -60,7 +61,18 @@ export const useProfile = () => {
       keys.forEach((key: string) => {
         formData.append(`${key}`, data[key as keyof Profile]);
       });
-      await updateProfile(formData, getCookie('token') as string, user.id!);
+      const response = await updateProfile(
+        formData,
+        getCookie('token') as string,
+        user.id!
+      );
+      setCookie('user', {
+        id: response.userInfo.id,
+        avatar: `${response.userInfo.avatar}`,
+        name: response.userInfo.username,
+        email: response.userInfo.email,
+        isVerified: response.userInfo.isVerified,
+      });
     } catch (err: any) {
       console.error(err);
     }

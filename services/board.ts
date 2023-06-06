@@ -27,14 +27,31 @@ export const getAllBoard = async (
   return res.data;
 };
 
-export const createBoard = async (
-  name: string,
-  token: string,
-  userId: number
+export const createBoard = async (data: FormData, token: string) => {
+  const res = await axios.post(`/create-board`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'content-type': 'multipart/form-data',
+    },
+  });
+  return res.data;
+};
+export const reorderTask = async (
+  taskId: number,
+  prevTaskId: number,
+  nextTaskId: number,
+  isChangingColumn: boolean,
+  columnId: number,
+  token: string
 ) => {
-  const res = await axios.post(
-    `/create-board`,
-    { name, userId },
+  const res = await axios.patch(
+    `/reorder-task/${taskId}`,
+    {
+      columnId,
+      isChangingColumn,
+      prevTaskId,
+      nextTaskId,
+    },
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -43,45 +60,47 @@ export const createBoard = async (
   );
   return res.data;
 };
-//TODO add token bearers here
-export const reorderTask = async (
-  taskId: number,
-  prevTaskId: number,
-  nextTaskId: number,
-  isChangingColumn: boolean,
-  columnId: number
-) => {
-  const res = await axios.patch(`/reorder-task/${taskId}`, {
-    columnId,
-    isChangingColumn,
-    prevTaskId,
-    nextTaskId,
-  });
-  return res.data;
-};
 
 export const reorderColumn = async (
   columnId: number,
   prevColumnId: number,
-  nextColumnId: number
+  nextColumnId: number,
+  token: string
 ) => {
-  const res = await axios.patch(`/reorder-column/${columnId}`, {
-    boardId: 1,
-    prevColumnId,
-    nextColumnId,
-  });
+  const res = await axios.patch(
+    `/reorder-column/${columnId}`,
+    {
+      boardId: 1,
+      prevColumnId,
+      nextColumnId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return res.data;
 };
 
 export const addColumn = async (
   lastIndexOfColumn: number | null,
   title: string = 'todo',
-  boardId: number
+  boardId: number,
+  token: string
 ) => {
-  const res = await axios.post(`/create-column/${boardId}`, {
-    title,
-    prevIndex: lastIndexOfColumn,
-  });
+  const res = await axios.post(
+    `/create-column/${boardId}`,
+    {
+      title,
+      prevIndex: lastIndexOfColumn,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return res.data;
 };
 
@@ -89,29 +108,58 @@ export const addTask = async (
   columnId: string,
   lastIndexOfColumn: number | null,
   content: string,
-  boardId: number
+  boardId: number,
+  token: string
 ) => {
-  const res = await axios.post(`/create-task/${columnId.slice(7)}`, {
-    content,
-    prevIndex: lastIndexOfColumn,
-    boardId,
+  const res = await axios.post(
+    `/create-task/${columnId.slice(7)}`,
+    {
+      content,
+      prevIndex: lastIndexOfColumn,
+      boardId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const deleteTask = async (taskId: string, token: string) => {
+  const res = await axios.delete(`/delete-task/${taskId.slice(5)}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
   return res.data;
 };
 
-export const deleteTask = async (taskId: string) => {
-  const res = await axios.delete(`/delete-task/${taskId.slice(5)}`);
-  return res.data;
-};
-
-export const deleteColumn = async (columnId: string) => {
-  const res = await axios.delete(`/delete-column/${columnId.slice(7)}`);
-  return res.data;
-};
-
-export const updateColumn = async (columnId: string, title: string) => {
-  const res = await axios.patch(`/update-column/${columnId.slice(7)}`, {
-    title,
+export const deleteColumn = async (columnId: string, token: string) => {
+  const res = await axios.delete(`/delete-column/${columnId.slice(7)}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
+  return res.data;
+};
+
+export const updateColumn = async (
+  columnId: string,
+  title: string,
+  token: string
+) => {
+  const res = await axios.patch(
+    `/update-column/${columnId.slice(7)}`,
+    {
+      title,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return res.data;
 };

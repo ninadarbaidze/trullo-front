@@ -16,8 +16,6 @@ export const useFileUploader = (
     'avatar'
   )}`;
 
-  console.log(imageUrl);
-
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const file = URL.createObjectURL(event.target.files![0]);
     setValue(name, event.target.files![0]);
@@ -41,8 +39,8 @@ export const useFileUploader = (
     setPreviewFileName('');
     setPreviewImage('');
     setValue(name, '');
+    setCustomImage?.('');
   };
-  //   console.log(getValues());
 
   return {
     imageIsDraggedOver,

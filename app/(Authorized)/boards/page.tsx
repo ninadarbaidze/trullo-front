@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { useBoards } from 'app/hooks/useBoards';
-import { NoImage } from 'public/images';
 import Image from 'next/image';
 import { AddBoardModal, AddButton, SquareLoader } from 'components';
 
@@ -14,7 +13,9 @@ const Boards = () => {
     addNewBoardHandler,
     closeModalHandler,
     isLoading,
+    getImage,
   } = useBoards();
+
   return (
     <>
       {addModalIsOpen && (
@@ -42,7 +43,8 @@ const Boards = () => {
               >
                 <div className='flex  overflow-clip max-w-96 h-48 relative rounded-lg object-cover z-10'>
                   <Image
-                    src={board.image ?? NoImage.src}
+                    src={getImage(board)}
+                    loader={() => getImage(board)}
                     alt='default_profile'
                     className='rounded'
                     fill
