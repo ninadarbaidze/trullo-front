@@ -166,10 +166,11 @@ export const updateColumn = async (
 };
 
 export const getAllUsers = async (
-  token: string
+  token: string,
+  boardId: number
 ): Promise<ProfileBackInfo[]> => {
   const res = await axios.get(
-    `/all-users`,
+    `/all-users/${boardId}`,
 
     {
       headers: {
@@ -198,10 +199,14 @@ export const sendInvitationsToBoard = async (
   return res.data;
 };
 
-export const verifyBoard = async (token: string, userId: number) => {
+export const verifyBoard = async (
+  token: string,
+  userId: number,
+  verificationToken: string
+): Promise<{ boardId: number; boardName: string }> => {
   const res = await axios.post(
     `/verify-board`,
-    { token, userId },
+    { token: verificationToken, userId },
     {
       headers: {
         Authorization: `Bearer ${token}`,

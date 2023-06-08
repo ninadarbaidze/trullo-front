@@ -3,7 +3,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useMain } from '../../../hooks';
 import { getFirstInitials, submitOnEnterHandler } from 'helpers';
 import { AddButton, BoardSkeleton, X, Select, Column } from 'components';
-import { FormProvider } from 'react-hook-form';
+import Image, { ImageLoader } from 'next/image';
 
 export default function Home() {
   const {
@@ -29,7 +29,7 @@ export default function Home() {
     setInvitationModalIsOpen,
     sendBoardInviteHandler,
   } = useMain();
-  console.log(allUsers);
+
   return (
     <>
       {isLoading ? (
@@ -37,14 +37,28 @@ export default function Home() {
       ) : (
         <div className='flex flex-col py-24  text-black  px-8'>
           <ul className='flex gap-2 mb-4 relative'>
-            {data.users.map((user) => (
-              <li
-                key={user.id}
-                className='w-8 h-8 rounded-md flex items-center justify-center bg-gray400 text-white'
-              >
-                {getFirstInitials(user?.firstName, user?.lastName)}
-              </li>
-            ))}
+            {data.users.map((user) =>
+              user.avatar ? (
+                <li className='w-8 h-8 overflow-clip rounded-lg' key={user.id}>
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`}
+                    loader={() =>
+                      `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
+                    }
+                    width={100}
+                    height={100}
+                    alt=''
+                  />
+                </li>
+              ) : (
+                <li
+                  key={user.id}
+                  className='w-8 h-8 rounded-md flex items-center justify-center bg-gray400 text-white'
+                >
+                  {getFirstInitials(user?.firstName, user?.lastName)}
+                </li>
+              )
+            )}
             <AddButton
               className='h-8 w-8 flex !items-center !justify-center'
               onclick={() => getAllUserData()}

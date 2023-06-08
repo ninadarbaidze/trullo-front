@@ -3,16 +3,15 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useAuth } from 'app/hooks/useAuth';
 import { InformationModal } from 'components';
+import { AuthContextProvider } from 'store';
 
 const Auth = () => {
-  const { errorExists } = useAuth();
+  const { errorExists, modalTexts } = useAuth();
   return (
     <InformationModal
-      title={
-        !errorExists ? 'YOUR ACCOUNT IS VERIFIED' : 'UPS.. SOMETHINGS WRONG'
-      }
-      buttonText={!errorExists ? 'Go to boards' : 'Back to sign up'}
-      buttonUrl={!errorExists ? '/boards' : '/user/register'}
+      title={!errorExists ? modalTexts.modalTitle : 'UPS.. SOMETHINGS WRONG'}
+      buttonText={!errorExists ? modalTexts.btnText : modalTexts.btnTextError}
+      buttonUrl={!errorExists ? modalTexts.btnUrl : modalTexts.btnUrlError}
     >
       <div
         className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${

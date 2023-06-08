@@ -47,6 +47,7 @@ export type Boards = {
   name: string;
   image: string | null;
   userId: number;
+  users: ProfileBackInfo[];
 };
 
 export type Profile = {

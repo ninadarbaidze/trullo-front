@@ -363,7 +363,10 @@ export const useMain = () => {
   const getAllUserData = async () => {
     try {
       setInvitationModalIsOpen(true);
-      const response = await getAllUsers(getCookie('token') as string);
+      const response = await getAllUsers(
+        getCookie('token') as string,
+        +params.id
+      );
       const modifiedResponse = response.map((user) => ({
         ...user,
         isChecked: false,
