@@ -9,10 +9,7 @@ const RegisterForm = () => {
     <FormProvider {...form}>
       <form className='space-y-6' onSubmit={form.handleSubmit(onSubmit)}>
         <div>
-          <label
-            htmlFor='username'
-            className='block text-sm font-medium leading-6 text-gray-900'
-          >
+          <label className='block text-sm font-medium leading-6 text-gray-900'>
             Username
           </label>
           <div className='mt-2'>
@@ -24,16 +21,37 @@ const RegisterForm = () => {
           </div>
         </div>
         <div>
-          <label
-            htmlFor='email'
-            className='block text-sm font-medium leading-6 text-gray-900'
-          >
+          <label className='block text-sm font-medium leading-6 text-gray-900'>
             Email address
           </label>
           <div className='mt-2'>
             <input
               {...form.register('email')}
               type='email'
+              className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+            />
+          </div>
+        </div>
+        <div>
+          <label className='block text-sm font-medium leading-6 text-gray-900'>
+            First name
+          </label>
+          <div className='mt-2'>
+            <input
+              {...form.register('firstName')}
+              type='text'
+              className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+            />
+          </div>
+        </div>
+        <div>
+          <label className='block text-sm font-medium leading-6 text-gray-900'>
+            Last name
+          </label>
+          <div className='mt-2'>
+            <input
+              {...form.register('lastName')}
+              type='string'
               className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
           </div>
@@ -66,7 +84,7 @@ const RegisterForm = () => {
             <input
               {...form.register('repeat_password')}
               type='password'
-              className='block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+              className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
           </div>
         </div>

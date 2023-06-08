@@ -16,3 +16,4 @@ export * from './FileUploader';
 export * from './MenuNavigation';
 export * from './SquareLoader';
 export * from './BoardSkeleton';
+export * from './Select';

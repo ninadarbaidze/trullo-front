@@ -1,15 +1,14 @@
 'use client';
 import { AllBoardButton, Logo, MenuNavigation } from 'components';
-import { Profile } from 'public/images';
-import Image from 'next/image';
+import Image, { ImageLoader } from 'next/image';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { useParams } from 'next/navigation';
 import { getCookie } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
-import { addClickAwayHandler } from 'helpers';
+import { addClickAwayHandler, getFirstInitials } from 'helpers';
 import { useRouter } from 'next/navigation';
 import { AuthContextProvider } from 'store';
-import { ProfileBackInfo, UserProfile } from 'types/global';
+import { UserProfile } from 'types/global';
 
 export default function BoardLayout({
   children,
@@ -39,9 +38,9 @@ export default function BoardLayout({
   };
 
   const getAvatarHandler = () => {
-    return user?.avatar
-      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
-      : Profile.src;
+    return (
+      user?.avatar && `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
+    );
   };
 
   return (
@@ -69,7 +68,7 @@ export default function BoardLayout({
           <section className='flex justify-between  w-1/2 pr-[1%]'>
             <div></div>
             <div
-              className='flex items-center justify-between relative gap-3 w-44 cursor-pointer'
+              className='flex items-center justify-between relative gap-3 w-56 cursor-pointer'
               ref={triggerRef}
               onClick={() => toggleDropDown()}
             >
@@ -81,18 +80,23 @@ export default function BoardLayout({
                   <MenuNavigation />
                 </div>
               )}
-              <div className='flex items-center gap-3 '>
-                <div className='w-10'>
-                  <Image
-                    src={getAvatarHandler()}
-                    loader={getAvatarHandler}
-                    width={100}
-                    height={100}
-                    alt='default_profile'
-                    className='rounded'
-                  />
+              <div className='flex items-center gap-3'>
+                <div className='w-10 h-10 overflow-clip rounded-lg'>
+                  {user?.avatar ? (
+                    <Image
+                      src={getAvatarHandler() as 'string | StaticImport'}
+                      loader={getAvatarHandler as ImageLoader}
+                      width={100}
+                      height={100}
+                      alt='default_profile'
+                    />
+                  ) : (
+                    <div className='w-full h-full flex items-center justify-center bg-gray400 text-white'>
+                      {getFirstInitials(user?.firstName, user?.lastName)}
+                    </div>
+                  )}
                 </div>
-                <p className='text-sm font-bold truncate w-20'>{user?.name}</p>
+                <p className='text-sm font-bold truncate w-36'>{`${user?.firstName}  ${user?.lastName}`}</p>
               </div>
               <ChevronDownIcon className='text-black w-5 absolute top-2 right-0' />
             </div>

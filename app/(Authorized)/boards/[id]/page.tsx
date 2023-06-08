@@ -1,9 +1,9 @@
 'use client';
-import Column from 'components/Column/Column';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useMain } from '../../../hooks';
-import { submitOnEnterHandler } from 'helpers';
-import { BoardSkeleton, X } from 'components';
+import { getFirstInitials, submitOnEnterHandler } from 'helpers';
+import { AddButton, BoardSkeleton, X, Select, Column } from 'components';
+import { FormProvider } from 'react-hook-form';
 
 export default function Home() {
   const {
@@ -20,14 +20,49 @@ export default function Home() {
     deleteColumnHandler,
     changeColumnNameHandler,
     isLoading,
+    form,
+    addNewTeamToBoard,
+    getAllUserData,
+    allUsers,
+    usersIsLoading,
+    invitationModalIsOpen,
+    setInvitationModalIsOpen,
+    sendBoardInviteHandler,
   } = useMain();
-
+  console.log(allUsers);
   return (
     <>
       {isLoading ? (
         <BoardSkeleton />
       ) : (
-        <div className='flex flex-row py-24  text-black  px-8'>
+        <div className='flex flex-col py-24  text-black  px-8'>
+          <ul className='flex gap-2 mb-4 relative'>
+            {data.users.map((user) => (
+              <li
+                key={user.id}
+                className='w-8 h-8 rounded-md flex items-center justify-center bg-gray400 text-white'
+              >
+                {getFirstInitials(user?.firstName, user?.lastName)}
+              </li>
+            ))}
+            <AddButton
+              className='h-8 w-8 flex !items-center !justify-center'
+              onclick={() => getAllUserData()}
+            />
+            {invitationModalIsOpen && (
+              <>
+                <div
+                  className='fixed top-0 left-0 w-screen h-screen  z-30'
+                  onClick={() => setInvitationModalIsOpen(false)}
+                />
+                <Select
+                  list={allUsers}
+                  usersIsLoading={usersIsLoading}
+                  sendBoardInviteHandler={sendBoardInviteHandler}
+                />
+              </>
+            )}
+          </ul>
           <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
             <Droppable
               droppableId='all-columns'

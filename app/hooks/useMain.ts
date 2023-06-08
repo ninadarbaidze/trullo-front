@@ -1,17 +1,21 @@
 import { getCookie, setCookie } from 'cookies-next';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { DragUpdate, DropResult } from 'react-beautiful-dnd';
 import {
   addColumn,
   addTask,
   deleteColumn,
   deleteTask,
+  getAllUsers,
   getBoard,
   reorderColumn,
   reorderTask,
+  sendInvitationsToBoard,
 } from 'services';
-import { Board, Placeholder } from 'types/global';
+import { AllUser, Board, Placeholder, ProfileBackInfo } from 'types/global';
+import { useForm } from 'react-hook-form';
+import { AuthContext } from 'store';
 
 export const useMain = () => {
   const [data, setData] = useState<Board>({
@@ -19,12 +23,18 @@ export const useMain = () => {
     columns: {},
     columnOrder: [],
     name: '',
+    users: [],
   });
   const [isLoading, setIsLoading] = useState(true);
+
+  const { user, board } = useContext(AuthContext);
 
   const params = useParams();
 
   const [columnInputIsOpen, setColumnInputIsOpen] = useState(false);
+  const [allUsers, setAllUsers] = useState<AllUser[]>([]);
+  const [usersIsLoading, setUsersIsLoading] = useState(true);
+  const [invitationModalIsOpen, setInvitationModalIsOpen] = useState(false);
 
   const [placeholderProps, setPlaceholderProps] = useState<Placeholder>({
     clientHeight: null,
@@ -33,13 +43,19 @@ export const useMain = () => {
     clientY: null,
   });
 
+  const form = useForm({ defaultValues: { test: '' } });
+
   const token = getCookie('token') as string;
 
   const inputValue = useRef<HTMLInputElement>(null);
 
   const getData = async () => {
     try {
-      const board = await getBoard(+params.id, getCookie('token') as string);
+      const board = await getBoard(
+        +params.id,
+        getCookie('token') as string,
+        user.id!
+      );
       setCookie('board', board.name);
       setData(board);
       setIsLoading(false);
@@ -340,6 +356,36 @@ export const useMain = () => {
     }));
   };
 
+  const addNewTeamToBoard = (data: any) => {
+    console.log(data);
+  };
+
+  const getAllUserData = async () => {
+    try {
+      setInvitationModalIsOpen(true);
+      const response = await getAllUsers(getCookie('token') as string);
+      const modifiedResponse = response.map((user) => ({
+        ...user,
+        isChecked: false,
+      }));
+      setAllUsers(modifiedResponse);
+      setUsersIsLoading(false);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const sendBoardInviteHandler = async (data: AllUser[]) => {
+    setInvitationModalIsOpen(false);
+    console.log('ss', data);
+
+    try {
+      await sendInvitationsToBoard(token, data, board, +params.id);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   return {
     data,
     setData,
@@ -356,5 +402,13 @@ export const useMain = () => {
     deleteColumnHandler,
     changeColumnNameHandler,
     isLoading,
+    form,
+    addNewTeamToBoard,
+    getAllUserData,
+    allUsers,
+    usersIsLoading,
+    invitationModalIsOpen,
+    setInvitationModalIsOpen,
+    sendBoardInviteHandler,
   };
 };

@@ -6,6 +6,8 @@ export const AuthContext = createContext({
     id: null,
     avatar: '',
     name: '',
+    firstName: '',
+    lastName: '',
   },
   board: '',
 });
@@ -21,6 +23,8 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = (
       id: user?.id,
       avatar: user?.avatar,
       name: user?.name,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
     },
     board: boardName,
   };

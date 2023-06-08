@@ -11,6 +11,8 @@ export const useRegisterForm = () => {
       email: '',
       password: '',
       repeat_password: '',
+      firstName: '',
+      lastName: '',
     },
   });
 

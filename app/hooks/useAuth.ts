@@ -1,4 +1,4 @@
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { verifyUser } from 'services';
 
@@ -15,8 +15,18 @@ export const useAuth = () => {
     }
   };
 
+  const acceptInvitation = async () => {
+    try {
+      await verifyUser(params.get('accept-invitation') as string);
+      setErrorExists(false);
+    } catch (err: any) {
+      setErrorExists(true);
+    }
+  };
+
   useEffect(() => {
-    verifyAccount();
+    params.get('verify-account') && verifyAccount();
+    params.get('accept-invitation') && verifyAccount();
   }, []);
 
   return { errorExists };

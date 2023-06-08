@@ -1,7 +1,7 @@
 import React from 'react';
 
 const AddButton: React.FC<{
-  text: string;
+  text?: string;
   onclick?: () => void;
   className?: string;
 }> = (props) => {

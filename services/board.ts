@@ -1,11 +1,12 @@
 import axios from 'services/axios';
-import { Board, Boards } from 'types/global';
+import { AllUser, Board, Boards, ProfileBackInfo } from 'types/global';
 
 export const getBoard = async (
   boardId: number,
-  token: string
+  token: string,
+  userId: number
 ): Promise<Board> => {
-  const res = await axios.get(`/board/${boardId}`, {
+  const res = await axios.get(`/board/${boardId}/${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
@@ -155,6 +156,52 @@ export const updateColumn = async (
     {
       title,
     },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const getAllUsers = async (
+  token: string
+): Promise<ProfileBackInfo[]> => {
+  const res = await axios.get(
+    `/all-users`,
+
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const sendInvitationsToBoard = async (
+  token: string,
+  users: AllUser[],
+  boardName: string,
+  boardId: number
+): Promise<ProfileBackInfo[]> => {
+  const res = await axios.post(
+    `/send-board-invitations`,
+    { users, boardName, boardId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const verifyBoard = async (token: string, userId: number) => {
+  const res = await axios.post(
+    `/verify-board`,
+    { token, userId },
     {
       headers: {
         Authorization: `Bearer ${token}`,

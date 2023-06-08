@@ -18,3 +18,11 @@ export const logOutHandler = (router: AppRouterInstance) => {
   deleteCookie('user');
   deleteCookie('board');
 };
+
+export const getFirstInitials = (
+  first: string | undefined,
+  last: string | undefined
+) => {
+  return ((first?.charAt(0).toUpperCase() as string) +
+    last?.charAt(0).toUpperCase()) as string;
+};

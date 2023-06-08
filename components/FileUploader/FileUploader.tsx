@@ -92,7 +92,7 @@ const FileUploader: React.FC<Props> = (props) => {
         hidden
       />
       {props.uploadBtnText && !props.disabled && (
-        <p className={`${props.uploadBtnStyle} cursor-pointer`}>
+        <p className={`${props.uploadBtnStyle} cursor-pointer text-bold`}>
           {props.uploadBtnText}
         </p>
       )}

@@ -15,6 +15,7 @@ module.exports = {
         gray200: '#E0E0E0',
         gray250: '#F2F2F2',
         gray300: '#828282',
+        gray400: '#BDBDBD',
       },
       backgroundImage: {
         default: "url('/images/profile.png')",

@@ -3,6 +3,7 @@ import { FormProvider } from 'react-hook-form';
 import { FileUploader, SquareLoader } from 'components';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useProfile } from 'app/hooks/useProfile';
+import { getFirstInitials } from 'helpers';
 
 const Page = () => {
   const {
@@ -17,10 +18,11 @@ const Page = () => {
     isInEditMode,
     setIsInEditMode,
     loading,
+    user,
   } = useProfile();
 
   return (
-    <section className='mt-16 pt-12 pl-8 flex items-center justify-center w-full'>
+    <section className='my-16 pt-12 pl-8 flex items-center justify-center w-full'>
       <FormProvider {...form}>
         {loading ? (
           <SquareLoader size='w-16 h-16' className='pt-44' />
@@ -31,7 +33,17 @@ const Page = () => {
           >
             <div className='flex flex-col items-center relative'>
               <div className='bg-default bg-cover w-36 h-36 rounded-full overflow-clip shadow'>
-                <img src={previewImage || imageUrl} alt='' />
+                {user?.avatar || previewImage ? (
+                  <img
+                    src={previewImage || imageUrl}
+                    alt=''
+                    className='w-full h-full'
+                  />
+                ) : (
+                  <div className='w-full h-full flex items-center justify-center bg-gray400 text-white text-7xl'>
+                    {getFirstInitials(user?.firstName, user?.lastName)}
+                  </div>
+                )}
               </div>
               <FileUploader
                 name='image'
@@ -71,6 +83,31 @@ const Page = () => {
                 {...form.register('email')}
                 id='email'
                 type='email'
+                className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                disabled={!isInEditMode}
+              />
+            </div>
+            <div className='w-[40%]'>
+              <label htmlFor='firstName' className='font-medium'>
+                First name
+              </label>
+              <input
+                {...form.register('firstName')}
+                id='firstName'
+                type='text'
+                className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                disabled={!isInEditMode}
+              />
+            </div>
+
+            <div className='w-[40%]'>
+              <label htmlFor='lastName' className='font-medium'>
+                Last name
+              </label>
+              <input
+                {...form.register('lastName')}
+                id='lastName'
+                type='text'
                 className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                 disabled={!isInEditMode}
               />

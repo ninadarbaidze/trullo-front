@@ -13,6 +13,8 @@ export const useProfile = () => {
       repeat_password: '',
       new_password: '',
       email: '',
+      firstName: '',
+      lastName: '',
     },
   });
   const [previewImage, setPreviewImage] = useState('');
@@ -92,5 +94,6 @@ export const useProfile = () => {
     isInEditMode,
     setIsInEditMode,
     loading,
+    user,
   };
 };

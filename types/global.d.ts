@@ -3,6 +3,7 @@ export type Board = {
   columns: { [key: string]: ColumnType };
   columnOrder: string[];
   name: string;
+  users: UserProfile[];
 };
 
 export type TaskType = {
@@ -32,6 +33,8 @@ export type RegisterData = {
   email: string;
   password: string;
   repeat_password?: string;
+  firstName: string;
+  lastName: string;
 };
 export type LoginData = {
   username: string;
@@ -52,6 +55,8 @@ export type Profile = {
   new_password: string;
   image: blob | string;
   repeat_password?: string;
+  firstName: string;
+  lastName: string;
 };
 
 export type ProfileBackInfo = {
@@ -59,10 +64,16 @@ export type ProfileBackInfo = {
   email: string;
   id: number;
   isVerified: boolean;
-  password: string;
+  password?: string;
   username: string;
+  firstName: string;
+  lastName: string;
 };
 
 export interface UserProfile extends ProfileBackInfo {
   name?: string;
+}
+
+export interface AllUser extends UserProfile {
+  isChecked: boolean;
 }

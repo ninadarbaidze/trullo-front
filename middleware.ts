@@ -6,7 +6,11 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const userInfo = request.cookies.get('user')?.value;
   const user = userInfo && JSON.parse(userInfo!.toString());
-  if ((!token || !user) && !pathname.includes('/user/login'))
+  if (
+    (!token || !user) &&
+    !pathname.includes('/user/login') &&
+    !pathname.includes('/user/register')
+  )
     return NextResponse.redirect(new URL('/user/login', request.url));
 }
 
