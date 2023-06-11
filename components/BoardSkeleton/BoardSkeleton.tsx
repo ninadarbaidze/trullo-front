@@ -2,7 +2,7 @@ import React from 'react';
 
 const BoardSkeleton = () => {
   return (
-    <div className='flex flex-row py-24  text-black  px-8 overflow-clip w-full '>
+    <div className='flex flex-row py-28  text-black  px-8 overflow-clip w-full '>
       <ul className='flex bg-babyBlue rounded-xl w-screen'>
         <li className='flex flex-col gap-2 p-5 relative'>
           <div className='bg-blue500 bg-opacity-20 animate-pulse rounded-md w-[60%] mt-2 h-8' />

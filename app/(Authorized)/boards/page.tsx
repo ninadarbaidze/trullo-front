@@ -80,8 +80,8 @@ const Boards = () => {
                     )
                   )}
                   <p className='text-xs text-gray300'>
-                    {board.users.length > 2 &&
-                      `+${board.users.length - 2} other`}
+                    {board.users.length > 3 &&
+                      `+${board.users.length - 3} other`}
                   </p>
                 </ul>
               </li>

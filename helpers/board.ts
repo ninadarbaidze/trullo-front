@@ -1,4 +1,5 @@
 import { RefObject } from 'react';
+import { UserProfile } from 'types/global';
 
 export const submitOnEnterHandler = (
   e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -30,4 +31,18 @@ export const addClickAwayHandler = (
     }
   };
   document.addEventListener('mousedown', clickAwayHandler);
+};
+
+export const getAvatarHandler = (user: Partial<UserProfile>) => {
+  return (
+    user?.avatar && `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
+  );
+};
+
+export const getFormattedDate = (date: string | undefined) => {
+  const currentDate = new Date(date);
+  const day = currentDate.getDate();
+  const month = currentDate.toLocaleString('en-US', { month: 'short' });
+  const year = currentDate.getFullYear();
+  return `${day} ${month}, ${year}`;
 };

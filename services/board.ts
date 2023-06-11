@@ -1,5 +1,11 @@
 import axios from 'services/axios';
-import { AllUser, Board, Boards, ProfileBackInfo } from 'types/global';
+import {
+  AllUser,
+  Board,
+  BoardDetail,
+  Boards,
+  ProfileBackInfo,
+} from 'types/global';
 
 export const getBoard = async (
   boardId: number,
@@ -207,6 +213,35 @@ export const verifyBoard = async (
   const res = await axios.post(
     `/verify-board`,
     { token: verificationToken, userId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const getBoardDetail = async (
+  token: string,
+  boardId: number
+): Promise<BoardDetail> => {
+  const res = await axios.get(`/board-detail/${boardId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const deleteUserFromBoard = async (
+  token: string,
+  boardId: number,
+  userId: number
+): Promise<BoardDetail> => {
+  const res = await axios.patch(
+    `/remove-board-user`,
+    { userId, boardId },
     {
       headers: {
         Authorization: `Bearer ${token}`,

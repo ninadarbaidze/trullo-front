@@ -35,7 +35,7 @@ const Task: React.FC<{
             ref={provided.innerRef}
             className={`${
               snapshot.isDragging ? 'bg-white' : 'bg-white'
-            }  pb-16 px-2 rounded-xl shadow-md mb-4 relative`}
+            }  pb-16 px-2 rounded-xl shadow-md mb-4 relative z-10`}
           >
             {taskDialogIsOpen && (
               <div className='absolute top-6 right-0' ref={dropdownRef}>

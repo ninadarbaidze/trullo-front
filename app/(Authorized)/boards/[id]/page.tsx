@@ -1,9 +1,14 @@
 'use client';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useMain } from '../../../hooks';
-import { getFirstInitials, submitOnEnterHandler } from 'helpers';
-import { AddButton, BoardSkeleton, X, Select, Column } from 'components';
-import Image, { ImageLoader } from 'next/image';
+import { submitOnEnterHandler } from 'helpers';
+import {
+  BoardSkeleton,
+  X,
+  Column,
+  BoardHeader,
+  BoardMenuModal,
+} from 'components';
 
 export default function Home() {
   const {
@@ -20,8 +25,8 @@ export default function Home() {
     deleteColumnHandler,
     changeColumnNameHandler,
     isLoading,
-    form,
-    addNewTeamToBoard,
+    openBoardMenu,
+    setBoardMenu,
     getAllUserData,
     allUsers,
     usersIsLoading,
@@ -32,51 +37,21 @@ export default function Home() {
 
   return (
     <>
+      <BoardHeader
+        data={data}
+        getAllUserData={getAllUserData}
+        invitationModalIsOpen={invitationModalIsOpen}
+        setInvitationModalIsOpen={setInvitationModalIsOpen}
+        allUsers={allUsers}
+        usersIsLoading={usersIsLoading}
+        sendBoardInviteHandler={sendBoardInviteHandler}
+        setBoardMenu={setBoardMenu}
+      />
+      {openBoardMenu && <BoardMenuModal setBoardMenu={setBoardMenu} />}
       {isLoading ? (
         <BoardSkeleton />
       ) : (
-        <div className='flex flex-col py-24  text-black  px-8'>
-          <ul className='flex gap-2 mb-4 relative'>
-            {data.users.map((user) =>
-              user.avatar ? (
-                <li className='w-8 h-8 overflow-clip rounded-lg' key={user.id}>
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`}
-                    loader={() =>
-                      `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
-                    }
-                    width={100}
-                    height={100}
-                    alt=''
-                  />
-                </li>
-              ) : (
-                <li
-                  key={user.id}
-                  className='w-8 h-8 rounded-md flex items-center justify-center bg-gray400 text-white'
-                >
-                  {getFirstInitials(user?.firstName, user?.lastName)}
-                </li>
-              )
-            )}
-            <AddButton
-              className='h-8 w-8 flex !items-center !justify-center'
-              onclick={() => getAllUserData()}
-            />
-            {invitationModalIsOpen && (
-              <>
-                <div
-                  className='fixed top-0 left-0 w-screen h-screen  z-30'
-                  onClick={() => setInvitationModalIsOpen(false)}
-                />
-                <Select
-                  list={allUsers}
-                  usersIsLoading={usersIsLoading}
-                  sendBoardInviteHandler={sendBoardInviteHandler}
-                />
-              </>
-            )}
-          </ul>
+        <div className='flex flex-col py-[9rem]  text-black  px-8'>
           <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
             <Droppable
               droppableId='all-columns'
@@ -85,7 +60,7 @@ export default function Home() {
             >
               {(provided) => (
                 <ul
-                  className='flex bg-babyBlue rounded-xl w-full'
+                  className='flex bg-babyBlue rounded-xl full'
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >

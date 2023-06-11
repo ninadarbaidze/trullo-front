@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react';
+
 export type Board = {
   tasks: { [key: string]: TaskType };
   columns: { [key: string]: ColumnType };
@@ -78,3 +80,21 @@ export interface UserProfile extends ProfileBackInfo {
 export interface AllUser extends UserProfile {
   isChecked: boolean;
 }
+
+export type SetState<T> = Dispatch<SetStateAction<T>>;
+
+export type FormDirtyFields<T> = {
+  [key: keyof T]: boolean;
+};
+
+type ValueOf<T> = T[keyof T];
+
+export type BoardDetail = {
+  id: number;
+  name: string;
+  image: string;
+  boardOwnerId: number;
+  createdAt: string;
+  users: UserProfile[];
+  boardOwner: UserProfile;
+};

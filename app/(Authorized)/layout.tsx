@@ -1,11 +1,10 @@
 'use client';
-import { AllBoardButton, Logo, MenuNavigation } from 'components';
-import Image, { ImageLoader } from 'next/image';
+import { BoardButton, Logo, MenuNavigation, UserInfo } from 'components';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { useParams } from 'next/navigation';
 import { getCookie } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
-import { addClickAwayHandler, getFirstInitials } from 'helpers';
+import { addClickAwayHandler } from 'helpers';
 import { useRouter } from 'next/navigation';
 import { AuthContextProvider } from 'store';
 import { UserProfile } from 'types/global';
@@ -37,12 +36,6 @@ export default function BoardLayout({
     addClickAwayHandler(triggerRef, dropDownRef, setUserMenuIsOpen);
   };
 
-  const getAvatarHandler = () => {
-    return (
-      user?.avatar && `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
-    );
-  };
-
   return (
     <AuthContextProvider>
       <section className='flex'>
@@ -61,7 +54,11 @@ export default function BoardLayout({
                   {boardName} Board
                 </h2>
                 <span className='w-[1px] h-8 bg-gray200'></span>
-                <AllBoardButton link='/boards' />
+                <BoardButton
+                  link={() => router.push('/boards')}
+                  buttonText={'All boards'}
+                  cubeNumber={3}
+                />
               </div>
             )}
           </section>
@@ -80,24 +77,7 @@ export default function BoardLayout({
                   <MenuNavigation />
                 </div>
               )}
-              <div className='flex items-center gap-3'>
-                <div className='w-10 h-10 overflow-clip rounded-lg'>
-                  {user?.avatar ? (
-                    <Image
-                      src={getAvatarHandler() as 'string | StaticImport'}
-                      loader={getAvatarHandler as ImageLoader}
-                      width={100}
-                      height={100}
-                      alt='default_profile'
-                    />
-                  ) : (
-                    <div className='w-full h-full flex items-center justify-center bg-gray400 text-white'>
-                      {getFirstInitials(user?.firstName, user?.lastName)}
-                    </div>
-                  )}
-                </div>
-                <p className='text-sm font-bold truncate w-36'>{`${user?.firstName}  ${user?.lastName}`}</p>
-              </div>
+              <UserInfo user={user} />
               <ChevronDownIcon className='text-black w-5 absolute top-2 right-0' />
             </div>
           </section>

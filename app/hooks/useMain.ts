@@ -13,7 +13,7 @@ import {
   reorderTask,
   sendInvitationsToBoard,
 } from 'services';
-import { AllUser, Board, Placeholder, ProfileBackInfo } from 'types/global';
+import { AllUser, Board, Placeholder } from 'types/global';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from 'store';
 
@@ -35,6 +35,7 @@ export const useMain = () => {
   const [allUsers, setAllUsers] = useState<AllUser[]>([]);
   const [usersIsLoading, setUsersIsLoading] = useState(true);
   const [invitationModalIsOpen, setInvitationModalIsOpen] = useState(false);
+  const [openBoardMenu, setBoardMenu] = useState(false);
 
   const [placeholderProps, setPlaceholderProps] = useState<Placeholder>({
     clientHeight: null,
@@ -413,5 +414,7 @@ export const useMain = () => {
     invitationModalIsOpen,
     setInvitationModalIsOpen,
     sendBoardInviteHandler,
+    openBoardMenu,
+    setBoardMenu,
   };
 };

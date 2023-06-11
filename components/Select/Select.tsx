@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { Props } from './types';
 import { AllUser } from 'types/global';
 import { getFirstInitials } from 'helpers';
-import Image, { ImageLoader } from 'next/image';
+import Image from 'next/image';
 
 const Select: React.FC<Props> = (props) => {
   const [list, setList] = useState<AllUser[]>([]);
@@ -105,7 +105,7 @@ const Select: React.FC<Props> = (props) => {
           <button
             className='bg-blue500 text-white w-24 py-1 rounded-lg my-3'
             onClick={() =>
-              props.sendBoardInviteHandler(
+              props.sendBoardInviteHandler?.(
                 list.filter((user) => user.isChecked)
               )
             }
