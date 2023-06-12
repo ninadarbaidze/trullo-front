@@ -250,3 +250,20 @@ export const deleteUserFromBoard = async (
   );
   return res.data;
 };
+
+export const changeBoardDescription = async (
+  token: string,
+  boardId: number,
+  content: string
+): Promise<string> => {
+  const res = await axios.put(
+    `/board-description`,
+    { description: content, boardId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};

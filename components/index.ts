@@ -21,3 +21,4 @@ export * from './BoardUserList';
 export * from './BoardHeader';
 export * from './BoardMenuModal';
 export * from './UserInfo';
+export * from './TinyMCE';

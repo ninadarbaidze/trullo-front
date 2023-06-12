@@ -97,4 +97,5 @@ export type BoardDetail = {
   createdAt: string;
   users: UserProfile[];
   boardOwner: UserProfile;
+  description?: string;
 };
