@@ -1,7 +1,12 @@
 import { getCookie, setCookie } from 'cookies-next';
 import { useParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
-import { deleteUserFromBoard, getBoardDetail, updateBoard } from 'services';
+import {
+  deleteUserFromBoard,
+  getBoardDetail,
+  removeBoardImage,
+  updateBoard,
+} from 'services';
 import { BoardDetail } from 'types/global';
 import { useForm } from 'react-hook-form';
 import { NoImage } from 'public/images';
@@ -13,6 +18,7 @@ export const useBoardMenuModal = () => {
   const [isInEditMode, setIsInEdiMode] = useState(false);
   const params = useParams();
   const boardId = +params.id;
+  const token = getCookie('token') as string;
 
   const { user } = useContext(AuthContext);
 
@@ -32,10 +38,7 @@ export const useBoardMenuModal = () => {
 
   const getBoardDetailHandler = async () => {
     try {
-      const response = await getBoardDetail(
-        getCookie('token') as string,
-        boardId
-      );
+      const response = await getBoardDetail(token, boardId);
       setBoardDetail(response);
       setBoardCover(response.image);
       form.reset({ name: response.name });
@@ -53,7 +56,7 @@ export const useBoardMenuModal = () => {
         };
         return newState as BoardDetail;
       });
-      await deleteUserFromBoard(getCookie('token') as string, boardId, userId);
+      await deleteUserFromBoard(token, boardId, userId);
     } catch (err: any) {
       console.error(err);
     }
@@ -68,6 +71,8 @@ export const useBoardMenuModal = () => {
     description: string;
     image: Blob | string;
   }) => {
+    console.log('data', data);
+
     try {
       const formData = new FormData();
       const keys = Object.keys(data);
@@ -79,6 +84,8 @@ export const useBoardMenuModal = () => {
         );
       });
 
+      if (!data.image) formData.append('image', null);
+
       console.log(formData);
 
       if (data.name) {
@@ -88,11 +95,7 @@ export const useBoardMenuModal = () => {
         setCookie('board', data.name);
       }
 
-      const response = await updateBoard(
-        getCookie('token') as string,
-        formData,
-        boardId
-      );
+      const response = await updateBoard(token, formData, boardId);
       setIsInEdiMode(false);
       console.log(response.boardDetails);
       setBoardCover(response.boardDetails.image);
@@ -107,6 +110,16 @@ export const useBoardMenuModal = () => {
     } else return NoImage.src;
   };
 
+  const removeImageHandler = async () => {
+    try {
+      setBoardCover('');
+      form.setValue('image', '');
+      await removeBoardImage(token, boardId);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   return {
     boardDetail,
     deleteUserFromBoardHandler,
@@ -119,5 +132,6 @@ export const useBoardMenuModal = () => {
     setIsInEdiMode,
     getImage,
     canUpdateBoard,
+    removeImageHandler,
   };
 };

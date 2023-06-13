@@ -23,7 +23,7 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
     getDescription,
     form,
     boardCover,
-    setBoardCover,
+    removeImageHandler,
     onSubmit,
     isInEditMode,
     setIsInEdiMode,
@@ -81,10 +81,7 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
                   {isInEditMode && (
                     <button
                       className='absolute -top-2 right-2 z-50'
-                      onClick={() => {
-                        setBoardCover('');
-                        form.setValue('image', '');
-                      }}
+                      onClick={removeImageHandler}
                       type='button'
                     >
                       <XMarkIcon className='bg-blue500 w-8 right-0 text-white rounded-md' />

@@ -281,3 +281,19 @@ export const updateBoard = async (
   });
   return res.data;
 };
+
+export const removeBoardImage = async (
+  token: string,
+  boardId: number
+): Promise<string> => {
+  const res = await axios.patch(
+    `/remove-board-image/${boardId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
