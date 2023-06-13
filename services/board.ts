@@ -267,3 +267,17 @@ export const changeBoardDescription = async (
   );
   return res.data;
 };
+
+export const updateBoard = async (
+  token: string,
+  data: FormData,
+  boardId: number
+): Promise<{ boardDetails: BoardDetail }> => {
+  const res = await axios.patch(`/update-board/${boardId}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'content-type': 'multipart/form-data',
+    },
+  });
+  return res.data;
+};

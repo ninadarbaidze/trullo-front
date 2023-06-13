@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
-import { UserProfile } from 'types/global';
+import { Boards, UserProfile } from 'types/global';
+import { NoImage } from 'public/images';
 
 export const submitOnEnterHandler = (
   e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -45,4 +46,10 @@ export const getFormattedDate = (date: string | undefined) => {
   const month = currentDate.toLocaleString('en-US', { month: 'short' });
   const year = currentDate.getFullYear();
   return `${day} ${month}, ${year}`;
+};
+
+export const getImage = (board: Boards) => {
+  if (board?.image) {
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/${board.image}`;
+  } else return NoImage.src;
 };

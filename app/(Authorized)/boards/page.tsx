@@ -3,7 +3,7 @@ import React from 'react';
 import { useBoards } from 'app/hooks/useBoards';
 import Image from 'next/image';
 import { AddBoardModal, AddButton, SquareLoader } from 'components';
-import { getFirstInitials } from 'helpers';
+import { getFirstInitials, getImage } from 'helpers';
 
 const Boards = () => {
   const {
@@ -14,7 +14,6 @@ const Boards = () => {
     addNewBoardHandler,
     closeModalHandler,
     isLoading,
-    getImage,
   } = useBoards();
 
   return (

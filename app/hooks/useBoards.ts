@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from 'react';
 import { createBoard, getAllBoard } from 'services';
 import { AuthContext } from 'store';
 import { Boards } from 'types/global';
-import { NoImage } from 'public/images';
 
 export const useBoards = () => {
   const [boards, setBoards] = useState<Boards[]>([]);
@@ -55,11 +54,6 @@ export const useBoards = () => {
     setAddModalIsOpen(false);
   };
 
-  const getImage = (board: Boards) => {
-    if (board?.image) {
-      return `${process.env.NEXT_PUBLIC_BACKEND_URL}/${board.image}`;
-    } else return NoImage.src;
-  };
   return {
     boards,
     router,
@@ -68,6 +62,5 @@ export const useBoards = () => {
     addNewBoardHandler,
     closeModalHandler,
     isLoading,
-    getImage,
   };
 };
