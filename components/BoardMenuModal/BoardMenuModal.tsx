@@ -28,6 +28,7 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
     isInEditMode,
     setIsInEdiMode,
     getImage,
+    canUpdateBoard,
   } = useBoardMenuModal();
 
   return (
@@ -152,39 +153,42 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
                     className='flex justify-between items-center'
                   >
                     <UserInfo user={user} />
-                    <button
-                      className='text-sm text-red-500 border rounded-lg border-red-500 px-4 h-8'
-                      onClick={() => deleteUserFromBoardHandler(user.id)}
-                      type='button'
-                    >
-                      Remove
-                    </button>
+                    {canUpdateBoard && (
+                      <button
+                        className='text-sm text-red-500 border rounded-lg border-red-500 px-4 h-8'
+                        onClick={() => deleteUserFromBoardHandler(user.id)}
+                        type='button'
+                      >
+                        Remove
+                      </button>
+                    )}
                   </li>
                 ))}
             </ul>
           </article>
         </div>
         <nav className='flex justify-end gap-3 pt-6'>
-          {isInEditMode ? (
-            <>
-              <button className='text-white bg-green-600 rounded-xl px-3 py-1'>
-                Save
-              </button>
-              <button
-                className='text-gray-400'
-                onClick={() => setIsInEdiMode(false)}
+          {canUpdateBoard &&
+            (isInEditMode ? (
+              <>
+                <button className='text-white bg-green-600 rounded-xl px-3 py-1'>
+                  Save
+                </button>
+                <button
+                  className='text-gray-400'
+                  onClick={() => setIsInEdiMode(false)}
+                >
+                  cancel
+                </button>
+              </>
+            ) : (
+              <div
+                className='bg-blue500 text-white px-3 py-1 rounded-xl cursor-pointer'
+                onClick={() => setIsInEdiMode(true)}
               >
-                cancel
-              </button>
-            </>
-          ) : (
-            <div
-              className='bg-blue500 text-white px-3 py-1 rounded-xl cursor-pointer'
-              onClick={() => setIsInEdiMode(true)}
-            >
-              Edit board
-            </div>
-          )}
+                Edit board
+              </div>
+            ))}
         </nav>
       </form>
     </FormProvider>

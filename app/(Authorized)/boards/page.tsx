@@ -14,6 +14,7 @@ const Boards = () => {
     addNewBoardHandler,
     closeModalHandler,
     isLoading,
+    numberOfEmployeesToShow,
   } = useBoards();
 
   return (
@@ -53,7 +54,7 @@ const Boards = () => {
                 </div>
                 <p className='text-lg py-2 font-medium'>{board.name}</p>
                 <ul className='flex items-center gap-2 my-4 relative'>
-                  {board.users.slice(0, 2).map((user) =>
+                  {board.users.slice(0, numberOfEmployeesToShow).map((user) =>
                     user.avatar ? (
                       <li
                         className='w-8 h-8 overflow-clip rounded-lg'
@@ -79,8 +80,8 @@ const Boards = () => {
                     )
                   )}
                   <p className='text-xs text-gray300'>
-                    {board.users.length > 3 &&
-                      `+${board.users.length - 3} other`}
+                    {board.users.length > numberOfEmployeesToShow &&
+                      `+${board.users.length - numberOfEmployeesToShow} other`}
                   </p>
                 </ul>
               </li>

@@ -15,6 +15,8 @@ export const useBoards = () => {
 
   const token = getCookie('token') as unknown as string;
 
+  const numberOfEmployeesToShow = 3;
+
   const getBoards = async () => {
     try {
       const boards = await getAllBoard(user.id!, token);
@@ -62,5 +64,6 @@ export const useBoards = () => {
     addNewBoardHandler,
     closeModalHandler,
     isLoading,
+    numberOfEmployeesToShow,
   };
 };

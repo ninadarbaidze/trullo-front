@@ -1,10 +1,11 @@
 import { getCookie, setCookie } from 'cookies-next';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { deleteUserFromBoard, getBoardDetail, updateBoard } from 'services';
 import { BoardDetail } from 'types/global';
 import { useForm } from 'react-hook-form';
 import { NoImage } from 'public/images';
+import { AuthContext } from 'store';
 
 export const useBoardMenuModal = () => {
   const [boardDetail, setBoardDetail] = useState<BoardDetail>();
@@ -12,6 +13,10 @@ export const useBoardMenuModal = () => {
   const [isInEditMode, setIsInEdiMode] = useState(false);
   const params = useParams();
   const boardId = +params.id;
+
+  const { user } = useContext(AuthContext);
+
+  const canUpdateBoard = user.id === boardDetail?.boardOwnerId;
 
   useEffect(() => {
     getBoardDetailHandler();
@@ -113,5 +118,6 @@ export const useBoardMenuModal = () => {
     isInEditMode,
     setIsInEdiMode,
     getImage,
+    canUpdateBoard,
   };
 };
