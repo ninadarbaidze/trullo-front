@@ -14,9 +14,10 @@ import { getFormattedDate } from 'helpers';
 import { FormProvider } from 'react-hook-form';
 import Image from 'next/image';
 
-const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
-  props
-) => {
+const BoardMenuModal: React.FC<{
+  setBoardMenu: SetState<boolean>;
+  openBoardMenu: boolean;
+}> = (props) => {
   const {
     boardDetail,
     deleteUserFromBoardHandler,
@@ -29,21 +30,33 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
     setIsInEdiMode,
     getImage,
     canUpdateBoard,
+    setBoardIsOpen,
+    boardIsOpen,
+    boardIsLoading,
   } = useBoardMenuModal();
 
   return (
     <FormProvider {...form}>
       <form
-        className='flex flex-col bg-white shadow-md fixed top-16 right-0 w-[30%] z-[45] px-4 pb-24  h-full overflow-y-scroll'
+        className={`flex flex-col bg-white shadow-md fixed top-16  w-[30%] px-4  z-[45] pb-24 ${
+          boardIsOpen ? 'right-0' : '-right-[40rem]'
+        } transition-all ease-in duration-300 transform  h-full overflow-y-scroll`}
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <article className='flex w-full items-center justify-between  border-b-2 sticky py-4 top-0 bg-white'>
           <h2 className='text-base font-semibold capitalize'>
-            {boardDetail?.name} board
+            {boardIsLoading ? (
+              <div className='bg-blue500 bg-opacity-20 animate-pulse rounded-md w-36 h-6' />
+            ) : (
+              `${boardDetail?.name} board`
+            )}
           </h2>
           <XMarkIcon
             className='w-6 cursor-pointer'
-            onClick={() => props.setBoardMenu(false)}
+            onClick={() => {
+              props.setBoardMenu(false);
+              setBoardIsOpen(false);
+            }}
           />
         </article>
         <div className='flex flex-col gap-5 mt-4'>
@@ -53,12 +66,16 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
               Made by
             </div>
             <div className='w-full h-10 overflow-clip rounded-lg'>
-              <UserInfo
-                user={boardDetail?.boardOwner as UserProfile}
-                additionalText={`on ${getFormattedDate(
-                  boardDetail?.createdAt
-                )}`}
-              />
+              {boardIsLoading ? (
+                <div className='bg-blue500 bg-opacity-20 animate-pulse rounded-md w-44 h-10' />
+              ) : (
+                <UserInfo
+                  user={boardDetail?.boardOwner as UserProfile}
+                  additionalText={`on ${getFormattedDate(
+                    boardDetail?.createdAt
+                  )}`}
+                />
+              )}
             </div>
           </article>
 
@@ -69,7 +86,9 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
             </div>
 
             <div className='relative'>
-              {isInEditMode && !boardCover ? (
+              {boardIsLoading ? (
+                <div className='bg-blue500 bg-opacity-20 animate-pulse rounded-md w-full h-44' />
+              ) : isInEditMode && !boardCover ? (
                 <div className='w-full h-20 overflow-clip rounded-lg'>
                   <FileUploader
                     name={'image'}
@@ -123,12 +142,13 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
               <DocumentTextIcon className='w-4' />
               Description
             </div>
-            <div className='w-full   '>
+            <div className='w-full'>
               <TinyMCE
                 submitTextHandler={getDescription}
                 value={boardDetail?.description}
                 isInEditMode={true}
                 disabled={!isInEditMode}
+                isLoading={boardIsLoading}
               />
             </div>
           </article>
@@ -139,28 +159,34 @@ const BoardMenuModal: React.FC<{ setBoardMenu: SetState<boolean> }> = (
             </div>
             <ul className='flex flex-col gap-4'>
               <li className='flex items-center justify-between'>
-                <UserInfo user={boardDetail?.boardOwner as UserProfile} />
+                {boardIsLoading ? (
+                  <div className='bg-blue500 bg-opacity-20 animate-pulse rounded-md w-[40%] h-10' />
+                ) : (
+                  <UserInfo user={boardDetail?.boardOwner as UserProfile} />
+                )}
+
                 <p className='text-sm text-gray-400'>Admin</p>
               </li>
-              {boardDetail?.users
-                .filter((user) => user.id !== boardDetail.boardOwnerId)
-                .map((user) => (
-                  <li
-                    key={user.id}
-                    className='flex justify-between items-center'
-                  >
-                    <UserInfo user={user} />
-                    {canUpdateBoard && (
-                      <button
-                        className='text-sm text-red-500 border rounded-lg border-red-500 px-4 h-8'
-                        onClick={() => deleteUserFromBoardHandler(user.id)}
-                        type='button'
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </li>
-                ))}
+              {!boardIsLoading &&
+                boardDetail?.users
+                  .filter((user) => user.id !== boardDetail?.boardOwnerId)
+                  .map((user) => (
+                    <li
+                      key={user.id}
+                      className='flex justify-between items-center'
+                    >
+                      <UserInfo user={user} />
+                      {canUpdateBoard && isInEditMode && (
+                        <button
+                          className='text-sm text-red-500 border rounded-lg border-red-500 px-4 h-8'
+                          onClick={() => deleteUserFromBoardHandler(user.id)}
+                          type='button'
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </li>
+                  ))}
             </ul>
           </article>
         </div>

@@ -47,7 +47,12 @@ export default function Home() {
         sendBoardInviteHandler={sendBoardInviteHandler}
         setBoardMenu={setBoardMenu}
       />
-      {openBoardMenu && <BoardMenuModal setBoardMenu={setBoardMenu} />}
+      {openBoardMenu && (
+        <BoardMenuModal
+          setBoardMenu={setBoardMenu}
+          openBoardMenu={openBoardMenu}
+        />
+      )}
       {isLoading ? (
         <BoardSkeleton />
       ) : (

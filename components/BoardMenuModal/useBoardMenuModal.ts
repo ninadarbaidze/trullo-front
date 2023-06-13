@@ -16,6 +16,8 @@ export const useBoardMenuModal = () => {
   const [boardDetail, setBoardDetail] = useState<BoardDetail>();
   const [boardCover, setBoardCover] = useState('');
   const [isInEditMode, setIsInEdiMode] = useState(false);
+  const [boardIsOpen, setBoardIsOpen] = useState(false);
+  const [boardIsLoading, setBoardIsLoading] = useState(true);
   const params = useParams();
   const boardId = +params.id;
   const token = getCookie('token') as string;
@@ -25,6 +27,7 @@ export const useBoardMenuModal = () => {
   const canUpdateBoard = user.id === boardDetail?.boardOwnerId;
 
   useEffect(() => {
+    setBoardIsOpen(true);
     getBoardDetailHandler();
   }, []);
 
@@ -42,6 +45,7 @@ export const useBoardMenuModal = () => {
       setBoardDetail(response);
       setBoardCover(response.image);
       form.reset({ name: response.name });
+      setBoardIsLoading(false);
     } catch (err: any) {
       console.error(err);
     }
@@ -84,10 +88,6 @@ export const useBoardMenuModal = () => {
         );
       });
 
-      if (!data.image) formData.append('image', null);
-
-      console.log(formData);
-
       if (data.name) {
         setBoardDetail((prev) => {
           return { ...prev, name: data.name } as BoardDetail;
@@ -97,7 +97,6 @@ export const useBoardMenuModal = () => {
 
       const response = await updateBoard(token, formData, boardId);
       setIsInEdiMode(false);
-      console.log(response.boardDetails);
       setBoardCover(response.boardDetails.image);
     } catch (err: any) {
       console.error(err);
@@ -133,5 +132,8 @@ export const useBoardMenuModal = () => {
     getImage,
     canUpdateBoard,
     removeImageHandler,
+    setBoardIsOpen,
+    boardIsOpen,
+    boardIsLoading,
   };
 };
