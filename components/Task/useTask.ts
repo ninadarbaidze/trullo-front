@@ -7,6 +7,7 @@ export const useTask = (
   deleteTaskHandler: (taskId: string, columnId: string) => void
 ) => {
   const [taskDialogIsOpen, setTaskDialogIsOpen] = useState(false);
+  const [taskDetailsIsOpen, setTaskDetailsIsOpen] = useState(false);
 
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -20,6 +21,12 @@ export const useTask = (
     deleteTaskHandler(task.id, `column-${task.columnId}`);
   };
 
+  const openTaskDetailsHandler = () => {
+    setTaskDetailsIsOpen(true);
+    try {
+    } catch (err: any) {}
+  };
+
   return {
     taskDialogIsOpen,
     setTaskDialogIsOpen,
@@ -27,5 +34,8 @@ export const useTask = (
     dropdownRef,
     dropdownToggler,
     deleteTask,
+    taskDetailsIsOpen,
+    openTaskDetailsHandler,
+    setTaskDetailsIsOpen,
   };
 };

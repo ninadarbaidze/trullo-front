@@ -1,6 +1,6 @@
 'use client';
 import { FormProvider } from 'react-hook-form';
-import { FileUploader, SquareLoader } from 'components';
+import { FileUploader, MultipleFileUpload, SquareLoader } from 'components';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useProfile } from 'app/hooks/useProfile';
 import { getFirstInitials } from 'helpers';

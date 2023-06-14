@@ -26,3 +26,7 @@ export const getFirstInitials = (
   return ((first?.charAt(0).toUpperCase() as string) +
     last?.charAt(0).toUpperCase()) as string;
 };
+
+export const firstTwoChars = (name: string) => {
+  return name.substring(0, 2);
+};

@@ -8,7 +8,7 @@ import { FormProvider } from 'react-hook-form';
 
 const AddBoardModal: React.FC<Props> = (props) => {
   const { form, previewImage, setCustomImage } = useAddBoardModal();
-  console.log(form.getValues());
+
   return (
     <ModalWrapper>
       <div className='px-6 py-5 items-center relative'>

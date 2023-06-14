@@ -4,7 +4,7 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { TaskType } from 'types/global';
 import { ThreeDots } from '../icons';
-import { ActionDialog } from 'components';
+import { ActionDialog, TaskDetailModal } from 'components';
 import { useTask } from './useTask';
 
 const Task: React.FC<{
@@ -19,10 +19,19 @@ const Task: React.FC<{
     dropdownRef,
     dropdownToggler,
     deleteTask,
+    taskDetailsIsOpen,
+    openTaskDetailsHandler,
+    setTaskDetailsIsOpen,
   } = useTask(props.task, props.deleteTaskHandler);
 
   return (
     <>
+      {taskDetailsIsOpen && (
+        <TaskDetailModal
+          setTaskDetailsIsOpen={setTaskDetailsIsOpen}
+          taskId={+props.task.id.slice(5)}
+        />
+      )}
       <Draggable
         draggableId={props.task.id as string}
         index={props.index}
@@ -36,6 +45,7 @@ const Task: React.FC<{
             className={`${
               snapshot.isDragging ? 'bg-white' : 'bg-white'
             }  pb-16 px-2 rounded-xl shadow-md mb-4 relative z-10`}
+            onClick={openTaskDetailsHandler}
           >
             {taskDialogIsOpen && (
               <div className='absolute top-6 right-0' ref={dropdownRef}>
