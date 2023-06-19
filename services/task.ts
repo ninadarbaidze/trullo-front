@@ -78,3 +78,33 @@ export const downloadAttachment = async (
   });
   return res.data;
 };
+
+export const assignTask = async (
+  token: string,
+  taskId: number,
+  userIds: number[]
+): Promise<string> => {
+  const res = await axios.patch(
+    `/assign-task/${taskId}`,
+    { userIds },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const deleteUserFromTask = async (
+  token: string,
+  taskId: number,
+  userId: number
+): Promise<string> => {
+  const res = await axios.delete(`/delete-user-task/${taskId}/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};

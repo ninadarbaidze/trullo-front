@@ -3,10 +3,11 @@ import React from 'react';
 import { Props } from './types';
 
 const BoardHeader: React.FC<Props> = (props) => {
+  console.log(props.data.users);
   return (
     <nav className='flex w-screen fixed top-[4rem] px-8 pt-5 justify-between bg-white z-40'>
       <ul className='flex gap-2 mb-4'>
-        <BoardUserList data={props.data} />
+        <BoardUserList users={props.data.users} />
         <AddButton
           className='h-8 w-8 flex !items-center !justify-center'
           onclick={() => props.getAllUserData()}
@@ -21,6 +22,8 @@ const BoardHeader: React.FC<Props> = (props) => {
               list={props.allUsers}
               usersIsLoading={props.usersIsLoading}
               sendBoardInviteHandler={props.sendBoardInviteHandler}
+              description='Invite members to this board'
+              btnText='Invite'
             />
           </>
         )}

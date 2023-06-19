@@ -16,16 +16,16 @@ const Select: React.FC<Props> = (props) => {
   }, [props.list]);
 
   return (
-    <div className='absolute z-40 top-9 shadow-md'>
+    <div className={`${props.className} absolute z-40 top-9 shadow-md`}>
       <div className='flex flex-col gap-1 relative border rounded-md bg-white px-2 py-2'>
         <div>
           <h3 className='font-semibold'>Members</h3>
-          <p className='text-gray-400 mb-2'>Invite members to this board</p>
+          <p className='text-gray-400 mb-2'>{props.description}</p>
         </div>
         <div className='flex flex-col gap-1 items-center'>
           <input
             type='search'
-            className='border rounded-md py-[5px] pl-2 text-sm relative shadow-md'
+            className='border rounded-md py-[5px] pl-2 text-sm w-full relative shadow-md'
             onChange={(e) => {
               setList((_prev) => {
                 return initialList.filter((item) => {
@@ -104,13 +104,14 @@ const Select: React.FC<Props> = (props) => {
           </ul>
           <button
             className='bg-blue500 text-white w-24 py-1 rounded-lg my-3'
+            type='button'
             onClick={() =>
               props.sendBoardInviteHandler?.(
                 list.filter((user) => user.isChecked)
               )
             }
           >
-            Invite
+            {props.btnText}
           </button>
         </div>
       </div>

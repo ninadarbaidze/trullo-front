@@ -1,26 +1,37 @@
 import { getCookie } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import {
   addTaskAttachments,
+  assignTask,
   deleteTaskImage,
+  deleteUserFromTask,
   getTaskDetails,
   postTaskDetails,
 } from 'services';
-import { NoImage } from 'public/images';
-import { TaskDetail, TaskDetailForm } from 'types/global';
+import { TaskDetail, TaskDetailForm, UserProfile } from 'types/global';
+import { addClickAwayHandler } from 'helpers';
 
-export const useTaskDetailModal = (taskId: number) => {
+export const useTaskDetailModal = (
+  taskId: number,
+  boardUsers: UserProfile[]
+) => {
   const [taskData, setTaskData] = useState<TaskDetail>();
   const [boardCover, setBoardCover] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
   const [customImage, setCustomImage] = useState('');
+  const [userListIsOpen, setUserListIsOpen] = useState(false);
+  const [boardUserList, setBoardUserList] = useState<UserProfile[]>(boardUsers);
+  const [taskUserList, setTaskUserList] = useState<UserProfile[]>([]);
   const [isInEditMode, setIsInEditMode] = useState({
     name: false,
     description: false,
   });
 
   const token = getCookie('token') as string;
+
+  const dropDownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const form = useForm<TaskDetailForm>({
     defaultValues: {
@@ -29,6 +40,7 @@ export const useTaskDetailModal = (taskId: number) => {
       attachments: [],
       comments: [],
       description: '',
+      users: [],
     },
   });
 
@@ -39,7 +51,13 @@ export const useTaskDetailModal = (taskId: number) => {
   const getTaskDetail = async () => {
     try {
       const response = await getTaskDetails(token, taskId);
+
+      const taskUserIds = response.users.map((user) => user.id);
       setTaskData(response);
+      setTaskUserList(response.users);
+      setBoardUserList((prev) =>
+        prev.filter((user) => !taskUserIds.includes(user.id))
+      );
       form.setValue('attachments', response.attachments);
       form.setValue('name', response.content);
       form.setValue('image', response.image as string);
@@ -125,11 +143,42 @@ export const useTaskDetailModal = (taskId: number) => {
       return customImage;
     } else if (!customImage && boardCover) {
       return `${process.env.NEXT_PUBLIC_BACKEND_URL}/${boardCover}`;
-    } else {
-      return NoImage.src;
     }
   };
 
+  const toggleDropDown = () => {
+    setUserListIsOpen((prev) => !prev);
+    addClickAwayHandler(triggerRef, dropDownRef, setUserListIsOpen);
+  };
+
+  const assignTaskToUser = async (users: UserProfile[]) => {
+    try {
+      const userIds = users.map((user) => user.id);
+
+      setBoardUserList((prev) =>
+        prev.filter((user) => !userIds.includes(user.id))
+      );
+      setTaskUserList((prev) => prev.concat(users));
+      await assignTask(
+        token,
+        taskId,
+        users.map((user) => user.id)
+      );
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
+  const removeUserFromTask = async (userId: number) => {
+    try {
+      const removedUser = boardUsers.find((user) => user.id === userId);
+      setBoardUserList((prev) => prev.concat(removedUser));
+      setTaskUserList((prev) => prev.filter((user) => user.id !== userId));
+      await deleteUserFromTask(token, taskId, userId);
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
   return {
     form,
     getDescription,
@@ -145,5 +194,14 @@ export const useTaskDetailModal = (taskId: number) => {
     submitImageHandler,
     getImage,
     boardCover,
+    userListIsOpen,
+    setUserListIsOpen,
+    dropDownRef,
+    triggerRef,
+    toggleDropDown,
+    assignTaskToUser,
+    taskUserList,
+    boardUserList,
+    removeUserFromTask,
   };
 };

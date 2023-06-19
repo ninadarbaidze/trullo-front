@@ -11,9 +11,17 @@ import {
   PhotoIcon,
   CheckIcon,
 } from '@heroicons/react/24/outline';
-import { TinyMCE, MultipleFileUpload, FileUploader, Button } from 'components';
+import {
+  TinyMCE,
+  MultipleFileUpload,
+  FileUploader,
+  Button,
+  Select,
+  BoardUserList,
+} from 'components';
 import { FormProvider } from 'react-hook-form';
 import { useTaskDetailModal } from './useTaskDetailModal';
+import { UserProfile } from 'types/global';
 
 const TaskDetailModal: React.FC<Props> = (props) => {
   const {
@@ -29,13 +37,24 @@ const TaskDetailModal: React.FC<Props> = (props) => {
     setEditState,
     isInEditMode,
     submitImageHandler,
-  } = useTaskDetailModal(props.taskId);
+    userListIsOpen,
+    dropDownRef,
+    triggerRef,
+    toggleDropDown,
+    assignTaskToUser,
+    boardCover,
+    customImage,
+    users,
+    taskUserList,
+    boardUserList,
+    removeUserFromTask,
+  } = useTaskDetailModal(props.taskId, props.boardUsers);
 
   return (
     <FormProvider {...form}>
       <ModalWrapper
         setModalIsOpen={props.setTaskDetailsIsOpen}
-        modalClass='w-[65%] top-[50%] h-[80vh] overflow-y-scroll'
+        modalClass='w-[65%] top-[50%] h-[80vh] overflow-y-scroll '
       >
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -52,16 +71,18 @@ const TaskDetailModal: React.FC<Props> = (props) => {
               </button>
             )}
 
-            <div className='flex  overflow-clip max-w-96 h-44 relative rounded-lg object-cover z-10'>
-              <Image
-                src={getImage()}
-                loader={() => getImage()}
-                alt='default_profile'
-                className='rounded'
-                fill
-                objectFit='cover'
-              />
-            </div>
+            {(customImage || boardCover) && (
+              <div className='flex  overflow-clip max-w-96 h-44 relative rounded-lg object-cover z-10'>
+                <Image
+                  src={getImage() as string}
+                  loader={() => getImage() as string}
+                  alt='default_profile'
+                  className='rounded'
+                  fill
+                  objectFit='cover'
+                />
+              </div>
+            )}
           </section>
           <section className='flex gap-8  w-full'>
             <div className='flex flex-col gap-6 w-3/4'>
@@ -102,8 +123,23 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                   <span className='text-black font-semibold'>In progress</span>
                 </p>
               </article>
+              {taskUserList?.length > 0 && (
+                <article className='flex flex-col gap-4 text-gray300 text-xs'>
+                  <div className='flex items-center gap-2'>
+                    <UserGroupIcon className='w-4' />
+                    Assigned to
+                  </div>
+
+                  <ul className='flex gap-1'>
+                    <BoardUserList
+                      users={taskUserList}
+                      deleteUser={removeUserFromTask}
+                    />
+                  </ul>
+                </article>
+              )}
               <article className='flex flex-col gap-4'>
-                <div className='flex text-gray-400 font-medium items-center gap-2 text-xs'>
+                <div className='flex text-gray300 font-medium items-center gap-2 text-xs'>
                   <DocumentTextIcon className='w-4' />
                   Description
                   {isInEditMode.description ? (
@@ -141,7 +177,7 @@ const TaskDetailModal: React.FC<Props> = (props) => {
               </article>
               <article className='flex flex-col gap-4'>
                 <div className='flex items-center gap-6'>
-                  <div className='flex text-gray-400 font-medium items-center gap-2 text-xs'>
+                  <div className='flex text-gray300 font-medium items-center gap-2 text-xs'>
                     <Square3Stack3DIcon className='w-4' />
                     Attachments
                   </div>
@@ -165,21 +201,40 @@ const TaskDetailModal: React.FC<Props> = (props) => {
             </div>
             <div className='w-1/4'>
               <article className='flex flex-col gap-3'>
-                <div className='flex text-gray-400 font-medium items-center gap-2 text-xs'>
+                <div className='flex text-gray300 font-medium items-center gap-2 text-xs'>
                   <AdjustmentsHorizontalIcon className='w-4' />
                   Actions
                 </div>
-                <nav className='flex flex-col items-start gap-2 w-full text-gray300'>
-                  <button className='flex gap-2 items-center justify-start px-4 py-2 bg-gray250 rounded-md w-full'>
+                <nav className='flex flex-col items-start  w-full text-gray300 relative'>
+                  {userListIsOpen && (
+                    <div ref={dropDownRef} className='w-full'>
+                      <Select
+                        list={boardUserList as UserProfile[]}
+                        className='right-0 top-0 w-72'
+                        description='Assign members to this task'
+                        btnText='Assign'
+                        sendBoardInviteHandler={assignTaskToUser}
+                      />
+                    </div>
+                  )}
+                  <button
+                    className='flex gap-2 items-center justify-start px-4 py-2 bg-gray250 rounded-md w-full'
+                    ref={triggerRef}
+                    onClick={toggleDropDown}
+                    type='button'
+                  >
                     <UserGroupIcon className='w-5' />
                     Members
                   </button>
-                  <button className='flex gap-2 items-center justify-start px-4 py-2 bg-gray250 rounded-md w-full'>
+                  <button
+                    className='flex gap-2 mt-2  items-center justify-start px-4 py-2 bg-gray250 rounded-md w-full'
+                    type='button'
+                  >
                     <TagIcon className='w-5' />
                     Label
                   </button>
                   <button
-                    className='flex gap-2 relative items-center px-4 py-2 bg-gray250 rounded-md w-full'
+                    className='flex gap-2 relative  mt-2 items-center px-4 py-2 bg-gray250 rounded-md w-full'
                     type='button'
                   >
                     <PhotoIcon className='w-5' />

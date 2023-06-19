@@ -1,11 +1,12 @@
 'use client';
 import React from 'react';
-import { TaskType } from 'types/global';
+import { TaskType, UserProfile } from 'types/global';
 import { Task } from 'components';
 
 const TaskList: React.FC<{
   tasks: TaskType[];
   deleteTaskHandler: (taskId: string, columnId: string) => void;
+  boardUsers: UserProfile[];
 }> = (props) => {
   return (
     <>
@@ -15,6 +16,7 @@ const TaskList: React.FC<{
           index={index}
           key={task.id}
           deleteTaskHandler={props.deleteTaskHandler}
+          boardUsers={props.boardUsers}
         />
       ))}
     </>

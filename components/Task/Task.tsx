@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { TaskType } from 'types/global';
+import { TaskType, UserProfile } from 'types/global';
 import { TaskDetailModal } from 'components';
 import { useTask } from './useTask';
 import Image from 'next/image';
@@ -12,15 +12,18 @@ const Task: React.FC<{
   index: number;
   key: string;
   deleteTaskHandler: (taskId: string, columnId: string) => void;
+  boardUsers: UserProfile[];
 }> = (props) => {
   const { taskDetailsIsOpen, openTaskDetailsHandler, setTaskDetailsIsOpen } =
     useTask(props.task, props.deleteTaskHandler);
+
   return (
     <>
       {taskDetailsIsOpen && (
         <TaskDetailModal
           setTaskDetailsIsOpen={setTaskDetailsIsOpen}
           taskId={+props.task.id.slice(5)}
+          boardUsers={props.boardUsers}
         />
       )}
       <Draggable

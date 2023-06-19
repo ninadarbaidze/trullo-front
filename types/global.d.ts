@@ -107,6 +107,7 @@ export type TaskDetailForm = {
   attachments: BackAttachment[] | File[];
   comments: [];
   description: string;
+  users: UserProfile[];
 };
 
 export type BackAttachment = {
@@ -131,4 +132,5 @@ export type TaskDetail = {
     content: string;
     taskId: number;
   };
+  users: UserProfile[];
 };

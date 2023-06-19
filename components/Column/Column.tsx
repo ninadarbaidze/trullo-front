@@ -104,6 +104,7 @@ const Column: React.FC<PropsTypes> = (props) => {
                     <TaskList
                       tasks={props.tasks}
                       deleteTaskHandler={props.deleteTaskHandler}
+                      boardUsers={props.boardUsers}
                     />
                   </ul>
                   {provided.placeholder}

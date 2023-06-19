@@ -1,14 +1,35 @@
 import React from 'react';
 import Image from 'next/image';
 import { getFirstInitials } from 'helpers';
-import { Board } from 'types/global';
+import { UserProfile } from 'types/global';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
-const BoardUserList: React.FC<{ data: Board }> = (props) => {
+const BoardUserList: React.FC<{
+  users: UserProfile[];
+  deleteUser?: (userId: number) => void;
+}> = (props) => {
   return (
     <>
-      {props.data.users.map((user) =>
-        user.avatar ? (
-          <li className='w-8 h-8 overflow-clip rounded-lg' key={user.id}>
+      {props.users?.map((user) => (
+        <li
+          className={`w-8 h-8  ${
+            user?.avatar
+              ? 'overflow-clip rounded-lg'
+              : 'rounded-md flex items-center justify-center bg-gray400 text-white'
+          } relative`}
+          key={user.id}
+        >
+          {props.deleteUser && (
+            <button
+              className='absolute top-0 right-0 z-50'
+              type='button'
+              onClick={() => props.deleteUser?.(user.id)}
+            >
+              <XMarkIcon className='bg-red-300 w-[0.8rem] rounded-full text-red-600' />
+            </button>
+          )}
+
+          {user?.avatar ? (
             <Image
               src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`}
               loader={() =>
@@ -18,16 +39,11 @@ const BoardUserList: React.FC<{ data: Board }> = (props) => {
               height={100}
               alt=''
             />
-          </li>
-        ) : (
-          <li
-            key={user.id}
-            className='w-8 h-8 rounded-md flex items-center justify-center bg-gray400 text-white'
-          >
-            {getFirstInitials(user?.firstName, user?.lastName)}
-          </li>
-        )
-      )}
+          ) : (
+            <div>{getFirstInitials(user?.firstName, user?.lastName)}</div>
+          )}
+        </li>
+      ))}
     </>
   );
 };

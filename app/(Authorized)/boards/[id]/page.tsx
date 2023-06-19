@@ -87,6 +87,7 @@ export default function Home() {
                             deleteTaskHandler={deleteTaskHandler}
                             deleteColumnHandler={deleteColumnHandler}
                             changeColumnNameHandler={changeColumnNameHandler}
+                            boardUsers={data.users}
                           />
                         );
                       }

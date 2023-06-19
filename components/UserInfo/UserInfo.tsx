@@ -8,6 +8,7 @@ const UserInfo: React.FC<{
   user: Partial<UserProfile>;
   additionalText?: string;
 }> = (props) => {
+  console.log(props.user);
   return (
     <div className='flex items-center gap-3'>
       <div className='w-10 h-10 overflow-clip rounded-lg'>

@@ -187,6 +187,22 @@ export const getAllUsers = async (
   return res.data;
 };
 
+export const getAllBoardUsers = async (
+  token: string,
+  boardId: number
+): Promise<ProfileBackInfo[]> => {
+  const res = await axios.get(
+    `/all-board-users/${boardId}`,
+
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
 export const sendInvitationsToBoard = async (
   token: string,
   users: AllUser[],

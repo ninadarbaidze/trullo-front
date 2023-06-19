@@ -74,6 +74,8 @@ export const useProfile = () => {
         name: response.userInfo.username,
         email: response.userInfo.email,
         isVerified: response.userInfo.isVerified,
+        firstName: response.userInfo.firstName,
+        lastName: response.userInfo.lastName,
       });
     } catch (err: any) {
       console.error(err);
