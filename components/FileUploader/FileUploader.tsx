@@ -14,7 +14,7 @@ const FileUploader: React.FC<Props> = (props) => {
     register,
     resetImage,
     imageUrl,
-  } = useFileUploader(props.name, props.setCustomImage);
+  } = useFileUploader(props.name, props.setCustomImage, props.submitImage);
 
   return (
     <div

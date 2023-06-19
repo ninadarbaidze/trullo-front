@@ -40,7 +40,7 @@ export const getAvatarHandler = (user: Partial<UserProfile>) => {
   );
 };
 
-export const getFormattedDate = (date: string | undefined) => {
+export const getFormattedDate = (date: string | number) => {
   const currentDate = new Date(date);
   const day = currentDate.getDate();
   const month = currentDate.toLocaleString('en-US', { month: 'short' });

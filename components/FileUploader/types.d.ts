@@ -7,4 +7,5 @@ export type Props = {
   imageReseted?: boolean;
   disabled?: boolean;
   boxClassName?: string;
+  submitImage?: () => void;
 };

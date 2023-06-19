@@ -24,3 +24,4 @@ export * from './UserInfo';
 export * from './TinyMCE';
 export * from './MultipleFileUpload';
 export * from './TaskDetailModal';
+export * from './Button';

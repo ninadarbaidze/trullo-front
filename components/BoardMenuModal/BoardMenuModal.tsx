@@ -72,7 +72,7 @@ const BoardMenuModal: React.FC<{
                 <UserInfo
                   user={boardDetail?.boardOwner as UserProfile}
                   additionalText={`on ${getFormattedDate(
-                    boardDetail?.createdAt
+                    boardDetail?.createdAt as string
                   )}`}
                 />
               )}

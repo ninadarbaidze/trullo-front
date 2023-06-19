@@ -3,7 +3,8 @@ import { useFormContext } from 'react-hook-form';
 
 export const useFileUploader = (
   name: string,
-  setCustomImage?: (file: string) => void
+  setCustomImage?: (file: string) => void,
+  submitImage?: () => void
 ) => {
   const [imageIsDraggedOver, setImageIsDraggedOver] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
@@ -22,6 +23,7 @@ export const useFileUploader = (
     setCustomImage?.(file);
     setPreviewImage(file);
     setPreviewFileName(event.target.files![0].name);
+    submitImage?.();
   };
   const dropHandler = (e: DragEvent<HTMLDivElement>) => {
     setImageIsDraggedOver(false);

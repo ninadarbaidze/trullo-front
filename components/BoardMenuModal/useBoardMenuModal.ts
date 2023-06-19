@@ -75,8 +75,6 @@ export const useBoardMenuModal = () => {
     description: string;
     image: Blob | string;
   }) => {
-    console.log('data', data);
-
     try {
       const formData = new FormData();
       const keys = Object.keys(data);

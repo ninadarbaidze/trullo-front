@@ -3,9 +3,9 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { TaskType } from 'types/global';
-import { ThreeDots } from '../icons';
-import { ActionDialog, TaskDetailModal } from 'components';
+import { TaskDetailModal } from 'components';
 import { useTask } from './useTask';
+import Image from 'next/image';
 
 const Task: React.FC<{
   task: TaskType;
@@ -13,17 +13,8 @@ const Task: React.FC<{
   key: string;
   deleteTaskHandler: (taskId: string, columnId: string) => void;
 }> = (props) => {
-  const {
-    taskDialogIsOpen,
-    triggerRef,
-    dropdownRef,
-    dropdownToggler,
-    deleteTask,
-    taskDetailsIsOpen,
-    openTaskDetailsHandler,
-    setTaskDetailsIsOpen,
-  } = useTask(props.task, props.deleteTaskHandler);
-
+  const { taskDetailsIsOpen, openTaskDetailsHandler, setTaskDetailsIsOpen } =
+    useTask(props.task, props.deleteTaskHandler);
   return (
     <>
       {taskDetailsIsOpen && (
@@ -47,20 +38,23 @@ const Task: React.FC<{
             }  pb-16 px-2 rounded-xl shadow-md mb-4 relative z-10`}
             onClick={openTaskDetailsHandler}
           >
-            {taskDialogIsOpen && (
-              <div className='absolute top-6 right-0' ref={dropdownRef}>
-                <ActionDialog deleteHandler={deleteTask} />
-              </div>
-            )}
-            <section className='flex items-start justify-between py-2'>
+            <section className='flex flex-col items-start justify-between py-2 relative'>
+              {props.task.image && (
+                <div className='flex  overflow-clip w-full h-24 relative rounded-lg object-cover z-10'>
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${props.task.image}`}
+                    loader={() =>
+                      `${process.env.NEXT_PUBLIC_BACKEND_URL}/${props.task.image}`
+                    }
+                    alt='default_profile'
+                    className='rounded'
+                    fill
+                    objectFit='cover'
+                  />
+                </div>
+              )}
+
               <div className='pr-1'>{props.task.content}</div>
-              <button
-                ref={triggerRef}
-                className='pt-1'
-                onClick={() => dropdownToggler()}
-              >
-                <ThreeDots color='#828282' />
-              </button>
             </section>
           </li>
         )}

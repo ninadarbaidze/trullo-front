@@ -1,14 +1,10 @@
 import { getCookie, setCookie } from 'cookies-next';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { verifyBoard, verifyUser } from 'services';
-import { AuthContext } from 'store';
-import { UserProfile } from 'types/global';
 
 export const useAuth = () => {
   const [errorExists, setErrorExists] = useState(false);
-  const [param, setParam] = useState('');
-  const [boardId, setBoardId] = useState<number | null>(null);
   const params = useSearchParams();
   const [modalTexts, setModalTexts] = useState({
     modalTitle: '',
@@ -17,8 +13,6 @@ export const useAuth = () => {
     btnUrl: '',
     btnUrlError: '',
   });
-
-  // const [user, setUser] = useState<Partial<UserProfile>>({});
 
   const verifyAccount = async () => {
     try {
@@ -41,7 +35,6 @@ export const useAuth = () => {
     const user = !!getCookie('user') && JSON.parse(getCookie('user') as string);
 
     try {
-      console.log(user);
       const response = await verifyBoard(
         getCookie('token') as string,
         user.id!,
@@ -66,5 +59,5 @@ export const useAuth = () => {
     params.get('accept-invitation') && acceptInvitation();
   }, []);
 
-  return { errorExists, param, modalTexts };
+  return { errorExists, modalTexts };
 };

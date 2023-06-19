@@ -381,7 +381,6 @@ export const useMain = () => {
 
   const sendBoardInviteHandler = async (data: AllUser[]) => {
     setInvitationModalIsOpen(false);
-    console.log('ss', data);
 
     try {
       await sendInvitationsToBoard(token, data, board, +params.id);

@@ -14,6 +14,7 @@ export type TaskType = {
   content: string;
   columnId: number;
   boardId: number;
+  image: string;
 };
 
 export type ColumnType = {
@@ -98,4 +99,36 @@ export type BoardDetail = {
   users: UserProfile[];
   boardOwner: UserProfile;
   description?: string;
+};
+
+export type TaskDetailForm = {
+  name: string;
+  image: string;
+  attachments: BackAttachment[] | File[];
+  comments: [];
+  description: string;
+};
+
+export type BackAttachment = {
+  id: number;
+  file: string;
+  taskId: number;
+  type: number;
+  createdAt: string;
+};
+
+export type TaskDetail = {
+  id: number;
+  taskPosition: number;
+  content: string;
+  image: string | null;
+  columnId: number;
+  boardId: number;
+  difficulty: null;
+  attachments: BackAttachment[];
+  description: {
+    id: number;
+    content: string;
+    taskId: number;
+  };
 };

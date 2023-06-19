@@ -3,7 +3,6 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useAuth } from 'app/hooks/useAuth';
 import { InformationModal } from 'components';
-import { AuthContextProvider } from 'store';
 
 const Auth = () => {
   const { errorExists, modalTexts } = useAuth();

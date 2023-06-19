@@ -1,30 +1,24 @@
-import {
-  PhotoIcon,
-  XMarkIcon,
-  PlusIcon,
-  DocumentTextIcon,
-} from '@heroicons/react/24/outline';
+import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { Props } from './types';
 import { useMultipleFileUploader } from './useMultipleFileUpload';
-import { firstTwoChars, getFirstInitials, getFormattedDate } from 'helpers';
+import { getFormattedDate } from 'helpers';
 import Image from 'next/image';
+import { Button } from 'components';
+import { BackAttachment } from 'types/global';
 
 const MultipleFileUpload: React.FC<Props> = (props) => {
   const {
-    imageIsDraggedOver,
     changeHandler,
-    previewImage,
-    fileRef,
-    previewFileName,
-    setImageIsDraggedOver,
     register,
-    resetImage,
-    imageUrl,
     files,
     getLocalImageObjectURL,
     removeFileHandler,
     download,
-  } = useMultipleFileUploader(props.name, props.setCustomImage);
+  } = useMultipleFileUploader(
+    props.name,
+    props.setCustomImage,
+    props.submitImages
+  );
 
   return (
     <div className={`${props.boxClassName} flex flex-col items-center  w-44`}>
@@ -39,51 +33,66 @@ const MultipleFileUpload: React.FC<Props> = (props) => {
       />
       <div className='w-full'>
         <ul className='flex flex-col gap-7'>
-          {files.map((file, i) => (
-            <li key={i} className='flex gap-4'>
-              <article>
-                {file.type.includes('application') ? (
-                  <div className='w-36 h-24 text-base rounded-md flex items-center justify-center bg-gray400 text-white'>
-                    <DocumentTextIcon className='w-10 text-gray-700' />
-                  </div>
-                ) : (
-                  <div className='flex overflow-clip w-36 h-24 relative rounded-lg object-cover z-10'>
-                    <Image
-                      src={getLocalImageObjectURL(file)}
-                      loader={() => getLocalImageObjectURL(file)}
-                      alt='default_profile'
-                      className='rounded'
-                      fill
-                      objectFit='cover'
-                    />
-                  </div>
-                )}
-              </article>
+          {files?.map((item: File | BackAttachment, i: number) => {
+            const frontFile = ((item as File).name && item) as File;
+            const backFile = ((item as BackAttachment).file &&
+              item) as BackAttachment;
+            return (
+              <li key={i} className='flex gap-4'>
+                <article>
+                  {(
+                    backFile
+                      ? backFile.type === 1
+                      : frontFile?.type?.includes('application')
+                  ) ? (
+                    <div className='w-24 h-20 text-base rounded-md flex items-center justify-center bg-gray400 text-white'>
+                      <DocumentTextIcon className='w-10 text-gray-700' />
+                    </div>
+                  ) : (
+                    <div className='flex overflow-clip w-24 h-20 relative rounded-lg object-cover z-10'>
+                      <Image
+                        src={getLocalImageObjectURL(
+                          frontFile ? frontFile : backFile
+                        )}
+                        loader={() =>
+                          getLocalImageObjectURL(
+                            frontFile ? frontFile : backFile
+                          )
+                        }
+                        alt='default_profile'
+                        className='rounded'
+                        fill
+                        objectFit='cover'
+                      />
+                    </div>
+                  )}
+                </article>
 
-              <article className='flex flex-col justify-between'>
-                <p className='text-xs text-gray-400'>
-                  {getFormattedDate(file.lastModified)}
-                </p>
-                <h3 className='text-base font-semibold w-96 truncate'>
-                  {file.name}
-                </h3>
-                <nav className='flex gap-3'>
-                  <button
-                    className='border border-gray-400 text-gray-400 rounded-lg px-4 py-1'
-                    onClick={() => download(i)}
-                  >
-                    Download
-                  </button>
-                  <button
-                    className='border border-gray-400 text-gray-400 rounded-lg px-4 py-1'
-                    onClick={() => removeFileHandler(i)}
-                  >
-                    Delete
-                  </button>
-                </nav>
-              </article>
-            </li>
-          ))}
+                <article className='flex flex-col justify-between'>
+                  <p className='text-xs text-gray-400'>
+                    {getFormattedDate(
+                      frontFile ? frontFile.lastModified : backFile?.createdAt
+                    )}
+                  </p>
+                  <h3 className='text-xs font-semibold w-96 truncate'>
+                    {frontFile?.name ?? backFile.file}
+                  </h3>
+                  <nav className='flex gap-3 text-xs'>
+                    <Button
+                      text={'Download'}
+                      onClick={() => download(i, backFile.file, backFile.id)}
+                    />
+                    {!frontFile && (
+                      <Button
+                        text={'Delete'}
+                        onClick={() => removeFileHandler(i, backFile?.id)}
+                      />
+                    )}
+                  </nav>
+                </article>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

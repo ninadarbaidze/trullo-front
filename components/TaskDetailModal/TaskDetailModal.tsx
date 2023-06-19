@@ -1,7 +1,5 @@
 import { ModalWrapper } from 'components/ModalWrapper';
-import React, { useRef } from 'react';
 import { Props } from './types';
-import { NoImage } from 'public/images';
 import Image from 'next/image';
 import {
   DocumentTextIcon,
@@ -11,16 +9,27 @@ import {
   UserGroupIcon,
   TagIcon,
   PhotoIcon,
-  PlusIcon,
+  CheckIcon,
 } from '@heroicons/react/24/outline';
-import { TinyMCE, MultipleFileUpload } from 'components';
+import { TinyMCE, MultipleFileUpload, FileUploader, Button } from 'components';
 import { FormProvider } from 'react-hook-form';
 import { useTaskDetailModal } from './useTaskDetailModal';
 
 const TaskDetailModal: React.FC<Props> = (props) => {
-  const { form, getDescription, onSubmit } = useTaskDetailModal();
-  console.log(form.getValues());
-  const fileRef = useRef<HTMLInputElement>(null);
+  const {
+    form,
+    getDescription,
+    onSubmit,
+    fileRef,
+    getImage,
+    setCustomImage,
+    resetTaskImage,
+    taskData,
+    submitImages,
+    setEditState,
+    isInEditMode,
+    submitImageHandler,
+  } = useTaskDetailModal(props.taskId);
 
   return (
     <FormProvider {...form}>
@@ -33,14 +42,20 @@ const TaskDetailModal: React.FC<Props> = (props) => {
           className='flex flex-col gap-6 w-full px-8 py-4 '
         >
           <section>
-            <button className='absolute top-2 right-5 z-50' type='button'>
-              <XMarkIcon className='bg-blue500 w-8 right-0 text-white rounded-md' />
-            </button>
+            {form.getValues('image') && (
+              <button
+                className='absolute top-2 right-5 z-50'
+                type='button'
+                onClick={resetTaskImage}
+              >
+                <XMarkIcon className='bg-blue500 w-8 right-0 text-white rounded-md' />
+              </button>
+            )}
 
             <div className='flex  overflow-clip max-w-96 h-44 relative rounded-lg object-cover z-10'>
               <Image
-                src={NoImage.src}
-                // loader={() => getImage()}
+                src={getImage()}
+                loader={() => getImage()}
                 alt='default_profile'
                 className='rounded'
                 fill
@@ -51,12 +66,36 @@ const TaskDetailModal: React.FC<Props> = (props) => {
           <section className='flex gap-8  w-full'>
             <div className='flex flex-col gap-6 w-3/4'>
               <article>
-                <h2 className='text-lg font-semibold'>
+                <h2 className='flex items-center justify-between text-lg font-semibold'>
                   <input
                     {...form.register('name')}
                     type='text'
                     className='outline-none'
+                    disabled={!isInEditMode.name}
                   />
+                  {isInEditMode.name ? (
+                    <nav className='flex gap-1'>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          setEditState('name');
+                          onSubmit(form.getValues());
+                        }}
+                      >
+                        <CheckIcon className='text-white bg-blue500 w-5 rounded-full z-20' />
+                      </button>
+                      <button onClick={() => setEditState('name')}>
+                        <XMarkIcon className='text-white bg-red-500 w-5 rounded-full z-20' />
+                      </button>
+                    </nav>
+                  ) : (
+                    <Button
+                      text={'Edit'}
+                      icon={'edit'}
+                      onClick={() => setEditState('name')}
+                      classNme='text-xs px-1'
+                    />
+                  )}
                 </h2>
                 <p className='text-xs text-gray-400'>
                   In list{' '}
@@ -67,15 +106,35 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                 <div className='flex text-gray-400 font-medium items-center gap-2 text-xs'>
                   <DocumentTextIcon className='w-4' />
                   Description
+                  {isInEditMode.description ? (
+                    <nav className='flex gap-1'>
+                      <button
+                        onClick={() => {
+                          setEditState('desc');
+                          onSubmit(form.getValues());
+                        }}
+                      >
+                        <CheckIcon className='text-white bg-blue500 w-5 rounded-full z-20' />
+                      </button>
+                      <button onClick={() => setEditState('desc')}>
+                        <XMarkIcon className='text-white bg-red-500 w-5 rounded-full z-20' />
+                      </button>
+                    </nav>
+                  ) : (
+                    <Button
+                      text={'Edit'}
+                      icon={'edit'}
+                      onClick={() => setEditState('desc')}
+                      classNme='text-xs px-1'
+                    />
+                  )}
                 </div>
-                <div className='w-full'>
+                <div className='w-full text-xs'>
                   <TinyMCE
                     submitTextHandler={getDescription}
-                    value={
-                      'Ideas are created and share here through a card. Here you can describe what youd like to accomplish.* Why  ? (Why do you wish to do it ?* What ? (What it  is it, what are the goals, who is concerned, Ideas are created and share here through a card. Here you can describe what youd like to accomplish.* Why  ? (Why do you wish to do it ?* What ? (What it  is it, what are the goals, who is concerned Ideas are created and share here through a card. Here you can describe what youd like to accomplish.* Why  ? (Why do you wish to do it ?* What ? (What it  is it, what are the goals, who is concerned'
-                    }
+                    value={taskData?.description.content}
                     isInEditMode={true}
-                    //   disabled={!isInEditMode}
+                    disabled={!isInEditMode.description}
                     //   isLoading={boardIsLoading}
                   />
                 </div>
@@ -86,16 +145,19 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                     <Square3Stack3DIcon className='w-4' />
                     Attachments
                   </div>
-                  <button
-                    className='flex text-sm border border-gray-400 text-gray-400 rounded-lg px-2 py-1'
-                    onClick={() => fileRef.current.click()}
-                  >
-                    <PlusIcon className='w-4' />
-                    Add
-                  </button>
+
+                  <Button
+                    text={'Add'}
+                    icon={'plus'}
+                    onClick={() => fileRef.current!.click()}
+                  />
                 </div>
                 <div className='w-full'>
-                  <MultipleFileUpload name={`attachments`} fileRef={fileRef} />
+                  <MultipleFileUpload
+                    name={`attachments`}
+                    fileRef={fileRef}
+                    submitImages={submitImages}
+                  />
                 </div>
               </article>
               <article></article>
@@ -108,23 +170,32 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                   Actions
                 </div>
                 <nav className='flex flex-col items-start gap-2 w-full text-gray300'>
-                  <button className='flex gap-3 items-center px-6 py-2 bg-gray250 rounded-md w-full'>
-                    <UserGroupIcon className='w-6' />
+                  <button className='flex gap-2 items-center justify-start px-4 py-2 bg-gray250 rounded-md w-full'>
+                    <UserGroupIcon className='w-5' />
                     Members
                   </button>
-                  <button className='flex gap-3 items-center px-6 py-2 bg-gray250 rounded-md w-full'>
-                    <TagIcon className='w-6' />
+                  <button className='flex gap-2 items-center justify-start px-4 py-2 bg-gray250 rounded-md w-full'>
+                    <TagIcon className='w-5' />
                     Label
                   </button>
-                  <button className='flex gap-3 items-center px-6 py-2 bg-gray250 rounded-md w-full'>
-                    <PhotoIcon className='w-6' />
+                  <button
+                    className='flex gap-2 relative items-center px-4 py-2 bg-gray250 rounded-md w-full'
+                    type='button'
+                  >
+                    <PhotoIcon className='w-5' />
                     Cover
+                    <FileUploader
+                      name='image'
+                      hiddenDropBox={true}
+                      boxClassName='absolute top-0 left-0 !h-10 w-full'
+                      setCustomImage={setCustomImage}
+                      submitImage={submitImageHandler}
+                    />
                   </button>
                 </nav>
               </article>
             </div>
           </section>
-          <button type='submit'>submit</button>
         </form>
       </ModalWrapper>
     </FormProvider>

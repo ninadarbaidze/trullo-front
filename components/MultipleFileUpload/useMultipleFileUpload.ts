@@ -1,59 +1,45 @@
-import { useState, useRef, ChangeEvent, DragEvent } from 'react';
+import { getCookie } from 'cookies-next';
+import { useState, useRef, ChangeEvent } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { deleteTaskAttachment, downloadAttachment } from 'services';
+import { BackAttachment } from 'types/global';
 
 export const useMultipleFileUploader = (
   name: string,
-  setCustomImage?: (file: string) => void
+  setCustomImage?: (file: string) => void,
+  submitImages?: (files: File[]) => void
 ) => {
+  const { register, setValue } = useFormContext();
+
   const [imageIsDraggedOver, setImageIsDraggedOver] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewFileName, setPreviewFileName] = useState('');
-  const [previewData, setPreviewData] = useState([
-    {
-      title: '',
-      file: '',
-      type: '',
-    },
-  ]);
-  const fileRef = useRef<HTMLInputElement>(null);
 
-  const { register, setValue, getValues } = useFormContext();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const token = getCookie('token') as string;
 
   const files = useWatch({ name: 'attachments' });
 
-  console.log(files);
-
-  const imageUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${getValues(
-    'avatar'
-  )}`;
-
-  const getLocalImageObjectURL = (file: File) => {
-    return URL.createObjectURL(file);
+  const getLocalImageObjectURL = (file: File | BackAttachment) => {
+    return (file as File)?.name
+      ? URL.createObjectURL(file as File)
+      : `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${
+          (file as BackAttachment).file
+        }`;
   };
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.files);
     const arrayOfFiles = Array.from(event.target?.files!);
-    console.log(arrayOfFiles);
     setValue('attachments', [...files, ...arrayOfFiles]);
-    // setPreviewData(
-    //   arrayOfFiles?.map((file) => ({
-    //     title: file.name,
-    //     file: URL.createObjectURL(file),
-    //     type: file.type,
-    //   }))
-    // );
-    // console.log(event.target.files);
-    // const file = URL.createObjectURL(event.target.files![0]);
-    // setValue(name, event.target.files![0]);
-    // setCustomImage?.(file);
-    // setPreviewImage(file);
-    // setPreviewFileName(event.target.files![0].name);
+    submitImages?.(arrayOfFiles);
   };
 
-  const removeFileHandler = (index: number) => {
+  const removeFileHandler = async (index: number, fileId: number) => {
     try {
       files.splice(index, 1);
       setValue('attachments', [...files]);
+      await deleteTaskAttachment(token, fileId);
     } catch (err: any) {
       console.error(err);
     }
@@ -66,17 +52,19 @@ export const useMultipleFileUploader = (
     setCustomImage?.('');
   };
 
-  const download = async (i: number) => {
+  const download = async (i: number, fileName?: string, id?: number) => {
     let url;
     try {
-      if (true) {
+      if (!fileName) {
         url = window.URL.createObjectURL(files[i]);
       } else {
-        // url = window.URL.createObjectURL(new Blob([res]));
+        const response = await downloadAttachment(token, id as number);
+        url = window.URL.createObjectURL(new Blob([response]));
       }
+
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', files[i].name);
+      link.setAttribute('download', fileName ?? files[i].name);
       document.body.appendChild(link);
       link.click();
     } catch (err: any) {
@@ -93,7 +81,6 @@ export const useMultipleFileUploader = (
     setImageIsDraggedOver,
     register,
     resetImage,
-    imageUrl,
     files,
     getLocalImageObjectURL,
     removeFileHandler,
