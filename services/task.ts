@@ -43,9 +43,10 @@ export const deleteTaskAttachment = async (
 
 export const deleteTaskImage = async (
   token: string,
-  taskId: number
+  taskId: number,
+  imageName: string
 ): Promise<string> => {
-  const res = await axios.delete(`/task-image/${taskId}`, {
+  const res = await axios.delete(`/task-image/${taskId}/${imageName}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -14,7 +14,7 @@ const BoardUserList: React.FC<{
         <li
           className={`w-8 h-8  ${
             user?.avatar
-              ? 'overflow-clip rounded-lg'
+              ? 'overflow-clip rounded-lg '
               : 'rounded-md flex items-center justify-center bg-gray400 text-white'
           } relative`}
           key={user.id}

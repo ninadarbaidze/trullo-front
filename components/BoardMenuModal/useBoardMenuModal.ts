@@ -109,9 +109,9 @@ export const useBoardMenuModal = () => {
 
   const removeImageHandler = async () => {
     try {
-      setBoardCover('');
       form.setValue('image', '');
-      await removeBoardImage(token, boardId);
+      await removeBoardImage(token, boardId, boardCover);
+      setBoardCover('');
     } catch (err: any) {
       console.error(err);
     }

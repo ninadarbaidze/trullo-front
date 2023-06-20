@@ -80,10 +80,12 @@ const BoardMenuModal: React.FC<{
           </article>
 
           <article className='flex flex-col gap-4 mb-4'>
-            <div className='flex text-gray400 font-medium items-center gap-2 text-xs'>
-              <PhotoIcon className='w-4' />
-              Image
-            </div>
+            {isInEditMode && boardCover && (
+              <div className='flex text-gray400 font-medium items-center gap-2 text-xs'>
+                <PhotoIcon className='w-4' />
+                Image
+              </div>
+            )}
 
             <div className='relative'>
               {boardIsLoading ? (
@@ -106,20 +108,23 @@ const BoardMenuModal: React.FC<{
                       <XMarkIcon className='bg-blue500 w-8 right-0 text-white rounded-md' />
                     </button>
                   )}
-                  <div className='flex  overflow-clip max-w-96 h-44 relative rounded-lg object-cover z-10'>
-                    <Image
-                      src={getImage()}
-                      loader={() => getImage()}
-                      alt='default_profile'
-                      className='rounded'
-                      fill
-                      objectFit='cover'
-                    />
-                  </div>
+                  {boardCover && (
+                    <div className='flex  overflow-clip max-w-96 h-44 relative rounded-lg object-cover z-10'>
+                      <Image
+                        src={getImage()}
+                        loader={() => getImage()}
+                        alt='default_profile'
+                        className='rounded'
+                        fill
+                        objectFit='cover'
+                      />
+                    </div>
+                  )}
                 </>
               )}
             </div>
           </article>
+
           {isInEditMode && (
             <article className='flex flex-col gap-4 mb-4'>
               <div className='flex text-gray400 font-medium items-center gap-2 text-xs'>

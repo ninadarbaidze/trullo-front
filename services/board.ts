@@ -300,10 +300,11 @@ export const updateBoard = async (
 
 export const removeBoardImage = async (
   token: string,
-  boardId: number
+  boardId: number,
+  boardCover: string
 ): Promise<string> => {
   const res = await axios.patch(
-    `/remove-board-image/${boardId}`,
+    `/remove-board-image/${boardId}/${boardCover}`,
     {},
     {
       headers: {

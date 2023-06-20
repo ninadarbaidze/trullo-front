@@ -76,8 +76,9 @@ export const useTaskDetailModal = (
     try {
       form.setValue('image', '');
       setCustomImage('');
+      console.log(boardCover);
+      await deleteTaskImage(token, taskId, boardCover);
       setBoardCover('');
-      await deleteTaskImage(token, taskId);
     } catch (err: any) {
       console.error(err);
     }
@@ -104,7 +105,9 @@ export const useTaskDetailModal = (
     try {
       const formData = new FormData();
       formData.append('image', form.getValues('image'));
-      await postTaskDetails(token, formData, taskId);
+      const response = await postTaskDetails(token, formData, taskId);
+      console.log('wewew', response);
+      setBoardCover(response.image);
     } catch (err: any) {
       console.error(err);
     }
