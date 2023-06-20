@@ -10,6 +10,7 @@ import {
   TagIcon,
   PhotoIcon,
   CheckIcon,
+  PuzzlePieceIcon,
 } from '@heroicons/react/24/outline';
 import {
   TinyMCE,
@@ -199,7 +200,7 @@ const TaskDetailModal: React.FC<Props> = (props) => {
               <article></article>
               <article></article>
             </div>
-            <div className='w-1/4'>
+            <div className='w-1/4 flex flex-col gap-6'>
               <article className='flex flex-col gap-3'>
                 <div className='flex text-gray300 font-medium items-center gap-2 text-xs'>
                   <AdjustmentsHorizontalIcon className='w-4' />
@@ -248,6 +249,49 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                     />
                   </button>
                 </nav>
+              </article>
+              <article className='flex flex-col gap-3'>
+                <div className='flex text-gray300 font-medium items-center gap-2 text-xs'>
+                  <PuzzlePieceIcon className='w-4' />
+                  Difficulty
+                </div>
+                <div className='flex items-center justify-between relative'>
+                  {isInEditMode.difficulty ? (
+                    <div className='flex flex-col justify-end gap-2'>
+                      <input
+                        type='number'
+                        {...form.register('difficulty')}
+                        className='outline-none border-b'
+                      />
+                      <nav className='flex gap-1'>
+                        <button
+                          type='button'
+                          onClick={() => {
+                            setEditState('dif');
+                            onSubmit(form.getValues());
+                          }}
+                        >
+                          <CheckIcon className='text-white bg-blue500 w-5 rounded-full z-20' />
+                        </button>
+                        <button onClick={() => setEditState('dif')}>
+                          <XMarkIcon className='text-white bg-red-500 w-5 rounded-full z-20' />
+                        </button>
+                      </nav>
+                    </div>
+                  ) : (
+                    <>
+                      <div className='bg-gray-400 text-white px-1 rounded-md'>
+                        {form.getValues('difficulty') ?? 0}
+                      </div>
+                      <Button
+                        text={'Edit'}
+                        icon={'edit'}
+                        onClick={() => setEditState('dif')}
+                        classNme='text-xs px-1'
+                      />
+                    </>
+                  )}
+                </div>
               </article>
             </div>
           </section>

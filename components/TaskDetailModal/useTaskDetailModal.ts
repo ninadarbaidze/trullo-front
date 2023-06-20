@@ -26,6 +26,7 @@ export const useTaskDetailModal = (
   const [isInEditMode, setIsInEditMode] = useState({
     name: false,
     description: false,
+    difficulty: false,
   });
 
   const token = getCookie('token') as string;
@@ -41,6 +42,7 @@ export const useTaskDetailModal = (
       comments: [],
       description: '',
       users: [],
+      difficulty: 0,
     },
   });
 
@@ -61,6 +63,7 @@ export const useTaskDetailModal = (
       form.setValue('attachments', response.attachments);
       form.setValue('name', response.content);
       form.setValue('image', response.image as string);
+      form.setValue('difficulty', response.difficulty);
 
       setBoardCover(response.image as string);
     } catch (err: any) {
@@ -106,8 +109,8 @@ export const useTaskDetailModal = (
       const formData = new FormData();
       formData.append('image', form.getValues('image'));
       const response = await postTaskDetails(token, formData, taskId);
-      console.log('wewew', response);
-      setBoardCover(response.image);
+
+      setBoardCover(response.image as string);
     } catch (err: any) {
       console.error(err);
     }
@@ -129,14 +132,18 @@ export const useTaskDetailModal = (
     }
   };
 
-  const setEditState = (field: 'name' | 'desc') => {
+  const setEditState = (field: 'name' | 'desc' | 'dif') => {
     if (field === 'name') {
       setIsInEditMode((prev) => {
         return { ...prev, name: !prev.name };
       });
-    } else {
+    } else if (field === 'desc') {
       setIsInEditMode((prev) => {
         return { ...prev, description: !prev.description };
+      });
+    } else {
+      setIsInEditMode((prev) => {
+        return { ...prev, difficulty: !prev.difficulty };
       });
     }
   };

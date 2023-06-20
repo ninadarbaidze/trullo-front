@@ -5,7 +5,7 @@ export const postTaskDetails = async (
   token: string,
   data: FormData,
   taskId: number
-): Promise<string> => {
+): Promise<TaskDetail> => {
   const res = await axios.post(`/task-detail/${taskId}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,

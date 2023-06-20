@@ -108,6 +108,7 @@ export type TaskDetailForm = {
   comments: [];
   description: string;
   users: UserProfile[];
+  difficulty: number;
 };
 
 export type BackAttachment = {

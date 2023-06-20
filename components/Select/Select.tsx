@@ -78,14 +78,13 @@ const Select: React.FC<Props> = (props) => {
                         {getFirstInitials(user?.firstName, user?.lastName)}
                       </div>
                     ) : (
-                      <div className='w-10 h-10 overflow-clip rounded-lg'>
+                      <div className='w-10 h-10 overflow-clip rounded-lg relative'>
                         <Image
                           src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`}
                           loader={() =>
                             `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
                           }
-                          width={100}
-                          height={100}
+                          fill
                           alt=''
                         />
                       </div>

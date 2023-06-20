@@ -8,17 +8,16 @@ const UserInfo: React.FC<{
   user: Partial<UserProfile>;
   additionalText?: string;
 }> = (props) => {
-  console.log(props.user);
   return (
     <div className='flex items-center gap-3'>
-      <div className='w-10 h-10 overflow-clip rounded-lg'>
+      <div className='w-10 h-10 overflow-clip rounded-lg relative'>
         {props.user?.avatar ? (
           <Image
             src={getAvatarHandler(props.user) as 'string | StaticImport'}
             loader={(() => getAvatarHandler(props.user)) as ImageLoader}
-            width={100}
-            height={100}
+            fill
             alt='default_profile'
+            className='rounded-lg'
           />
         ) : (
           <div className='w-full h-full flex items-center justify-center bg-gray400 text-white'>

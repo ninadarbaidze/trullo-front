@@ -3,7 +3,6 @@ import React from 'react';
 import { Props } from './types';
 
 const BoardHeader: React.FC<Props> = (props) => {
-  console.log(props.data.users);
   return (
     <nav className='flex w-screen fixed top-[4rem] px-8 pt-5 justify-between bg-white z-40'>
       <ul className='flex gap-2 mb-4'>
