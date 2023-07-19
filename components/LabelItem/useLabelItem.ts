@@ -5,20 +5,23 @@ import { Label, SetState } from 'types/global';
 
 export const useLabelItem = (
   i: number,
-  setLabels: SetState<Label[]> | undefined
+  setLabels: SetState<Label[]> | undefined,
+  removeAssignedLabelHandler?: (label: Label) => void,
+  taskId?: number
 ) => {
   const [labelEditDialogIsOpen, setLabelEditDialogIsOpen] = useState(false);
 
   const token = getCookie('token') as string;
 
-  const deleteLabelHandler = async (labelId: number) => {
+  const deleteLabelHandler = async (label: Label) => {
     try {
       setLabels?.((prev) => {
         let newState = [...prev];
         newState.splice(i, 1);
         return newState;
       });
-      await deleteLabel(token, labelId);
+      removeAssignedLabelHandler?.(label);
+      await deleteLabel(token, taskId!, label.id!);
     } catch (err: any) {
       console.error(err);
     }

@@ -7,7 +7,12 @@ const LabelItem: React.FC<Props> = (props) => {
     labelEditDialogIsOpen,
     deleteLabelHandler,
     setLabelEditDialogIsOpen,
-  } = useLabelItem(props.i, props.setLabels);
+  } = useLabelItem(
+    props.i,
+    props.setLabels,
+    props.removeAssignedLabelHandler,
+    props.taskId
+  );
 
   return (
     <li
@@ -32,8 +37,7 @@ const LabelItem: React.FC<Props> = (props) => {
             type='button'
             className='py-1'
             onClick={() => {
-              deleteLabelHandler(props.label.id!),
-                setLabelEditDialogIsOpen(false);
+              deleteLabelHandler(props.label), setLabelEditDialogIsOpen(false);
             }}
           >
             Delete label

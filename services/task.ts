@@ -155,9 +155,10 @@ export const removeLabel = async (
 
 export const deleteLabel = async (
   token: string,
+  taskId: number,
   labelId: number
 ): Promise<string> => {
-  const res = await axios.delete(`/delete-label/${labelId}`, {
+  const res = await axios.delete(`/delete-label/${taskId}/${labelId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -8,4 +8,5 @@ export type Props = {
   assignLabel?: (label: Label) => void;
   removeAssignedLabelHandler?: (label: Label) => void;
   canNotEdit?: boolean;
+  taskId?: number;
 };

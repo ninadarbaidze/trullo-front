@@ -82,6 +82,7 @@ const Labels: React.FC<Props> = (props) => {
                   setLabels={setLabels}
                   assignLabel={assignLabel}
                   removeAssignedLabelHandler={removeAssignedLabelHandler}
+                  taskId={props.taskId}
                 />
               ))}
             </ul>
