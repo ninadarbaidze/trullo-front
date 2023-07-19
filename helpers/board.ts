@@ -1,4 +1,4 @@
-import { RefObject } from 'react';
+import { RefObject, KeyboardEvent } from 'react';
 import { Boards, UserProfile } from 'types/global';
 import { NoImage } from 'public/images';
 
@@ -52,4 +52,10 @@ export const getImage = (board: Boards) => {
   if (board?.image) {
     return `${process.env.NEXT_PUBLIC_BACKEND_URL}/${board.image}`;
   } else return NoImage.src;
+};
+
+export const allowOnlyNumbersInInput = (e: KeyboardEvent<HTMLInputElement>) => {
+  if (!((e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode === 8)) {
+    e.preventDefault();
+  }
 };

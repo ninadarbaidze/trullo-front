@@ -109,3 +109,70 @@ export const deleteUserFromTask = async (
   });
   return res.data;
 };
+
+export const addLabel = async (
+  token: string,
+  boardId: number,
+  data: { color: string; title: string }
+): Promise<string> => {
+  const res = await axios.post(`/add-label/${boardId}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const assignLabelToTask = async (
+  token: string,
+  taskId: number,
+  labelId: number
+): Promise<string> => {
+  const res = await axios.patch(
+    `/assign-label/${taskId}/${labelId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const removeLabel = async (
+  token: string,
+  taskId: number,
+  labelId: number
+): Promise<string> => {
+  const res = await axios.delete(`/remove-label/${taskId}/${labelId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const deleteLabel = async (
+  token: string,
+  labelId: number
+): Promise<string> => {
+  const res = await axios.delete(`/delete-label/${labelId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const getBoardLabels = async (
+  token: string,
+  boardId: number
+): Promise<string> => {
+  const res = await axios.get(`/board-labels/${boardId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};

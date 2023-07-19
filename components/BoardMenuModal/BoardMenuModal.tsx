@@ -43,7 +43,7 @@ const BoardMenuModal: React.FC<{
         } transition-all ease-in duration-300 transform  h-full overflow-y-scroll`}
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <article className='flex w-full items-center justify-between  border-b-2 sticky py-4 top-0 bg-white'>
+        <article className='flex w-full items-center justify-between  border-b-2 sticky py-4 top-0 bg-white z-[45]'>
           <h2 className='text-base font-semibold capitalize'>
             {boardIsLoading ? (
               <div className='bg-blue500 bg-opacity-20 animate-pulse rounded-md w-36 h-6' />

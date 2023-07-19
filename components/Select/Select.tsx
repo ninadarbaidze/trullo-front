@@ -17,7 +17,7 @@ const Select: React.FC<Props> = (props) => {
 
   return (
     <div className={`${props.className} absolute z-40 top-9 shadow-md`}>
-      <div className='flex flex-col gap-1 relative border rounded-md bg-white px-2 py-2'>
+      <div className='flex flex-col gap-1 relative border rounded-lg bg-white px-2 py-2'>
         <div>
           <h3 className='font-semibold'>Members</h3>
           <p className='text-gray-400 mb-2'>{props.description}</p>

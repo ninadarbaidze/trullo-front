@@ -1,6 +1,6 @@
 import { getCookie } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import {
   addTaskAttachments,
   assignTask,
@@ -9,7 +9,7 @@ import {
   getTaskDetails,
   postTaskDetails,
 } from 'services';
-import { TaskDetail, TaskDetailForm, UserProfile } from 'types/global';
+import { Label, TaskDetail, TaskDetailForm, UserProfile } from 'types/global';
 import { addClickAwayHandler } from 'helpers';
 
 export const useTaskDetailModal = (
@@ -23,6 +23,8 @@ export const useTaskDetailModal = (
   const [userListIsOpen, setUserListIsOpen] = useState(false);
   const [boardUserList, setBoardUserList] = useState<UserProfile[]>(boardUsers);
   const [taskUserList, setTaskUserList] = useState<UserProfile[]>([]);
+  const [labelIsOpen, setLabelIsOpen] = useState(false);
+  const [assignedLabels, setAssignedLabels] = useState<Label[]>([]);
   const [isInEditMode, setIsInEditMode] = useState({
     name: false,
     description: false,
@@ -33,6 +35,9 @@ export const useTaskDetailModal = (
 
   const dropDownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const labelRef = useRef<HTMLDivElement>(null);
+  const labelTriggerRef = useRef<HTMLButtonElement>(null);
 
   const form = useForm<TaskDetailForm>({
     defaultValues: {
@@ -60,6 +65,7 @@ export const useTaskDetailModal = (
       setBoardUserList((prev) =>
         prev.filter((user) => !taskUserIds.includes(user.id))
       );
+      setAssignedLabels(response.labels.map((label) => label.label));
       form.setValue('attachments', response.attachments);
       form.setValue('name', response.content);
       form.setValue('image', response.image as string);
@@ -161,6 +167,11 @@ export const useTaskDetailModal = (
     addClickAwayHandler(triggerRef, dropDownRef, setUserListIsOpen);
   };
 
+  const toggleLabel = () => {
+    setLabelIsOpen((prev) => !prev);
+    addClickAwayHandler(labelTriggerRef, labelRef, setLabelIsOpen);
+  };
+
   const assignTaskToUser = async (users: UserProfile[]) => {
     try {
       const userIds = users.map((user) => user.id);
@@ -182,7 +193,7 @@ export const useTaskDetailModal = (
   const removeUserFromTask = async (userId: number) => {
     try {
       const removedUser = boardUsers.find((user) => user.id === userId);
-      setBoardUserList((prev) => prev.concat(removedUser));
+      setBoardUserList((prev) => prev.concat(removedUser as UserProfile));
       setTaskUserList((prev) => prev.filter((user) => user.id !== userId));
       await deleteUserFromTask(token, taskId, userId);
     } catch (err: any) {
@@ -213,5 +224,12 @@ export const useTaskDetailModal = (
     taskUserList,
     boardUserList,
     removeUserFromTask,
+    labelIsOpen,
+    setLabelIsOpen,
+    assignedLabels,
+    setAssignedLabels,
+    labelRef,
+    labelTriggerRef,
+    toggleLabel,
   };
 };

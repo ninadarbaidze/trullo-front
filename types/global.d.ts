@@ -126,7 +126,7 @@ export type TaskDetail = {
   image: string | null;
   columnId: number;
   boardId: number;
-  difficulty: null;
+  difficulty: number;
   attachments: BackAttachment[];
   description: {
     id: number;
@@ -134,4 +134,27 @@ export type TaskDetail = {
     taskId: number;
   };
   users: UserProfile[];
+  labels: { labelId: number; taskId: number; label: Label }[];
 };
+
+export type Label = {
+  id?: number;
+  title: string;
+  color: string;
+  taskId?: number;
+  boardId?: number;
+};
+
+export type Colors =
+  | '#219653'
+  | '#F2C94C'
+  | '#F2994A'
+  | '#EB5757'
+  | '#2F80ED'
+  | '#56CCF2'
+  | '#6FCF97'
+  | '#333333'
+  | '#4F4F4F'
+  | '#828282'
+  | '#BDBDBD'
+  | '#E0E0E0';

@@ -19,10 +19,13 @@ import {
   Button,
   Select,
   BoardUserList,
+  Labels,
+  LabelItem,
 } from 'components';
 import { FormProvider } from 'react-hook-form';
 import { useTaskDetailModal } from './useTaskDetailModal';
-import { UserProfile } from 'types/global';
+import { Label, UserProfile } from 'types/global';
+import { allowOnlyNumbersInInput } from 'helpers';
 
 const TaskDetailModal: React.FC<Props> = (props) => {
   const {
@@ -45,10 +48,16 @@ const TaskDetailModal: React.FC<Props> = (props) => {
     assignTaskToUser,
     boardCover,
     customImage,
-    users,
     taskUserList,
     boardUserList,
     removeUserFromTask,
+    labelIsOpen,
+    setLabelIsOpen,
+    assignedLabels,
+    setAssignedLabels,
+    labelRef,
+    labelTriggerRef,
+    toggleLabel,
   } = useTaskDetailModal(props.taskId, props.boardUsers);
 
   return (
@@ -211,7 +220,7 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                     <div ref={dropDownRef} className='w-full'>
                       <Select
                         list={boardUserList as UserProfile[]}
-                        className='right-0 top-0 w-72'
+                        className='-top-3 right-[13.5rem] w-72'
                         description='Assign members to this task'
                         btnText='Assign'
                         sendBoardInviteHandler={assignTaskToUser}
@@ -227,9 +236,20 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                     <UserGroupIcon className='w-5' />
                     Members
                   </button>
+                  {labelIsOpen && (
+                    <div ref={labelRef}>
+                      <Labels
+                        setAssignedLabels={setAssignedLabels}
+                        assignedLabels={assignedLabels}
+                        taskId={props.taskId}
+                      />
+                    </div>
+                  )}
                   <button
-                    className='flex gap-2 mt-2  items-center justify-start px-4 py-2 bg-gray250 rounded-md w-full'
+                    className='flex gap-2 mt-2  items-center justify-start px-4 py-2 bg-gray250 rounded-md w-full relative'
                     type='button'
+                    onClick={toggleLabel}
+                    ref={labelTriggerRef}
                   >
                     <TagIcon className='w-5' />
                     Label
@@ -261,7 +281,10 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                       <input
                         type='number'
                         {...form.register('difficulty')}
-                        className='outline-none border-b'
+                        className='outline-none border-b w-24'
+                        onKeyDown={(e) => {
+                          return allowOnlyNumbersInInput(e);
+                        }}
                       />
                       <nav className='flex gap-1'>
                         <button
@@ -292,6 +315,18 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                     </>
                   )}
                 </div>
+              </article>
+              <article className='flex flex-col gap-3'>
+                <div className='flex text-gray300 font-medium items-center gap-2 text-xs'>
+                  <TagIcon className='w-4' />
+                  Assigned labels
+                </div>
+                <ul className='flex flex-wrap gap-2 mt-2'>
+                  {assignedLabels.map((label, i) => (
+                    <LabelItem label={label} i={i} key={i} canNotEdit={true} />
+                  ))}
+                </ul>
+                <div className='flex items-center justify-between relative'></div>
               </article>
             </div>
           </section>

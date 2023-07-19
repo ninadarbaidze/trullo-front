@@ -53,11 +53,11 @@ const Boards = () => {
                   />
                 </div>
                 <p className='text-lg py-2 font-medium'>{board.name}</p>
-                <ul className='flex items-center gap-2 my-4 relative'>
+                <ul className='flex items-center gap-2 my-4'>
                   {board.users.slice(0, numberOfEmployeesToShow).map((user) =>
                     user.avatar ? (
                       <li
-                        className='w-8 h-8 overflow-clip rounded-lg'
+                        className='w-8 h-8 overflow-clip rounded-lg relative'
                         key={user.id}
                       >
                         <Image
@@ -65,9 +65,8 @@ const Boards = () => {
                           loader={() =>
                             `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
                           }
-                          width={100}
-                          height={100}
-                          alt=''
+                          fill
+                          alt='user_avatar'
                         />
                       </li>
                     ) : (
