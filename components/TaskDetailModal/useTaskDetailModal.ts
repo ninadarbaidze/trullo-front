@@ -11,6 +11,7 @@ import {
 } from 'services';
 import { Label, TaskDetail, TaskDetailForm, UserProfile } from 'types/global';
 import { addClickAwayHandler } from 'helpers';
+import { Comment } from 'types/global';
 
 export const useTaskDetailModal = (
   taskId: number,
@@ -25,6 +26,7 @@ export const useTaskDetailModal = (
   const [taskUserList, setTaskUserList] = useState<UserProfile[]>([]);
   const [labelIsOpen, setLabelIsOpen] = useState(false);
   const [assignedLabels, setAssignedLabels] = useState<Label[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [isInEditMode, setIsInEditMode] = useState({
     name: false,
     description: false,
@@ -66,6 +68,7 @@ export const useTaskDetailModal = (
         prev.filter((user) => !taskUserIds.includes(user.id))
       );
       setAssignedLabels(response.labels.map((label) => label.label));
+      setComments(response.comments);
       form.setValue('attachments', response.attachments);
       form.setValue('name', response.content);
       form.setValue('image', response.image as string);
@@ -183,7 +186,7 @@ export const useTaskDetailModal = (
       await assignTask(
         token,
         taskId,
-        users.map((user) => user.id)
+        users.map((user) => user.id as number)
       );
     } catch (err: any) {
       console.error(err);
@@ -231,5 +234,7 @@ export const useTaskDetailModal = (
     labelRef,
     labelTriggerRef,
     toggleLabel,
+    comments,
+    setComments,
   };
 };

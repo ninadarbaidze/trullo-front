@@ -7,12 +7,7 @@ const LabelItem: React.FC<Props> = (props) => {
     labelEditDialogIsOpen,
     deleteLabelHandler,
     setLabelEditDialogIsOpen,
-  } = useLabelItem(
-    props.i,
-    props.setLabels,
-    props.removeAssignedLabelHandler,
-    props.taskId
-  );
+  } = useLabelItem(props.i, props.setLabels, props.removeAssignedLabelHandler);
 
   return (
     <li

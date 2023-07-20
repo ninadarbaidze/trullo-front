@@ -30,3 +30,27 @@ export const getFirstInitials = (
 export const firstTwoChars = (name: string) => {
   return name.substring(0, 2);
 };
+
+export const getFormattedHours = (date: Date) => {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  const formattedHours = hours.toString().padStart(2, '0');
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+
+  const formattedTime = `${formattedHours}:${formattedMinutes}`;
+
+  return formattedTime;
+};
+
+export const getFormattedDateAndTime = (date: string) => {
+  const formattedDate = new Date(date);
+  const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(
+    new Date()
+  );
+  const day = formattedDate.getDate();
+  const year = formattedDate.getFullYear();
+  const time = getFormattedHours(formattedDate);
+
+  return `${day} ${monthName}, ${year} at ${time}`;
+};

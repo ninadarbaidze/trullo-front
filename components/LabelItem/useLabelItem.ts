@@ -6,8 +6,7 @@ import { Label, SetState } from 'types/global';
 export const useLabelItem = (
   i: number,
   setLabels: SetState<Label[]> | undefined,
-  removeAssignedLabelHandler?: (label: Label) => void,
-  taskId?: number
+  removeAssignedLabelHandler?: (label: Label) => void
 ) => {
   const [labelEditDialogIsOpen, setLabelEditDialogIsOpen] = useState(false);
 
@@ -21,7 +20,7 @@ export const useLabelItem = (
         return newState;
       });
       removeAssignedLabelHandler?.(label);
-      await deleteLabel(token, taskId!, label.id!);
+      await deleteLabel(token, label.id!);
     } catch (err: any) {
       console.error(err);
     }

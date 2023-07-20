@@ -1,5 +1,5 @@
 import axios from 'services/axios';
-import { TaskDetail } from 'types/global';
+import { Label, TaskDetail } from 'types/global';
 
 export const postTaskDetails = async (
   token: string,
@@ -114,7 +114,7 @@ export const addLabel = async (
   token: string,
   boardId: number,
   data: { color: string; title: string }
-): Promise<string> => {
+): Promise<Label> => {
   const res = await axios.post(`/add-label/${boardId}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -155,10 +155,9 @@ export const removeLabel = async (
 
 export const deleteLabel = async (
   token: string,
-  taskId: number,
   labelId: number
 ): Promise<string> => {
-  const res = await axios.delete(`/delete-label/${taskId}/${labelId}`, {
+  const res = await axios.delete(`/delete-label/${labelId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -169,8 +168,45 @@ export const deleteLabel = async (
 export const getBoardLabels = async (
   token: string,
   boardId: number
-): Promise<string> => {
+): Promise<Label[]> => {
   const res = await axios.get(`/board-labels/${boardId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const addComment = async (
+  token: string,
+  taskId: number,
+  data: { content: string; userId: number }
+): Promise<Label> => {
+  const res = await axios.post(`/comment/${taskId}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const patchComment = async (
+  token: string,
+  data: { content: string; commentId: number }
+): Promise<Label> => {
+  const res = await axios.patch(`/edit-comment`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const deleteComment = async (
+  token: string,
+  commentId: number
+): Promise<Label> => {
+  const res = await axios.delete(`/delete-comment/${commentId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

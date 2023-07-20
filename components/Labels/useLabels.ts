@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Colors, Label, SetState } from 'types/global';
 import { styles } from './utils';
 import {
@@ -9,7 +9,6 @@ import {
 } from 'services';
 import { getCookie } from 'cookies-next';
 import { useParams } from 'next/navigation';
-import { LabelItem } from 'components/LabelItem';
 
 export const useLabels = (
   assignedLabels: Label[],
@@ -38,12 +37,12 @@ export const useLabels = (
           title: labelRef.current?.value as string,
           color: styles[selectedColor as Colors],
         };
-        // console.log(labelItem);
+
+        const response = await addLabel(token, boardId, labelItem);
 
         setLabels((prev: Label[]) => {
-          return [...prev, labelItem];
+          return [...prev, { ...labelItem, id: response.id }];
         });
-        await addLabel(token, boardId, labelItem);
         setSelectedColor('');
       }
     } catch (err: any) {
@@ -86,7 +85,6 @@ export const useLabels = (
   const getBoardLabelsHandler = async () => {
     try {
       const boardLabels = await getBoardLabels(token, boardId);
-      console.log(boardLabels);
       setLabels(boardLabels);
     } catch (err: any) {
       console.error(err);

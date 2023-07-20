@@ -21,10 +21,11 @@ import {
   BoardUserList,
   Labels,
   LabelItem,
+  CommentsSection,
 } from 'components';
 import { FormProvider } from 'react-hook-form';
 import { useTaskDetailModal } from './useTaskDetailModal';
-import { Label, UserProfile } from 'types/global';
+import { UserProfile } from 'types/global';
 import { allowOnlyNumbersInInput } from 'helpers';
 
 const TaskDetailModal: React.FC<Props> = (props) => {
@@ -52,12 +53,13 @@ const TaskDetailModal: React.FC<Props> = (props) => {
     boardUserList,
     removeUserFromTask,
     labelIsOpen,
-    setLabelIsOpen,
     assignedLabels,
     setAssignedLabels,
     labelRef,
     labelTriggerRef,
     toggleLabel,
+    comments,
+    setComments,
   } = useTaskDetailModal(props.taskId, props.boardUsers);
 
   return (
@@ -206,7 +208,13 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                   />
                 </div>
               </article>
-              <article></article>
+              <article>
+                <CommentsSection
+                  comments={comments}
+                  setComments={setComments}
+                  taskId={props.taskId}
+                />
+              </article>
               <article></article>
             </div>
             <div className='w-1/4 flex flex-col gap-6'>

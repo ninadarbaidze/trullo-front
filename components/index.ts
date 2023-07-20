@@ -27,3 +27,5 @@ export * from './TaskDetailModal';
 export * from './Button';
 export * from './Labels';
 export * from './LabelItem';
+export * from './CommentsSection';
+export * from './CommentItem';

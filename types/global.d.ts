@@ -65,11 +65,11 @@ export type Profile = {
 
 export type ProfileBackInfo = {
   avatar: string;
-  email: string;
-  id: number;
-  isVerified: boolean;
+  email?: string;
+  id?: number;
+  isVerified?: boolean;
   password?: string;
-  username: string;
+  username?: string;
   firstName: string;
   lastName: string;
 };
@@ -135,6 +135,16 @@ export type TaskDetail = {
   };
   users: UserProfile[];
   labels: { labelId: number; taskId: number; label: Label }[];
+  comments: Comment[];
+};
+
+export type Comment = {
+  id?: number;
+  content: string;
+  userId?: number;
+  taskId: number;
+  createdAt?: string | Date;
+  user: UserProfile;
 };
 
 export type Label = {
