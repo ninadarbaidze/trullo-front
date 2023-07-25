@@ -9,7 +9,7 @@ import {
 import { ChevronDownIcon, BellIcon } from '@heroicons/react/24/outline';
 import { useParams } from 'next/navigation';
 import { getCookie } from 'cookies-next';
-import { SetStateAction, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { addClickAwayHandler } from 'helpers';
 import { useRouter } from 'next/navigation';
 import { AuthContextProvider } from 'store';
@@ -87,7 +87,6 @@ export default function BoardLayout({
             return prev;
           });
         }
-        console.log(data);
       }
     );
   }, []);
@@ -128,6 +127,7 @@ export default function BoardLayout({
                     setNotifications={setNotifications}
                     notificationRef={notificationRef}
                     setSumOfNotifications={setSumOfNotifications}
+                    setNotificationIsOpen={setNotificationIsOpen}
                   />
                 )}
                 <div ref={bellRef} onClick={toggleNotification}>

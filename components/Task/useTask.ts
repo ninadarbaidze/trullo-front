@@ -1,5 +1,6 @@
 import { addClickAwayHandler } from 'helpers';
-import { useRef, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { TaskType } from 'types/global';
 
 export const useTask = (
@@ -8,9 +9,15 @@ export const useTask = (
 ) => {
   const [taskDialogIsOpen, setTaskDialogIsOpen] = useState(false);
   const [taskDetailsIsOpen, setTaskDetailsIsOpen] = useState(false);
+  const searchParams = useSearchParams();
+
+  const taskId = searchParams.get('task_id');
+  const pathname = usePathname();
 
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const router = useRouter();
 
   const dropdownToggler = () => {
     addClickAwayHandler(triggerRef, dropdownRef, setTaskDialogIsOpen);
@@ -21,11 +28,30 @@ export const useTask = (
     deleteTaskHandler(task.id, `column-${task.columnId}`);
   };
 
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+
   const openTaskDetailsHandler = () => {
     setTaskDetailsIsOpen(true);
-    try {
-    } catch (err: any) {}
+    router.push(
+      pathname + '?' + createQueryString('task_id', task.id.slice(5))
+    );
   };
+
+  const closeTaskModal = () => {
+    router.push(pathname);
+  };
+
+  useEffect(() => {
+    taskId === task.id.slice(5) && setTaskDetailsIsOpen(true);
+  }, [task.id, taskId]);
 
   return {
     taskDialogIsOpen,
@@ -37,5 +63,7 @@ export const useTask = (
     taskDetailsIsOpen,
     openTaskDetailsHandler,
     setTaskDetailsIsOpen,
+    taskId,
+    closeTaskModal,
   };
 };

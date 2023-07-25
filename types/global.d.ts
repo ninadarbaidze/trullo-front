@@ -179,4 +179,5 @@ export type Notification = {
   type: string;
   receiver: ProfileBackInfo;
   sender: ProfileBackInfo;
+  taskId: number;
 };

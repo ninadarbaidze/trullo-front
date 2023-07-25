@@ -67,6 +67,7 @@ const TaskDetailModal: React.FC<Props> = (props) => {
       <ModalWrapper
         setModalIsOpen={props.setTaskDetailsIsOpen}
         modalClass='w-[65%] top-[50%] h-[80vh] overflow-y-scroll '
+        customFunction={() => props.closeTaskModal()}
       >
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -180,10 +181,9 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                 <div className='w-full text-xs'>
                   <TinyMCE
                     submitTextHandler={getDescription}
-                    value={taskData?.description.content}
+                    value={taskData?.description?.content}
                     isInEditMode={true}
                     disabled={!isInEditMode.description}
-                    //   isLoading={boardIsLoading}
                   />
                 </div>
               </article>

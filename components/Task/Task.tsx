@@ -14,16 +14,21 @@ const Task: React.FC<{
   deleteTaskHandler: (taskId: string, columnId: string) => void;
   boardUsers: UserProfile[];
 }> = (props) => {
-  const { taskDetailsIsOpen, openTaskDetailsHandler, setTaskDetailsIsOpen } =
-    useTask(props.task, props.deleteTaskHandler);
-
+  const {
+    taskDetailsIsOpen,
+    openTaskDetailsHandler,
+    setTaskDetailsIsOpen,
+    taskId,
+    closeTaskModal,
+  } = useTask(props.task, props.deleteTaskHandler);
   return (
     <>
       {taskDetailsIsOpen && (
         <TaskDetailModal
           setTaskDetailsIsOpen={setTaskDetailsIsOpen}
-          taskId={+props.task.id.slice(5)}
+          taskId={taskId ? Number(taskId) : +props.task.id.slice(5)}
           boardUsers={props.boardUsers}
+          closeTaskModal={closeTaskModal}
         />
       )}
       <Draggable

@@ -7,7 +7,7 @@ import * as timeago from 'timeago.js';
 const NotificationListItem: React.FC<{
   notification: Notification;
   key: number;
-  markAsSeenHandler: (notificationId: number) => void;
+  markAsSeenHandler: (notificationId: number, taskId: number) => void;
 }> = (props) => {
   const { getNotificationText } = useNotificationListItem();
   return (
@@ -15,8 +15,10 @@ const NotificationListItem: React.FC<{
       key={props.key}
       className='flex items-start w-96 text-sm'
       onClick={() =>
-        props.notification.isRead === false &&
-        props.markAsSeenHandler(props.notification.id)
+        props.markAsSeenHandler(
+          props.notification.id,
+          props.notification.taskId
+        )
       }
     >
       <div id='not_user' className='flex w-full gap-2'>
