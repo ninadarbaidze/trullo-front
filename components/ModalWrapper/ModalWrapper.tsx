@@ -14,7 +14,7 @@ const ModalWrapper: React.FC<{
         onClick={() => props.setModalIsOpen?.((prev) => !prev)}
       ></div>
       <div
-        className={`${props.modalClass} bg-white fixed overflow-auto top-[40%] left-[50%] translate-y-[-50%] z-50 translate-x-[-50%] bg-mainDark rounded-[12px]`}
+        className={`${props.modalClass} bg-white fixed overflow-auto top-[40%] left-[50%] translate-y-[-50%] z-[45] translate-x-[-50%] bg-mainDark rounded-[12px]`}
       >
         {props.children}
       </div>

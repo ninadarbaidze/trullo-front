@@ -15,22 +15,24 @@ export const useCommentsSection = (
 
   const addNewComment = async () => {
     try {
-      const newComment = {
-        content: textareaRef?.current!.value,
-        taskId,
-        user,
-        userId: user?.id as number,
-        createdAt: new Date(),
-      } as Comment;
+      if (textareaRef.current?.value) {
+        const newComment = {
+          content: textareaRef?.current!.value,
+          taskId,
+          user,
+          userId: user?.id as number,
+          createdAt: new Date(),
+        } as Comment;
 
-      const response = await addComment(token, taskId, {
-        content: textareaRef?.current!.value,
-        userId: user?.id as number,
-      });
-      setComments((prev) => {
-        return [{ ...newComment, id: response.id }, ...prev];
-      });
-      textareaRef.current!.value = '';
+        const response = await addComment(token, taskId, {
+          content: textareaRef?.current!.value,
+          userId: user?.id as number,
+        });
+        setComments((prev) => {
+          return [{ ...newComment, id: response.id }, ...prev];
+        });
+        textareaRef.current!.value = '';
+      }
     } catch (err: any) {
       console.error(err);
     }
@@ -52,7 +54,13 @@ export const useCommentsSection = (
 
   const deleteCommentHandler = async (commentId: number) => {
     try {
-      await deleteComment(token, commentId);
+      console.log(comments);
+      const notificationIds = comments
+        .find((item) => item.id === commentId)
+        ?.notification.map((item) => item.id);
+      console.log(notificationIds);
+
+      await deleteComment(token, commentId, notificationIds);
       setComments((prev) => {
         const newState = [...prev];
         return newState.filter((comment) => comment.id !== commentId);

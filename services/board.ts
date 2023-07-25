@@ -5,6 +5,7 @@ import {
   BoardDetail,
   Boards,
   ProfileBackInfo,
+  Notification,
 } from 'types/global';
 
 export const getBoard = async (
@@ -305,6 +306,50 @@ export const removeBoardImage = async (
 ): Promise<string> => {
   const res = await axios.patch(
     `/remove-board-image/${boardId}/${boardCover}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const getNotifications = async (
+  token: string,
+  userId: number
+): Promise<Notification[]> => {
+  const res = await axios.get(`/notifications/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};
+
+export const markAllAsSeen = async (
+  token: string,
+  userId: number
+): Promise<Notification[]> => {
+  const res = await axios.put(
+    `/seen-all/${userId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const markAsSeen = async (
+  token: string,
+  notificationId: number
+): Promise<Notification[]> => {
+  const res = await axios.patch(
+    `/mark-as-seen/${notificationId}`,
     {},
     {
       headers: {

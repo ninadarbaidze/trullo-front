@@ -31,7 +31,7 @@ const CommentsSection: React.FC<Props> = (props) => {
             />
           </div>
           <button
-            className='bg-blue500 text-xs text-white px-3 py-1 rounded-lg cursor-pointer absolute bottom-2 right-2'
+            className='bg-blue500 disabled:cursor-not-allowed text-xs text-white px-3 py-1 rounded-lg cursor-pointer absolute bottom-2 right-2'
             onClick={() => addNewComment()}
             type='button'
           >

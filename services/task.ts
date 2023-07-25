@@ -204,12 +204,17 @@ export const patchComment = async (
 
 export const deleteComment = async (
   token: string,
-  commentId: number
+  commentId: number,
+  notificationIds: number[]
 ): Promise<Label> => {
-  const res = await axios.delete(`/delete-comment/${commentId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const res = await axios.patch(
+    `/delete-comment/${commentId}`,
+    notificationIds,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return res.data;
 };

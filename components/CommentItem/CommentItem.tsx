@@ -76,13 +76,15 @@ const CommentsSection: React.FC<Props> = (props) => {
                 cancel
               </button>
               <button
-                className='bg-blue500 text-xs text-white px-3 py-1 rounded-lg cursor-pointer'
+                className='bg-blue500 disabled:cursor-not-allowed text-xs text-white px-3 py-1 rounded-lg cursor-pointer'
                 onClick={() => {
-                  props.editComment(
-                    props.comment.id!,
-                    textAreaEditRef?.current?.value!
-                  );
-                  setIsInEditMode(false);
+                  if (textAreaEditRef?.current?.value) {
+                    props.editComment(
+                      props.comment.id!,
+                      textAreaEditRef?.current?.value!
+                    );
+                    setIsInEditMode(false);
+                  }
                 }}
                 type='button'
               >

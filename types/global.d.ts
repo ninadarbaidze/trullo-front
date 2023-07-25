@@ -145,6 +145,7 @@ export type Comment = {
   taskId: number;
   createdAt?: string | Date;
   user: UserProfile;
+  notification: Notification[];
 };
 
 export type Label = {
@@ -168,3 +169,14 @@ export type Colors =
   | '#828282'
   | '#BDBDBD'
   | '#E0E0E0';
+
+export type Notification = {
+  id: number;
+  receiverId: number;
+  senderId: number;
+  isRead: boolean;
+  createdAt: string;
+  type: string;
+  receiver: ProfileBackInfo;
+  sender: ProfileBackInfo;
+};

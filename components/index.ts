@@ -29,3 +29,5 @@ export * from './Labels';
 export * from './LabelItem';
 export * from './CommentsSection';
 export * from './CommentItem';
+export * from './NotificationModal';
+export * from './NotificationListItem';
