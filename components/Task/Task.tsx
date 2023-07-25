@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { TaskType, UserProfile } from 'types/global';
-import { TaskDetailModal } from 'components';
+import { SetState, TaskType, UserProfile } from 'types/global';
+import { AssignedUserList, LabelItem, TaskDetailModal } from 'components';
 import { useTask } from './useTask';
 import Image from 'next/image';
 
@@ -13,6 +13,7 @@ const Task: React.FC<{
   key: string;
   deleteTaskHandler: (taskId: string, columnId: string) => void;
   boardUsers: UserProfile[];
+  setRefreshBoard: SetState<boolean>;
 }> = (props) => {
   const {
     taskDetailsIsOpen,
@@ -20,7 +21,7 @@ const Task: React.FC<{
     setTaskDetailsIsOpen,
     taskId,
     closeTaskModal,
-  } = useTask(props.task, props.deleteTaskHandler);
+  } = useTask(props.task, props.deleteTaskHandler, props.setRefreshBoard);
   return (
     <>
       {taskDetailsIsOpen && (
@@ -36,14 +37,12 @@ const Task: React.FC<{
         index={props.index}
         key={props.key}
       >
-        {(provided, snapshot) => (
+        {(provided) => (
           <li
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
-            className={`${
-              snapshot.isDragging ? 'bg-white' : 'bg-white'
-            }  pb-16 px-2 rounded-xl shadow-md mb-4 relative z-10`}
+            className={`bg-white pb-16 px-2 rounded-xl shadow-md mb-4 relative z-10`}
             onClick={openTaskDetailsHandler}
           >
             <section className='flex flex-col items-start justify-between py-2 relative'>
@@ -61,9 +60,22 @@ const Task: React.FC<{
                   />
                 </div>
               )}
-
               <div className='pr-1'>{props.task.content}</div>
             </section>
+            <ul className='flex flex-wrap gap-2 mt-2'>
+              {props.task?.labels?.map((label, i) => (
+                <LabelItem
+                  label={label.label}
+                  i={i}
+                  key={i}
+                  canNotEdit={true}
+                />
+              ))}
+            </ul>
+            <AssignedUserList
+              users={props.task.users?.map((user) => user.user)!}
+              numberOfEmployeesToShow={2}
+            />
           </li>
         )}
       </Draggable>

@@ -1,11 +1,12 @@
 import { addClickAwayHandler } from 'helpers';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { TaskType } from 'types/global';
+import { SetState, TaskType } from 'types/global';
 
 export const useTask = (
   task: TaskType,
-  deleteTaskHandler: (taskId: string, columnId: string) => void
+  deleteTaskHandler: (taskId: string, columnId: string) => void,
+  setRefreshBoard: SetState<boolean>
 ) => {
   const [taskDialogIsOpen, setTaskDialogIsOpen] = useState(false);
   const [taskDetailsIsOpen, setTaskDetailsIsOpen] = useState(false);
@@ -46,6 +47,7 @@ export const useTask = (
   };
 
   const closeTaskModal = () => {
+    setRefreshBoard((prev) => !prev);
     router.push(pathname);
   };
 

@@ -1,4 +1,4 @@
-import { TaskType, UserProfile } from 'types/global';
+import { SetState, TaskType, UserProfile } from 'types/global';
 
 export type PropsTypes = {
   tasks: TaskType[];
@@ -11,4 +11,5 @@ export type PropsTypes = {
   deleteColumnHandler: (columnId: string) => void;
   changeColumnNameHandler: (columnId: string, title: string) => void;
   boardUsers: UserProfile[];
+  setRefreshBoard: SetState<boolean>;
 };

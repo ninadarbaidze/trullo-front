@@ -15,6 +15,8 @@ export type TaskType = {
   columnId: number;
   boardId: number;
   image: string;
+  users?: { taskId: number; userId: number; user: ProfileBackInfo }[];
+  labels?: { labelId: number; taskId: number; label: Label }[];
 };
 
 export type ColumnType = {

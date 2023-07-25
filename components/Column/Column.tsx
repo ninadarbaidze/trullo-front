@@ -105,6 +105,7 @@ const Column: React.FC<PropsTypes> = (props) => {
                       tasks={props.tasks}
                       deleteTaskHandler={props.deleteTaskHandler}
                       boardUsers={props.boardUsers}
+                      setRefreshBoard={props.setRefreshBoard}
                     />
                   </ul>
                   {provided.placeholder}

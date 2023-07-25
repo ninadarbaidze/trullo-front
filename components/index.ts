@@ -31,3 +31,4 @@ export * from './CommentsSection';
 export * from './CommentItem';
 export * from './NotificationModal';
 export * from './NotificationListItem';
+export * from './AssignedUserList';

@@ -36,6 +36,7 @@ export const useMain = () => {
   const [usersIsLoading, setUsersIsLoading] = useState(true);
   const [invitationModalIsOpen, setInvitationModalIsOpen] = useState(false);
   const [openBoardMenu, setBoardMenu] = useState(false);
+  const [refreshBoard, setRefreshBoard] = useState(false);
 
   const [placeholderProps, setPlaceholderProps] = useState<Placeholder>({
     clientHeight: null,
@@ -67,7 +68,7 @@ export const useMain = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [refreshBoard]);
 
   const reorderTaskHandler = async (
     taskId: number,
@@ -357,10 +358,6 @@ export const useMain = () => {
     }));
   };
 
-  const addNewTeamToBoard = (data: any) => {
-    console.log(data);
-  };
-
   const getAllUserData = async () => {
     try {
       setInvitationModalIsOpen(true);
@@ -406,7 +403,6 @@ export const useMain = () => {
     changeColumnNameHandler,
     isLoading,
     form,
-    addNewTeamToBoard,
     getAllUserData,
     allUsers,
     usersIsLoading,
@@ -415,5 +411,6 @@ export const useMain = () => {
     sendBoardInviteHandler,
     openBoardMenu,
     setBoardMenu,
+    setRefreshBoard,
   };
 };

@@ -1,12 +1,13 @@
 'use client';
 import React from 'react';
-import { TaskType, UserProfile } from 'types/global';
+import { SetState, TaskType, UserProfile } from 'types/global';
 import { Task } from 'components';
 
 const TaskList: React.FC<{
   tasks: TaskType[];
   deleteTaskHandler: (taskId: string, columnId: string) => void;
   boardUsers: UserProfile[];
+  setRefreshBoard: SetState<boolean>;
 }> = (props) => {
   return (
     <>
@@ -17,6 +18,7 @@ const TaskList: React.FC<{
           key={task.id}
           deleteTaskHandler={props.deleteTaskHandler}
           boardUsers={props.boardUsers}
+          setRefreshBoard={props.setRefreshBoard}
         />
       ))}
     </>

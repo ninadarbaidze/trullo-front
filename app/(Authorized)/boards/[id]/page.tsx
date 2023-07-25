@@ -33,6 +33,7 @@ export default function Home() {
     invitationModalIsOpen,
     setInvitationModalIsOpen,
     sendBoardInviteHandler,
+    setRefreshBoard,
   } = useMain();
 
   return (
@@ -88,6 +89,7 @@ export default function Home() {
                             deleteColumnHandler={deleteColumnHandler}
                             changeColumnNameHandler={changeColumnNameHandler}
                             boardUsers={data.users}
+                            setRefreshBoard={setRefreshBoard}
                           />
                         );
                       }

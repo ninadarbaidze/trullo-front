@@ -2,8 +2,13 @@
 import React from 'react';
 import { useBoards } from 'app/hooks/useBoards';
 import Image from 'next/image';
-import { AddBoardModal, AddButton, SquareLoader } from 'components';
-import { getFirstInitials, getImage } from 'helpers';
+import {
+  AddBoardModal,
+  AddButton,
+  AssignedUserList,
+  SquareLoader,
+} from 'components';
+import { getImage } from 'helpers';
 
 const Boards = () => {
   const {
@@ -53,36 +58,10 @@ const Boards = () => {
                   />
                 </div>
                 <p className='text-lg py-2 font-medium'>{board.name}</p>
-                <ul className='flex items-center gap-2 my-4'>
-                  {board.users.slice(0, numberOfEmployeesToShow).map((user) =>
-                    user.avatar ? (
-                      <li
-                        className='w-8 h-8 overflow-clip rounded-lg relative'
-                        key={user.id}
-                      >
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`}
-                          loader={() =>
-                            `${process.env.NEXT_PUBLIC_BACKEND_URL}/${user?.avatar}`
-                          }
-                          fill
-                          alt='user_avatar'
-                        />
-                      </li>
-                    ) : (
-                      <li
-                        key={user.id}
-                        className='w-8 h-8 rounded-md flex items-center justify-center bg-gray400 text-white'
-                      >
-                        {getFirstInitials(user?.firstName, user?.lastName)}
-                      </li>
-                    )
-                  )}
-                  <p className='text-xs text-gray300'>
-                    {board.users.length > numberOfEmployeesToShow &&
-                      `+${board.users.length - numberOfEmployeesToShow} other`}
-                  </p>
-                </ul>
+                <AssignedUserList
+                  users={board.users}
+                  numberOfEmployeesToShow={numberOfEmployeesToShow}
+                />
               </li>
             ))}
           </ul>
