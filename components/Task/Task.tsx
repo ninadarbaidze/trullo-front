@@ -42,7 +42,7 @@ const Task: React.FC<{
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
-            className={`bg-white pb-16 px-2 rounded-xl shadow-md mb-4 relative z-10`}
+            className={`bg-white px-2 rounded-xl shadow-md mb-4 relative z-10`}
             onClick={openTaskDetailsHandler}
           >
             <section className='flex flex-col items-start justify-between py-2 relative'>

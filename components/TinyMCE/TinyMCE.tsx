@@ -9,6 +9,7 @@ const TinyMCE: React.FC<{
   value?: string;
   disabled?: boolean;
   isLoading?: boolean;
+  isTaskEdit?: boolean;
 }> = (props) => {
   const editorRef = useRef<TinyMCEEditor | null>(null);
   const [isInEditMode, setIsInEditMode] = useState(false);
@@ -45,8 +46,10 @@ const TinyMCE: React.FC<{
                 'bold italic forecolor | alignleft aligncenter  ' +
                 'bullist numlist | link',
 
-              content_style:
-                '.tox-tinymce-inline {z-index: 200 !important;  } .mce-edit-focus:focus-visible {outline: none}',
+              content_style: props.isTaskEdit
+                ? '.tox-tinymce-inline {z-index: 200 !important; top: 20% !important; left: 20% !important;   } .mce-edit-focus:focus-visible {outline: none}'
+                : '.tox-tinymce-inline {z-index: 200 !important;   } .mce-edit-focus:focus-visible {outline: none}',
+
               smart_paste: true,
             }}
             onFocusIn={() => setIsInEditMode(true)}
@@ -59,27 +62,6 @@ const TinyMCE: React.FC<{
           />
         )}
       </div>
-      {/* {isInEditMode && (
-        <nav className='flex gap-3 pt-6'>
-          <button
-            onClick={() => {
-              props.submitTextHandler(
-                editorRef.current!.getContent() as string
-              );
-              setIsInEditMode(false);
-            }}
-            className='text-white bg-green-600 rounded-xl px-3 py-1'
-          >
-            Save
-          </button>
-          <button
-            className='text-gray-400'
-            onClick={() => setIsInEditMode(false)}
-          >
-            cancel
-          </button>
-        </nav>
-      )} */}
     </div>
   );
 };

@@ -9,7 +9,7 @@ const AssignedUserList: React.FC<{
 }> = (props) => {
   return (
     <ul className='flex items-center gap-2 my-4'>
-      {props.users.slice(0, props.numberOfEmployeesToShow).map((user) =>
+      {props.users?.slice(0, props.numberOfEmployeesToShow).map((user) =>
         user.avatar ? (
           <li
             className='w-8 h-8 overflow-clip rounded-lg relative'
@@ -34,8 +34,8 @@ const AssignedUserList: React.FC<{
         )
       )}
       <p className='text-xs text-gray300'>
-        {props.users.length > props.numberOfEmployeesToShow &&
-          `+${props.users.length - props.numberOfEmployeesToShow} other`}
+        {props.users?.length > props.numberOfEmployeesToShow &&
+          `+${props.users?.length - props.numberOfEmployeesToShow} other`}
       </p>
     </ul>
   );

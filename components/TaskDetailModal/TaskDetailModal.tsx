@@ -184,6 +184,7 @@ const TaskDetailModal: React.FC<Props> = (props) => {
                     value={taskData?.description?.content}
                     isInEditMode={true}
                     disabled={!isInEditMode.description}
+                    isTaskEdit={true}
                   />
                 </div>
               </article>
