@@ -87,6 +87,7 @@ export default function BoardLayout({
             return prev;
           });
         }
+        console.log(data);
       }
     );
   }, []);

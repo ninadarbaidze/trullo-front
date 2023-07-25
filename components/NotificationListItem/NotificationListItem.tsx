@@ -1,13 +1,18 @@
-import { UserInfo } from 'components/UserInfo';
+import { UserInfo } from 'components';
 import React from 'react';
 import { Notification } from 'types/global';
 import { useNotificationListItem } from './useNotificationListItem';
 import * as timeago from 'timeago.js';
+import { ChatBubbleLeftIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 
 const NotificationListItem: React.FC<{
   notification: Notification;
   key: number;
-  markAsSeenHandler: (notificationId: number, taskId: number) => void;
+  markAsSeenHandler: (
+    notificationId: number,
+    taskId: number,
+    isRead: boolean
+  ) => void;
 }> = (props) => {
   const { getNotificationText } = useNotificationListItem();
   return (
@@ -17,16 +22,24 @@ const NotificationListItem: React.FC<{
       onClick={() =>
         props.markAsSeenHandler(
           props.notification.id,
-          props.notification.taskId
+          props.notification.taskId,
+          props.notification.isRead
         )
       }
     >
-      <div id='not_user' className='flex w-full gap-2'>
+      <div id='not_user' className='flex w-full gap-2 relative'>
         <UserInfo
           user={props.notification.sender}
           hideName={true}
           imageSize='w-12 h-12'
         />
+        <div className='absolute bottom-0 left-8'>
+          {props.notification.type === 'comment' ? (
+            <ChatBubbleLeftIcon className='bg-green-600 text-white p-[2px] rounded-full w-5 h-5' />
+          ) : (
+            <UserPlusIcon className='bg-blue500 text-white p-[2px] rounded-full w-5 h-5' />
+          )}
+        </div>
         <div>
           <p className='w-full'>
             <span className='font-semibold capitalize'>{`${props.notification.sender?.firstName} ${props.notification.sender?.lastName} `}</span>

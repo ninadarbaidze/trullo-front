@@ -1,5 +1,5 @@
 import { getCookie } from 'cookies-next';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   addTaskAttachments,
@@ -12,6 +12,7 @@ import {
 import { Label, TaskDetail, TaskDetailForm, UserProfile } from 'types/global';
 import { addClickAwayHandler } from 'helpers';
 import { Comment } from 'types/global';
+import { AuthContext } from 'store';
 
 export const useTaskDetailModal = (
   taskId: number,
@@ -34,6 +35,8 @@ export const useTaskDetailModal = (
   });
 
   const token = getCookie('token') as string;
+
+  const { user } = useContext(AuthContext);
 
   const dropDownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -186,7 +189,8 @@ export const useTaskDetailModal = (
       await assignTask(
         token,
         taskId,
-        users.map((user) => user.id as number)
+        users.map((user) => user.id as number),
+        user?.id!
       );
     } catch (err: any) {
       console.error(err);

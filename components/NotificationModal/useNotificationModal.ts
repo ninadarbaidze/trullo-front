@@ -39,7 +39,11 @@ export const useNotificationModal = (
       console.error(err);
     }
   };
-  const markAsSeenHandler = async (notificationId: number, taskId: number) => {
+  const markAsSeenHandler = async (
+    notificationId: number,
+    taskId: number,
+    isRead: boolean
+  ) => {
     try {
       router.push(pathname + '?' + createQueryString('task_id', `${taskId}`));
       await markAsSeen(token, notificationId);
@@ -48,7 +52,7 @@ export const useNotificationModal = (
           item.id === notificationId ? { ...item, isRead: true } : item
         );
       });
-      setSumOfNotifications((prev) => prev - 1);
+      !isRead && setSumOfNotifications((prev) => prev - 1);
       setNotificationIsOpen(false);
     } catch (err: any) {
       console.error(err);

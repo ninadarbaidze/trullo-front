@@ -54,13 +54,7 @@ export const useCommentsSection = (
 
   const deleteCommentHandler = async (commentId: number) => {
     try {
-      console.log(comments);
-      const notificationIds = comments
-        .find((item) => item.id === commentId)
-        ?.notification.map((item) => item.id);
-      console.log(notificationIds);
-
-      await deleteComment(token, commentId, notificationIds);
+      await deleteComment(token, commentId);
       setComments((prev) => {
         const newState = [...prev];
         return newState.filter((comment) => comment.id !== commentId);
