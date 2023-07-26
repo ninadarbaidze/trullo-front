@@ -1,94 +1,57 @@
 'use client';
-
 import React, { useState } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
 const Page = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
-  const getDaysInMonth = (month: number, year: number) => {
-    let daysFromBeginning = new Date(year, month, 1);
-    let days = [];
-    while (daysFromBeginning.getMonth() === month) {
-      days.push(new Date(daysFromBeginning));
-      daysFromBeginning.setDate(daysFromBeginning.getDate() + 1);
-    }
-    return days;
-  };
+  const WEEK_DAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   const hydrateMonth = (date: Date) => {
     const months = [];
+    const firstDayOfWeek = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      1
+    ).getDay();
 
-    let m = 0;
-    let laps = 0;
-    for (let i = 0; i <= 7; ) {
-      if (i === 7 && laps < 5) {
-        i = 0;
-        laps++;
-      }
-      const currentMonth = new Date(
-        getDaysInMonth(date.getMonth(), date.getFullYear())[m]
-      );
-      if (currentMonth.getDay() === i) {
-        months.push({ day: currentMonth.getDate(), month: 'curr' });
-        m++;
-      } else if (laps <= 2) {
-        let prevMonth = getDaysInMonth(
-          date.getMonth() === 0 ? 11 : date.getMonth() - 1,
-          date.getMonth() === 0 ? date.getFullYear() - 1 : date.getFullYear()
-        ).slice(-7);
+    let dateToStartCalendar = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      1 - firstDayOfWeek
+    );
 
-        const prevDate = prevMonth
-          .find((item) => item.getDay() === i)
-          ?.getDate();
-        months.push({ day: prevDate, month: 'prev' });
-      } else {
-        let nextMonth = getDaysInMonth(
-          date.getMonth() === 11 ? 0 : date.getMonth() + 1,
-          date.getMonth() === 11 ? date.getFullYear() + 1 : date.getFullYear()
-        ).slice(0, 12);
+    while (months.length < 42) {
+      const day = dateToStartCalendar.getDate();
+      const month =
+        dateToStartCalendar.getMonth() === date.getMonth() ? 'curr' : 'prev';
+      months.push({ day, month });
 
-        console.log(date.getMonth());
-        const firstDate = nextMonth
-          .filter((item) => item.getDay() === i)[0]
-          ?.getDate();
-
-        if (!months.slice(-10).some((item) => item.day === firstDate)) {
-          months.push({ day: firstDate, month: 'next' });
-        } else {
-          const secondDate = nextMonth
-            .filter((item) => item.getDay() === i)[1]
-            ?.getDate();
-          months.push({ day: secondDate, month: 'next' });
-        }
-      }
-      i++;
+      dateToStartCalendar.setDate(dateToStartCalendar.getDate() + 1);
     }
 
     return months;
   };
 
-  console.log(hydrateMonth(selectedMonth));
+  const handlePrevMonth = () => {
+    setSelectedMonth(
+      (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1)
+    );
+  };
+
+  const handleNextMonth = () => {
+    setSelectedMonth(
+      (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1)
+    );
+  };
 
   return (
     <div className='p-36'>
       <nav className='flex gap-2'>
-        <div
-          onClick={() =>
-            setSelectedMonth((prev) => {
-              return new Date(prev.setMonth(prev.getMonth() - 1));
-            })
-          }
-        >
+        <div onClick={handlePrevMonth}>
           <ArrowLeftIcon className='w-5' />
         </div>
-        <div
-          onClick={() =>
-            setSelectedMonth((prev) => {
-              return new Date(prev.setMonth(prev.getMonth() + 1));
-            })
-          }
-        >
+        <div onClick={handleNextMonth}>
           <ArrowRightIcon className='w-5' />
         </div>
       </nav>
@@ -97,27 +60,23 @@ const Page = () => {
         {selectedMonth.getFullYear()}
       </h3>
       <div className='grid grid-cols-7 gap-4'>
-        <div className=' col-span-1'>S</div>
-        <div className=' col-span-1'>M</div>
-        <div className=' col-span-1'>T</div>
-        <div className=' col-span-1'>W</div>
-        <div className=' col-span-1'>T</div>
-        <div className=' col-span-1'>F</div>
-        <div className=' col-span-1'>S</div>
+        {WEEK_DAYS.map((day, index) => (
+          <div className='col-span-1' key={index}>
+            {day}
+          </div>
+        ))}
       </div>
 
       <div className='grid grid-cols-7 gap-4'>
-        {hydrateMonth(selectedMonth)?.map((item, i) => (
-          <>
-            <div
-              className={`${
-                item.month === 'curr' ? 'text-black' : 'text-gray-400'
-              } col-span-1`}
-              key={i}
-            >
-              {item.day}
-            </div>
-          </>
+        {hydrateMonth(selectedMonth)?.map((item, index) => (
+          <div
+            className={`${
+              item.month === 'curr' ? 'text-black' : 'text-gray-400'
+            } col-span-1`}
+            key={index}
+          >
+            {item.day}
+          </div>
         ))}
       </div>
     </div>
