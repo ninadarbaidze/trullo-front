@@ -3,21 +3,46 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const TimeFrameItem = (props) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [initialHeight, setInitialHeigth] = useState(0);
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   const triggerRef = useRef(null);
 
-  const [initialHeight, setInitialHeigth] = useState(0);
+  const createDivElement = (
+    top: number | null,
+    height: number,
+    bottom: number | null
+  ) => {
+    const myDiv = document.createElement('div');
+    myDiv.style.backgroundColor = '#2F80ED';
+    myDiv.style.borderRadius = '6px';
+    if (top) {
+      myDiv.style.top = `${top}px`;
+    } else {
+      myDiv.style.bottom = `${bottom}`;
+    }
+
+    myDiv!.style.left = '50px';
+
+    myDiv.style.height = `${height}px`;
+    myDiv.style.width = `100%`;
+
+    myDiv.style.position = 'absolute';
+
+    const slotList = document.getElementById('timeslots');
+
+    slotList?.appendChild(myDiv);
+  };
 
   const handleMouseDown = (e) => {
     e.preventDefault();
     setInitialHeigth(e.pageY);
     setIsMouseDown(true);
 
-    if (e.target.id === `${props.i}`) {
-      // Handle mouse down on the specific div (id={`hour-${props.i}`})
-      // Here, you can update state or do anything specific to this div.
+    if (e.target.id === `${props.hour}`) {
       props.setTimeFrames((prev) => {
         const newState = [...prev];
+
         let obj = {
           id: prev.length > 0 ? prev?.at(-1)?.id + 1 : 1,
           start: props.hour,
@@ -25,25 +50,36 @@ const TimeFrameItem = (props) => {
         return newState.concat(obj);
       });
     }
-    // If the event originated from the triggerRef <div>, it will be handled inside the useEffect.
   };
 
   const handleMouseUp = useCallback(
-    (e, end) => {
-      // console.log('end', end);
+    (e, end, start) => {
+      // console.log(start, 'propsstart');
       e.preventDefault();
       setIsMouseDown(false);
-      // console.log(e.target.id);
-      if (end) {
-        // Handle mouse up on the specific div (id={`hour-${props.i}`})
-        // Here, you can update state or do anything specific to this div.
-        props.setTimeFrames((prev) => {
-          const newState = [...prev];
-          newState.at(-1).end = end;
-          return newState;
-        });
-      }
-      // If the event originated from the triggerRef <div>, it was handled inside the useEffect.
+
+      props.setTimeFrames((prev) => {
+        const newState = [...prev];
+        {
+          if (!start && end) {
+            console.log('first');
+            newState.at(-1).end = end;
+            end = '';
+          } else {
+            console.log('second');
+
+            // console.log(props.hour, 'end');
+            // if (newState.length > 0) {
+            newState.at(-1).end = props.hour;
+            newState.at(-1).start = start;
+            // }
+
+            start = '';
+          }
+        }
+
+        return newState;
+      });
     },
     [props]
   );
@@ -57,7 +93,8 @@ const TimeFrameItem = (props) => {
       let yCord = 0;
       let initial = 0;
 
-      let end = 0;
+      let end = '';
+      let start = '';
 
       resizableElement!.style.left = '50px';
 
@@ -67,12 +104,12 @@ const TimeFrameItem = (props) => {
           return;
         }
         event.preventDefault();
-        if (event.target.id) {
-          end = +event.target.id;
-        }
-        console.log('move');
+
         const dy = event.pageY - yCord;
         if (initial < event.pageY) {
+          if (event.target.id) {
+            end = event.target.id;
+          }
           bottomHeight = 0;
 
           topHeight = topHeight + dy;
@@ -80,6 +117,10 @@ const TimeFrameItem = (props) => {
           resizableElement!.style.bottom = null;
           resizableElement!.style.height = `${topHeight}px`;
         } else {
+          if (event.target.id) {
+            console.log(start, 'target id');
+            start = event.target.id;
+          }
           topHeight = 0;
           bottomHeight = bottomHeight - dy;
           resizableElement!.style.bottom = `${styles.bottom}`;
@@ -92,10 +133,26 @@ const TimeFrameItem = (props) => {
 
       // document.addEventListener('mousemove', onMouseMoveBottomResize);
       const onMouseUpBottomResize = (event) => {
-        console.log('up');
         setIsMouseDown(false);
+        props.setTimeFrames((prev) => {
+          const newState = [...prev];
+          if (topHeight) {
+            newState.at(-1).top = initialHeight - 96;
+            newState.at(-1).bottom = null;
+            newState.at(-1).height = topHeight;
+            createDivElement(initialHeight - 96, topHeight, null);
+            handleMouseUp(event, end, false);
+          } else {
+            newState.at(-1).top = null;
+            newState.at(-1).bottom = styles.bottom;
+            newState.at(-1).height = bottomHeight;
 
-        handleMouseUp(event, end);
+            createDivElement(null, bottomHeight, styles.bottom);
+            handleMouseUp(event, end, start);
+          }
+
+          return newState;
+        });
         document.removeEventListener('mousemove', onMouseMoveBottomResize);
       };
 
@@ -115,27 +172,43 @@ const TimeFrameItem = (props) => {
         resizeBottom?.removeEventListener('mousedown', onMouseDownBottomResize);
       };
     }
-  }, [handleMouseUp, initialHeight, isMouseDown]);
+  }, [initialHeight, isMouseDown]);
+
+  const setOneHourSlotHandler = () => {
+    setDialogIsOpen(true);
+  };
 
   return (
     <>
       {isMouseDown && (
         <div
-          className={`w-full min-w-[15px]  left-0  bg-red-500 z-50 border rounded-md overflow-x-clip overflow-y-auto absolute`}
+          className={`w-full min-w-[15px] left-0  bg-blue500 z-50 border rounded-md overflow-x-clip overflow-y-auto absolute`}
           ref={triggerRef}
         ></div>
       )}
       <li
         key={props.i}
-        className='flex gap-2 relative'
+        className={`flex h-3 ${
+          props.hour.slice(3, 5) === '00' ? 'relative' : ''
+        } `}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
+        onClick={() => setOneHourSlotHandler()}
+        style={props.hour.slice(3, 5) === '00' ? { position: 'relative' } : {}}
       >
-        <div className='w-12 text-xs'>{props.hour}</div>
-        <div id={`${props.i}`} className='border w-full pb-12'>
-          {/* {timeFrames.at(-1)?.start == hour && (
-      <p>{`${timeFrames.at(-1)?.start} - ${currentEndTime}`}</p>
-    )} */}
+        {props.hour.slice(3, 5) === '00' && (
+          <div className='w-12 text-xs text-gray-500 -pt-2'>{props.hour}</div>
+        )}
+
+        {dialogIsOpen && <div className='sticky top-0'>dsssss</div>}
+
+        <div
+          id={`${props.hour}`}
+          className={` w-full mb-[7px]  ${
+            props.hour.slice(3, 5) === '00' ? 'border-b ' : ''
+          }`}
+        >
+          {' '}
         </div>
       </li>
     </>
