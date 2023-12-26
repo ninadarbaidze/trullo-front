@@ -29,7 +29,6 @@ export const useMultipleFileUploader = (
   };
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.files);
     const arrayOfFiles = Array.from(event.target?.files!);
     setValue('attachments', [...files, ...arrayOfFiles]);
     submitImages?.(arrayOfFiles);

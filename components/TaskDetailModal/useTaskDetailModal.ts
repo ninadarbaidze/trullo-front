@@ -91,7 +91,6 @@ export const useTaskDetailModal = (
     try {
       form.setValue('image', '');
       setCustomImage('');
-      console.log(boardCover);
       await deleteTaskImage(token, taskId, boardCover);
       setBoardCover('');
     } catch (err: any) {

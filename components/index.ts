@@ -32,4 +32,3 @@ export * from './CommentItem';
 export * from './NotificationModal';
 export * from './NotificationListItem';
 export * from './AssignedUserList';
-export * from './TimeFrameItem';

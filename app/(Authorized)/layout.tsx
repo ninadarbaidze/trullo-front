@@ -76,7 +76,6 @@ export default function BoardLayout({
     socket.on(
       'task',
       (data: { action: string; notifications: Notification[] }) => {
-        console.log(data.notifications);
         const userNotification = data.notifications.find(
           (item) => item.receiverId === user?.id
         );
@@ -87,7 +86,6 @@ export default function BoardLayout({
             return prev;
           });
         }
-        console.log(data);
       }
     );
   }, []);

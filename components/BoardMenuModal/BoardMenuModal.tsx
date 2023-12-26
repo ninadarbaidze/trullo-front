@@ -184,7 +184,9 @@ const BoardMenuModal: React.FC<{
                       {canUpdateBoard && isInEditMode && (
                         <button
                           className='text-sm text-red-500 border rounded-lg border-red-500 px-4 h-8'
-                          onClick={() => deleteUserFromBoardHandler(user.id)}
+                          onClick={() =>
+                            deleteUserFromBoardHandler(user.id as number)
+                          }
                           type='button'
                         >
                           Remove

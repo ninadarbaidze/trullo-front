@@ -45,7 +45,7 @@ export const useBoards = () => {
         );
       });
 
-      formData.append('userId', user.id!);
+      formData.append('userId', user.id! as any);
       await createBoard(formData, token);
       await getBoards();
     } catch (err: any) {

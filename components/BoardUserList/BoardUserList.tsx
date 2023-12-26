@@ -16,7 +16,7 @@ const BoardUserList: React.FC<{
             <button
               className='absolute -top-1 -right-1 z-50'
               type='button'
-              onClick={() => props.deleteUser?.(user.id)}
+              onClick={() => props.deleteUser?.(user.id as number)}
             >
               <XMarkIcon className='bg-red-300 w-[0.8rem] rounded-full text-red-600' />
             </button>

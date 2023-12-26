@@ -11,8 +11,8 @@ const Select: React.FC<Props> = (props) => {
   const [initialList, setInitialList] = useState<AllUser[]>([]);
 
   useEffect(() => {
-    setList(props.list);
-    setInitialList(props.list);
+    setList(props.list as AllUser[]);
+    setInitialList(props.list as AllUser[]);
   }, [props.list]);
 
   return (
