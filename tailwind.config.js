@@ -7,10 +7,18 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        babyBlue: '#F8F9FD',
+        blue100: '#E2E8F6',
+        blue200: '#DAE4FD',
+        blue500: '#2F80ED',
+        gray200: '#E0E0E0',
+        gray250: '#F2F2F2',
+        gray300: '#828282',
+        gray400: '#BDBDBD',
+      },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        default: "url('/images/profile.png')",
       },
     },
   },
