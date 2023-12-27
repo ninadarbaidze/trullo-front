@@ -8,9 +8,9 @@ export const useLoginForm = () => {
   const router = useRouter();
   const form = useForm<LoginData>({
     defaultValues: {
-      username: 'user',
+      username: '',
       remember: true,
-      password: 'user',
+      password: '',
     },
   });
 
