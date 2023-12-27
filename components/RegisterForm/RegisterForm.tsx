@@ -4,7 +4,7 @@ import { useRegisterForm } from './useRegisterForm';
 import { FormProvider } from 'react-hook-form';
 
 const RegisterForm = () => {
-  const { onSubmit, form, router } = useRegisterForm();
+  const { onSubmit, form, router, registered } = useRegisterForm();
   return (
     <FormProvider {...form}>
       <form className='space-y-6' onSubmit={form.handleSubmit(onSubmit)}>
@@ -94,7 +94,7 @@ const RegisterForm = () => {
             type='submit'
             className='flex w-full justify-center rounded-md bg-blue500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
           >
-            Sign up
+            {registered ? 'Success! Check your email' : 'Sign up'}
           </button>
           <div className='text-xs flex pt-1  justify-center'>
             Already have an account?{' '}

@@ -2,6 +2,7 @@
 import React from 'react';
 import { useLoginForm } from './useLoginForm';
 import { FormProvider } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 
 const LoginForm = () => {
   const { onSubmit, form, router } = useLoginForm();
@@ -18,10 +19,15 @@ const LoginForm = () => {
           </label>
           <div className='mt-2'>
             <input
-              {...form.register('username')}
+              {...form.register('username', {
+                required: 'Required',
+              })}
               type='text'
               className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
+            <p className='text-xs text-red-600'>
+              <ErrorMessage name={'username'} />
+            </p>
           </div>
         </div>
 
@@ -34,10 +40,15 @@ const LoginForm = () => {
           </label>
           <div className='mt-2'>
             <input
-              {...form.register('password')}
+              {...form.register('password', {
+                required: 'Required',
+              })}
               type='password'
               className='block w-full pl-2 rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
             />
+            <p className='text-xs text-red-600'>
+              <ErrorMessage name={'password'} />
+            </p>
           </div>
         </div>
 
@@ -54,15 +65,6 @@ const LoginForm = () => {
             >
               Remember me
             </label>
-          </div>
-
-          <div className='text-sm leading-6'>
-            <a
-              href='#'
-              className='font-semibold  text-blue500 hover:opacity-90'
-            >
-              Forgot password?
-            </a>
           </div>
         </div>
 

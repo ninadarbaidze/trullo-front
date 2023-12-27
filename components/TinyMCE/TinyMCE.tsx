@@ -47,8 +47,8 @@ const TinyMCE: React.FC<{
                 'bullist numlist | link',
 
               content_style: props.isTaskEdit
-                ? '.tox-tinymce-inline {z-index: 200 !important; top: 20% !important; left: 20% !important;   } .mce-edit-focus:focus-visible {outline: none}'
-                : '.tox-tinymce-inline {z-index: 200 !important;   } .mce-edit-focus:focus-visible {outline: none}',
+                ? '.tox-tinymce-inline {z-index: 200 !important; top: 20% !important; left: 20% !important; width: 300px  } .mce-edit-focus:focus-visible {outline: none}'
+                : '.tox-tinymce-inline {z-index: 200 !important;  width: 300px  } .mce-edit-focus:focus-visible {outline: none}',
 
               smart_paste: true,
             }}

@@ -100,7 +100,7 @@ export default function BoardLayout({
               onClick={() => router.push('/boards')}
             >
               <Logo />
-              <p className='text-lg font-semibold'>Thullo</p>
+              <p className='text-lg font-semibold'>Trullo</p>
             </div>
             {params.id && (
               <div className='flex items-center gap-5'>

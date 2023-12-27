@@ -8,9 +8,9 @@ export const useLoginForm = () => {
   const router = useRouter();
   const form = useForm<LoginData>({
     defaultValues: {
-      username: '',
-      remember: false,
-      password: '',
+      username: 'user',
+      remember: true,
+      password: 'user',
     },
   });
 
@@ -21,6 +21,10 @@ export const useLoginForm = () => {
       setCookie('user', response.user);
       router.push('/boards');
     } catch (err: any) {
+      form.setError('username', {
+        type: 'custom',
+        message: 'Incorrect username or password',
+      });
       console.error(err);
     }
   };
